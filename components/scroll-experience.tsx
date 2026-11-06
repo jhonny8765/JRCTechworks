@@ -11,8 +11,8 @@ const scenes = [
 ] as const;
 
 const lastIndex = scenes.length - 1;
-const TRANSITION_DURATION = 1180;
-const TRANSITION_EASING = "cubic-bezier(.68, 0, .18, 1)";
+const TRANSITION_DURATION = 1300;
+const TRANSITION_EASING = "cubic-bezier(.48, .05, .18, 1)";
 
 function indexFromHash(hash: string): number {
   const id = decodeURIComponent(hash.replace(/^#/, ""));
@@ -62,11 +62,6 @@ export default function ScrollExperience() {
     const shell = document.querySelector<HTMLElement>(".story-shell");
     shell?.classList.toggle("motion-disabled", !enabled);
     shell?.classList.toggle("motion-user-enabled", enabled);
-    try {
-      window.localStorage.setItem("jrc-slide-motion", enabled ? "on" : "off");
-    } catch {
-      // Storage can be disabled in private browsing; the toggle still works.
-    }
   }
 
   useEffect(() => {
@@ -77,17 +72,14 @@ export default function ScrollExperience() {
     const previousRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let storedMotion: string | null = null;
-    try {
-      storedMotion = window.localStorage.getItem("jrc-slide-motion");
-    } catch {
-      // Continue with the system preference when storage is unavailable.
-    }
-    const initialMotion = storedMotion === "on" || (storedMotion !== "off" && !reducedMotion);
+    // Each visit starts with motion enabled unless the visitor requests reduced
+    // motion. An old saved "off" setting could otherwise silently make the
+    // entire presentation flash between scenes on future visits.
+    const initialMotion = !reducedMotion;
     motionRef.current = initialMotion;
     setMotionEnabled(initialMotion);
     shell.classList.toggle("motion-disabled", !initialMotion);
-    shell.classList.toggle("motion-user-enabled", storedMotion === "on");
+    shell.classList.remove("motion-user-enabled");
     const supportsKeyframes = sections.every((section) => typeof section.animate === "function");
     shell.classList.toggle("motion-scripted", supportsKeyframes);
 
@@ -97,8 +89,11 @@ export default function ScrollExperience() {
     let touchY: number | null = null;
     let touchTarget: EventTarget | null = null;
     let runningAnimations: Animation[] = [];
+    let finishTimer: number | null = null;
 
     function clearAnimations() {
+      if (finishTimer !== null) window.clearTimeout(finishTimer);
+      finishTimer = null;
       const oldAnimations = runningAnimations;
       runningAnimations = [];
       oldAnimations.forEach((animation) => {
@@ -133,8 +128,8 @@ export default function ScrollExperience() {
       shell?.style.setProperty("--active-scene", String(next));
 
       if (wasReady && motionRef.current && supportsKeyframes && previous !== next) {
-        // Real timelines keep both scenes painted for the whole movement. A hidden
-        // CSS layer can otherwise appear as an instant flash on some browsers.
+        // Move both complete screens together. The old fade/28% exit looked
+        // like a flash when the entering panel was still below the viewport.
         const direction = next > previous ? 1 : -1;
         const outgoing = sections[previous];
         const incoming = sections[next];
@@ -150,13 +145,12 @@ export default function ScrollExperience() {
           fill: "both",
         };
         const enterAnimation = incoming.animate([
-          { transform: `translate3d(0, ${direction * 105}%, 0) scale(.988)`, opacity: 0.45 },
-          { transform: `translate3d(0, ${direction * 52}%, 0) scale(.994)`, opacity: 1, offset: 0.52 },
-          { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 },
+          { transform: `translate3d(0, ${direction * 100}%, 0)`, opacity: 1 },
+          { transform: "translate3d(0, 0, 0)", opacity: 1 },
         ], timing);
         const exitAnimation = outgoing.animate([
-          { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 },
-          { transform: `translate3d(0, ${direction * -28}%, 0) scale(.965)`, opacity: 0.16 },
+          { transform: "translate3d(0, 0, 0)", opacity: 1 },
+          { transform: `translate3d(0, ${direction * -100}%, 0)`, opacity: 1 },
         ], timing);
 
         runningAnimations = [enterAnimation, exitAnimation];
@@ -167,6 +161,9 @@ export default function ScrollExperience() {
             if (finished === 2) clearAnimations();
           };
         });
+        // Background tabs can suspend animation finish events. Do not leave
+        // scrolling locked if the browser misses one of them.
+        finishTimer = window.setTimeout(clearAnimations, TRANSITION_DURATION + 150);
       }
 
       if (method !== "none") {
