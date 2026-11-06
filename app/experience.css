@@ -375,7 +375,7 @@ body:has(.story-shell.presentation-ready) {
 
 .story-shell.presentation-ready .scene-contact .scene-frame {
   padding-top: 18px;
-  padding-bottom: 24px;
+  padding-bottom: 0;
 }
 
 .story-shell.presentation-ready .scene-contact .scene-heading {
