@@ -428,7 +428,7 @@ body:has(.story-shell.presentation-ready) {
   .scene-controls {
     top: 96px;
     bottom: auto;
-    left: 50%;
+    left: 62%;
     right: auto;
     transform: translateX(-50%);
   }
