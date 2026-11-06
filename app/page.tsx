@@ -17,6 +17,7 @@ export default function Home() {
       <div className="ambient ambient-blue" aria-hidden="true" />
       <SiteHeader />
 
+      <div className="story-viewport">
       <main id="main-content" className="story-main">
         <section id="top" className="hero story-scene scene-home" aria-labelledby="hero-title">
           <div className="container hero-layout">
@@ -161,6 +162,7 @@ export default function Home() {
           </div>
         </section>
       </main>
+      </div>
 
       <SiteFooter />
     </div>

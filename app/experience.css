@@ -242,12 +242,18 @@ body:has(.story-shell.presentation-ready) {
   z-index: 80;
 }
 
-.story-shell.presentation-ready .story-main {
+.story-shell.presentation-ready .story-viewport {
   position: absolute;
   inset: 79px 0 0;
-  height: auto;
-  overflow: visible;
+  overflow: hidden;
   isolation: isolate;
+}
+
+.story-shell.presentation-ready .story-main {
+  position: relative;
+  inset: auto;
+  height: 100%;
+  overflow: visible;
   transform: translate3d(0, var(--scene-offset, 0%), 0);
   transition: transform 1100ms cubic-bezier(.58, .05, .2, 1);
   will-change: transform;
@@ -448,7 +454,7 @@ body:has(.story-shell.presentation-ready) {
 }
 
 @media (max-width: 900px) {
-  .story-shell.presentation-ready .story-main { inset: 76px 0 0; }
+  .story-shell.presentation-ready .story-viewport { inset: 76px 0 0; }
   .story-shell.presentation-ready .story-scene .scene-frame { padding-top: 28px; padding-bottom: 64px; }
   .story-shell.presentation-ready .scene-home .hero-layout { height: auto; }
   .story-shell.presentation-ready .scene-home .hero-art { height: min(440px, 45dvh); }
