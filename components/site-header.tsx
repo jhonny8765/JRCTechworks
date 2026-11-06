@@ -3,9 +3,10 @@
 import { useState } from "react";
 
 const navLinks = [
-  { label: "Home", href: "#top" },
-  { label: "Our work", href: "#work" },
-  { label: "Approach", href: "#approach" },
+  { label: "Home", href: "/#top" },
+  { label: "Services", href: "/#services" },
+  { label: "Our work", href: "/#work" },
+  { label: "Approach", href: "/#approach" },
 ];
 
 export default function SiteHeader() {
@@ -15,7 +16,7 @@ export default function SiteHeader() {
     <header className="site-header">
       <div className="container header-inner">
         <a
-          href="#top"
+          href="/#top"
           className="brand"
           aria-label="JRC Techworks home"
           onClick={() => setMenuOpen(false)}

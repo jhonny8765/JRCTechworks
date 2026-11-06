@@ -20,9 +20,16 @@ The homepage uses screenshots supplied by the project owner:
 ## Phase checkpoints
 
 - Phase 2: Responsive homepage, visual identity, and real project previews.
-- Phase 3 (planned): Expanded services and project case studies.
+- Phase 3: Six-service overview and dedicated SukiSuite and Better Yield case studies.
 - Phase 4 (planned): Team/about and complete contact/social sections.
 - Phase 5 (planned): Performance, accessibility, and responsive QA.
 - Phase 6 (planned): Deployment after approval.
 
 The GitHub repository is the source of truth. Deployment is intentionally deferred until approval.
+
+## Case-study routes
+
+- \`/work/sukisuite\` — booking, client management, and follow-up workflows
+- \`/work/better-yield\` — POS welcome experience and highlighted store workflows
+
+Product descriptions reflect publicly visible features and the original supplied screenshots. No private dashboard data or performance claims are included.

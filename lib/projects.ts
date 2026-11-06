@@ -1,0 +1,88 @@
+export const projects = [
+  {
+    slug: "sukisuite",
+    number: "01",
+    title: "SukiSuite",
+    category: "SAAS PLATFORM",
+    industry: "SERVICE BUSINESS TOOLS",
+    description: "Bookings, client records, and thoughtful follow-ups — brought together in one workspace for service businesses.",
+    features: ["Bookings", "Client management", "Follow-ups"],
+    url: "https://sukisuite.com/",
+    screenshot: "/projects/sukisuite.png",
+    alt: "Actual SukiSuite homepage showing bookings, clients, and follow-up dashboard preview",
+    theme: "suki",
+    headline: "Bookings, clients, and follow-ups in one calm workspace.",
+    overview: "SukiSuite is a booking and client-management product for appointment-led businesses. It helps owners receive appointment or quote requests, keep client visits organized, and prepare follow-ups from one browser-based workspace.",
+    detailLabel: "A CLOSER LOOK AT THE PRODUCT",
+    details: [
+      {
+        number: "01",
+        title: "Booking and quote requests",
+        text: "Businesses can share a public link where customers request appointments or ask for service estimates. The business confirms the details.",
+      },
+      {
+        number: "02",
+        title: "Organized client history",
+        text: "Client details, visit notes, and return-visit timing sit together, making it easier to see who may need a follow-up.",
+      },
+      {
+        number: "03",
+        title: "Human-approved SMS follow-ups",
+        text: "Messages can be reviewed before sending through a connected Android phone and the business owner's own SIM.",
+      },
+      {
+        number: "04",
+        title: "Explore before signing up",
+        text: "A public demo gives prospective users a feel for the scheduling and client-care workflows before starting a trial.",
+      },
+    ],
+    designTitle: "A softer way to handle busy days.",
+    designDescription: "The lavender interface, visible demo dashboard, and clear calls to action make a practical business tool feel friendly and approachable.",
+    imageCaption: "SukiSuite homepage — actual screenshot supplied by the project creator.",
+    screenshotNote: "Shown: the public SukiSuite website and its sample dashboard preview.",
+  },
+  {
+    slug: "better-yield",
+    number: "02",
+    title: "Better Yield POS",
+    category: "POINT OF SALE SYSTEM",
+    industry: "AGRICULTURAL RETAIL",
+    description: "A retail-focused point-of-sale experience for Better Yield, designed around cash checkout, stock records, and branches.",
+    features: ["Point of sale", "Stock records", "Branches"],
+    url: "https://better-yield-magpet-pos.pages.dev/",
+    screenshot: "/projects/better-yield.png",
+    alt: "Actual Better Yield POS welcome and sign-in screen with forest-green branding",
+    theme: "yield",
+    headline: "A practical POS experience for agricultural retail.",
+    overview: "Better Yield POS is a branded point-of-sale interface for Better Yield Agri Trading and Services. Its welcome screen introduces the store, provides sign-in, and highlights cash checkout, stock records, and branch workflows.",
+    detailLabel: "WHAT THE INTERFACE HIGHLIGHTS",
+    details: [
+      {
+        number: "01",
+        title: "Cash checkout",
+        text: "The welcome screen highlights cash checkout as a core part of the retail workflow.",
+      },
+      {
+        number: "02",
+        title: "Stock records",
+        text: "Stock records are presented as a key operational area for keeping store products organized.",
+      },
+      {
+        number: "03",
+        title: "Branch workflows",
+        text: "Branch support is called out alongside checkout and stock records in the product interface.",
+      },
+      {
+        number: "04",
+        title: "Practice checkout",
+        text: "A practice option introduces sample products with separate local data and no real transactions.",
+      },
+    ],
+    designTitle: "Made to feel at home in the store.",
+    designDescription: "Deep agricultural green, cream surfaces, a clear sign-in form, and real store imagery carry Better Yield's identity into the software.",
+    imageCaption: "Better Yield POS welcome screen — actual screenshot supplied by the project creator.",
+    screenshotNote: "Shown: the welcome and sign-in screen. A checkout or inventory screenshot can be added when available.",
+  },
+] as const;
+
+export type Project = (typeof projects)[number];
