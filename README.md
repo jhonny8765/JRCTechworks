@@ -23,9 +23,10 @@ The homepage uses screenshots supplied by the project owner:
 - Phase 3: Six-service overview and dedicated SukiSuite and Better Yield case studies.
 - Phase 4: Two-person studio introduction, contact section, social links, and consistent footer navigation.
 - Phase 5: Responsive, accessibility, and source-level performance checks with targeted fixes.
-- Phase 6 (planned): Deployment after approval.
+- Phase 6: Published on Cloudflare Pages at https://jrc-techworks.pages.dev.
+- Phase 7: Search and sharing metadata, canonical URLs, sitemap, robots rules, and a branded social preview.
 
-The GitHub repository is the source of truth. Deployment is intentionally deferred until approval.
+The GitHub repository is the source of truth. Cloudflare Pages is connected to its `main` branch.
 
 ## Case-study routes
 
@@ -47,5 +48,5 @@ the other member remains unnamed until their public identity is confirmed.
 ## Quality assurance
 
 See [`docs/phase-5-qa.md`](docs/phase-5-qa.md) for the Phase 5 test matrix,
-issues fixed, verified image sizes, and remaining limitations. The code is still
-not deployed publicly; Phase 6 requires separate approval.
+issues fixed, verified image sizes, and remaining limitations.
+See [`docs/phase-7-seo.md`](docs/phase-7-seo.md) for SEO checks and optional indexing steps.
