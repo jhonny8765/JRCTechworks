@@ -232,7 +232,8 @@ body:has(.story-shell.presentation-ready) {
 .story-shell.presentation-ready {
   height: 100dvh;
   min-height: 0;
-  overflow: hidden;
+  /* clip is not a scroll container; hidden can shift when links receive focus. */
+  overflow: clip;
   isolation: isolate;
 }
 

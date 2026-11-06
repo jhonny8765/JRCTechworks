@@ -95,6 +95,8 @@ export default function ScrollExperience() {
     function setScene(index: number, method: "push" | "replace" | "none" = "replace") {
       const next = Math.max(0, Math.min(lastIndex, index));
       const wasReady = shell?.classList.contains("presentation-ready");
+      // Prevent focus or anchor navigation from shifting the clipped shell.
+      if (shell && shell.scrollTop !== 0) shell.scrollTop = 0;
       if (activeRef.current === next && wasReady) return;
       const previous = activeRef.current;
       clearTransition();
