@@ -8,15 +8,19 @@ The original first page contained a long sequence of independent card sections. 
 4. Studio — team information and the three-step process share one switchable panel.
 5. Contact — the existing guided email brief and authentic social/contact links.
 
-## Interaction decisions
+## Interaction decisions (slideshow refinement)
 
-- Large screens use gentle CSS `scroll-snap-type: proximity` to settle near scene boundaries, while normal scrolling remains available.
-- A fixed scene rail shows the active stage and provides direct section links on wide screens.
-- An `IntersectionObserver` progressively reveals content as it becomes visible. Animations affect opacity and transforms only.
+- The homepage is now a fixed, five-scene presentation. Standard document scrolling is locked after hydration. It does **not** use scroll snapping.
+- A wheel or trackpad gesture activates exactly one next/previous scene. Momentum is debounced so it cannot rapidly skip multiple scenes.
+- Scenes animate vertically in both directions, with staged entrance animations for their content. Moving upward reverses the transitions.
+- Keyboard Arrow Up/Down, Page Up/Down, Home, and End navigate the slides when focus is outside interactive controls.
+- Touch gestures and on-screen previous/next buttons navigate the same scenes; the header and progress rail support direct jumps.
+- Content that exceeds a small or short viewport can scroll **inside its own scene**, particularly the project brief on Contact. This preserves full access to form fields without returning to a long page.
+- URLs with section hashes open the matching scene, including `/\?service=...#contact`. History and anchor navigation are supported.
 - Project and service selection are standard accessible buttons with tab semantics and arrow-key support. Details are never fetched from an external service.
 - The shorter homepage does not delete case-study routes. Both supplied screenshots stay unmodified.
-- On smaller viewports, section snapping is disabled and all scenes flow normally.
-- For users requesting reduced motion, scroll snapping and animations are disabled.
+- For users requesting reduced motion, slide transitions are instantaneous while navigation still works.
+- Without JavaScript, the server-rendered sections remain available as an ordinary scrollable page.
 
 ## Verification
 
@@ -26,7 +30,9 @@ The original first page contained a long sequence of independent card sections. 
 - Check project screenshots, live URLs, email, and social links were preserved.
 - Test keyboard navigation and focus visibility on the tab controls.
 - Check desktop and mobile viewports for clipping, text size, and unwanted horizontal scrolling.
-- Confirm the reduced-motion behavior and new section-reveal styles.
+- Confirm one gesture changes only one scene, reverse gestures move backward, and the document itself stays fixed.
+- Confirm form fields and social links remain reachable inside Contact on short screens.
+- Confirm the reduced-motion behavior and animated content entrance styles.
 
 ## Deployment boundary
 

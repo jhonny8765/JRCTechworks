@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const scenes = [
   { id: "top", number: "01", label: "Home" },
@@ -10,81 +10,228 @@ const scenes = [
   { id: "contact", number: "05", label: "Contact" },
 ] as const;
 
+const lastIndex = scenes.length - 1;
+
+function indexFromHash(hash: string): number {
+  const id = decodeURIComponent(hash.replace(/^#/, ""));
+  if (id === "project-brief") return lastIndex;
+  if (id === "approach") return 3;
+  return Math.max(0, scenes.findIndex((scene) => scene.id === id));
+}
+
+function isInteractive(target: EventTarget | null): boolean {
+  return target instanceof Element && Boolean(
+    target.closest("input, textarea, select, button, a, [role='tab'], [contenteditable='true']"),
+  );
+}
+
+function canScrollWithinScene(target: EventTarget | null, section: HTMLElement, direction: number): boolean {
+  if (!(target instanceof Element)) return false;
+  let current: Element | null = target;
+
+  while (current && section.contains(current)) {
+    if (current instanceof HTMLElement) {
+      const style = window.getComputedStyle(current);
+      const isScrollable = /(auto|scroll)/.test(style.overflowY);
+      const availableScroll = current.scrollHeight - current.clientHeight;
+      if (isScrollable && availableScroll > 4) {
+        if (direction > 0 && current.scrollTop < availableScroll - 3) return true;
+        if (direction < 0 && current.scrollTop > 3) return true;
+      }
+    }
+    if (current === section) break;
+    current = current.parentElement;
+  }
+
+  return false;
+}
+
 export default function ScrollExperience() {
-  const [active, setActive] = useState<string>("top");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeRef = useRef(0);
+  const navigateRef = useRef<(index: number, method?: "push" | "replace" | "none") => void>(() => {});
 
   useEffect(() => {
-    const sections = scenes
-      .map(({ id }) => document.getElementById(id))
-      .filter((element): element is HTMLElement => Boolean(element));
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const reveals = [...document.querySelectorAll<HTMLElement>("[data-reveal]")];
+    const shell = document.querySelector<HTMLElement>(".story-shell");
+    const sections = scenes.map(({ id }) => document.getElementById(id)).filter((section): section is HTMLElement => Boolean(section));
+    if (!shell || sections.length !== scenes.length) return;
 
-    const revealObserver = !reducedMotion && "IntersectionObserver" in window
-      ? new IntersectionObserver((entries, observer) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.08, rootMargin: "0px 0px -3% 0px" })
-      : null;
+    const previousRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    let lockedUntil = 0;
+    let lastWheelAt = 0;
+    let wheelConsumed = false;
+    let touchY: number | null = null;
+    let touchTarget: EventTarget | null = null;
 
-    if (revealObserver) {
-      reveals.forEach((element) => revealObserver.observe(element));
-      document.documentElement.classList.add("motion-enabled");
+    function setScene(index: number, method: "push" | "replace" | "none" = "replace") {
+      const next = Math.max(0, Math.min(lastIndex, index));
+      if (activeRef.current === next && shell?.classList.contains("presentation-ready")) return;
+
+      activeRef.current = next;
+      setActiveIndex(next);
+
+      sections.forEach((section, sectionIndex) => {
+        const isActive = sectionIndex === next;
+        section.dataset.slideState = isActive ? "active" : sectionIndex < next ? "before" : "after";
+        section.inert = !isActive;
+        section.setAttribute("aria-hidden", String(!isActive));
+        if (!isActive) section.scrollTop = 0;
+      });
+
+      shell?.style.setProperty("--active-scene", String(next));
+      if (method !== "none") {
+        const destination = `${window.location.pathname}${window.location.search}#${scenes[next].id}`;
+        window.history[method === "push" ? "pushState" : "replaceState"](null, "", destination);
+      }
     }
 
-    let scheduled = false;
-    const updateActive = () => {
-      scheduled = false;
-      const targetY = window.innerHeight * 0.45;
-      const closest = sections.reduce<{ id: string; distance: number } | null>((best, section) => {
-        const rect = section.getBoundingClientRect();
-        const visiblePoint = Math.max(rect.top, Math.min(targetY, rect.bottom));
-        const distance = Math.abs(visiblePoint - targetY);
-        return !best || distance < best.distance ? { id: section.id, distance } : best;
-      }, null);
-      if (closest) setActive(closest.id);
-    };
+    navigateRef.current = setScene;
+    setScene(indexFromHash(window.location.hash), "none");
+    window.scrollTo(0, 0);
+    shell.classList.add("presentation-ready");
 
-    const onScroll = () => {
-      if (!scheduled) {
-        scheduled = true;
-        window.requestAnimationFrame(updateActive);
+    function onWheel(event: WheelEvent) {
+      if (event.ctrlKey || event.defaultPrevented) return;
+
+      const current = sections[activeRef.current];
+      const direction = Math.sign(event.deltaY);
+      if (!direction) return;
+      if (canScrollWithinScene(event.target, current, direction)) return;
+
+      // One wheel or trackpad gesture = one scene. Momentum cannot skip slides.
+      event.preventDefault();
+      const now = performance.now();
+      if (now - lastWheelAt > 340) wheelConsumed = false;
+      lastWheelAt = now;
+
+      if (wheelConsumed || now < lockedUntil || Math.abs(event.deltaY) < 5) return;
+      wheelConsumed = true;
+      lockedUntil = now + 850;
+      setScene(activeRef.current + direction);
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || isInteractive(event.target)) return;
+      const next = {
+        ArrowDown: activeRef.current + 1,
+        PageDown: activeRef.current + 1,
+        ArrowUp: activeRef.current - 1,
+        PageUp: activeRef.current - 1,
+        Home: 0,
+        End: lastIndex,
+      }[event.key];
+
+      if (next === undefined) return;
+      event.preventDefault();
+      setScene(next);
+    }
+
+    function onTouchStart(event: TouchEvent) {
+      if (event.touches.length !== 1) return;
+      touchY = event.touches[0].clientY;
+      touchTarget = event.target;
+    }
+
+    function onTouchEnd(event: TouchEvent) {
+      if (touchY === null || !event.changedTouches.length) return;
+      const distance = touchY - event.changedTouches[0].clientY;
+      touchY = null;
+      if (Math.abs(distance) < 65 || isInteractive(touchTarget)) return;
+
+      const direction = Math.sign(distance);
+      const current = sections[activeRef.current];
+      if (canScrollWithinScene(touchTarget, current, direction)) return;
+      setScene(activeRef.current + direction);
+    }
+
+    function onAnchorClick(event: MouseEvent) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href]") : null;
+      if (!link) return;
+
+      const href = new URL(link.href, window.location.href);
+      if (href.origin !== window.location.origin || href.pathname !== window.location.pathname || href.search !== window.location.search || !href.hash) return;
+
+      const id = decodeURIComponent(href.hash.slice(1));
+      const target = document.getElementById(id);
+      const section = target?.closest<HTMLElement>(".story-scene");
+      if (!section) return;
+
+      event.preventDefault();
+      const index = scenes.findIndex((scene) => scene.id === section.id);
+      if (index < 0) return;
+      setScene(index, "push");
+
+      // Deep links to the form can move within the final scene if needed.
+      if (target && target !== section) {
+        window.setTimeout(() => {
+          const position = target.getBoundingClientRect().top - section.getBoundingClientRect().top + section.scrollTop - 22;
+          section.scrollTo({ top: Math.max(0, position), behavior: "smooth" });
+        }, 80);
       }
-    };
+    }
 
-    updateActive();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    function onHistoryChange() {
+      setScene(indexFromHash(window.location.hash), "none");
+    }
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    document.addEventListener("click", onAnchorClick, true);
+    window.addEventListener("popstate", onHistoryChange);
+    window.addEventListener("hashchange", onHistoryChange);
 
     return () => {
-      revealObserver?.disconnect();
-      document.documentElement.classList.remove("motion-enabled");
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.history.scrollRestoration = previousRestoration;
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+      document.removeEventListener("click", onAnchorClick, true);
+      window.removeEventListener("popstate", onHistoryChange);
+      window.removeEventListener("hashchange", onHistoryChange);
+      shell.classList.remove("presentation-ready");
+      shell.style.removeProperty("--active-scene");
+      sections.forEach((section) => {
+        section.inert = false;
+        section.removeAttribute("aria-hidden");
+        delete section.dataset.slideState;
+      });
     };
   }, []);
 
   return (
-    <nav className="scene-rail" aria-label="Page sections">
-      <span className="scene-rail-caption">EXPLORE / 05</span>
-      {scenes.map((scene) => (
-        <a
-          href={`#${scene.id}`}
-          key={scene.id}
-          aria-label={`Go to ${scene.label}`}
-          aria-current={active === scene.id ? "location" : undefined}
-          className={active === scene.id ? "is-current" : ""}
-        >
-          <span className="scene-rail-index">{scene.number}</span>
-          <span className="scene-rail-bar" aria-hidden="true" />
-          <span className="scene-rail-name">{scene.label}</span>
-        </a>
-      ))}
-      <span className="scene-rail-end">JRC / TECHWORKS</span>
-    </nav>
+    <>
+      <nav className="scene-rail" aria-label="Page sections">
+        <span className="scene-rail-caption">EXPLORE / 05</span>
+        {scenes.map((scene, index) => (
+          <a
+            href={`#${scene.id}`}
+            key={scene.id}
+            aria-label={`Go to ${scene.label}`}
+            aria-current={activeIndex === index ? "location" : undefined}
+            className={activeIndex === index ? "is-current" : ""}
+          >
+            <span className="scene-rail-index">{scene.number}</span>
+            <span className="scene-rail-bar" aria-hidden="true" />
+            <span className="scene-rail-name">{scene.label}</span>
+          </a>
+        ))}
+        <span className="scene-rail-end">JRC / TECHWORKS</span>
+      </nav>
+
+      <nav className="scene-controls" aria-label="Slide controls">
+        <span className="scene-counter" aria-live="polite">{scenes[activeIndex].number} <span>/ 05</span></span>
+        <button type="button" aria-label="Previous scene" disabled={activeIndex === 0} onClick={() => navigateRef.current(activeIndex - 1)}>
+          <span aria-hidden="true">↑</span>
+        </button>
+        <button type="button" aria-label="Next scene" disabled={activeIndex === lastIndex} onClick={() => navigateRef.current(activeIndex + 1)}>
+          <span aria-hidden="true">↓</span>
+        </button>
+      </nav>
+    </>
   );
 }
