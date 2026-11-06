@@ -358,6 +358,17 @@ body:has(.story-shell.presentation-ready) {
   min-height: min(410px, 48dvh);
 }
 
+.story-shell.presentation-ready .studio-team-monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 112px;
+  margin: 14px 0;
+  font-size: clamp(60px, 6vw, 88px);
+  line-height: 1.1;
+}
+
 .story-shell.presentation-ready .scene-next-link {
   margin-top: 18px;
 }
