@@ -18,7 +18,7 @@ export default function Home() {
       <SiteHeader />
 
       <div className="story-viewport">
-      <main id="main-content" className="story-main">
+      <main id="main-content" className="story-main" tabIndex={-1}>
         <section id="top" className="hero story-scene scene-home" aria-labelledby="hero-title">
           <div className="container hero-layout">
             <div className="hero-copy" data-reveal>
@@ -129,7 +129,7 @@ export default function Home() {
                 <h3>Big idea?<br /><em>Start small.</em></h3>
                 <p>Tell us what you want to make better. We'll start with the problem, then talk through what to build.</p>
                 <a className="button primary-button contact-primary" href="#project-brief">
-                  Share your idea <ArrowIcon diagonal />
+                  Start your brief <ArrowIcon diagonal />
                 </a>
                 <p className="contact-alternative">Prefer email?</p>
                 <a className="contact-email-address" href={projectInquiryHref}>{contactEmail}</a>

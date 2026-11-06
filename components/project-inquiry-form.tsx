@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent, type MouseEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import ArrowIcon from "@/components/arrow-icon";
 import { contactEmail } from "@/lib/contact";
 import { services } from "@/lib/services";
@@ -21,6 +21,7 @@ export default function ProjectInquiryForm() {
   const [timeline, setTimeline] = useState("Not sure yet");
   const [details, setDetails] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [manualBrief, setManualBrief] = useState("");
 
   useEffect(() => {
     const requestedService = new URLSearchParams(window.location.search).get("service");
@@ -56,24 +57,26 @@ export default function ProjectInquiryForm() {
     ].join("\n");
   }
 
-  function prepareEmail(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function prepareEmail() {
+    const form = document.querySelector<HTMLFormElement>(".inquiry-form");
+    if (!form?.reportValidity()) return;
     const subject = `Project inquiry — ${service} | JRC Techworks`;
     const mailto = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText())}`;
-    setFeedback("Your email app should open with your project brief. Please review it and press Send there; this website has not sent a message.");
+    setFeedback("Your email app may open with the draft. You still need to press Send. If nothing opens, choose Copy project brief instead.");
     window.location.href = mailto;
   }
 
-  async function copyBrief(event: MouseEvent<HTMLButtonElement>) {
-    if (!event.currentTarget.form?.reportValidity()) return;
+  async function copyBrief(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const fullBrief = `To: ${contactEmail}\nSubject: Project inquiry — ${service} | JRC Techworks\n\n${briefText()}`;
 
     try {
-      await navigator.clipboard.writeText(
-        `To: ${contactEmail}\nSubject: Project inquiry — ${service} | JRC Techworks\n\n${briefText()}`,
-      );
-      setFeedback("Project brief copied. Paste it into an email or message and send it to us.");
+      await navigator.clipboard.writeText(fullBrief);
+      setManualBrief("");
+      setFeedback(`Copied! Paste your brief into an email to ${contactEmail}, then send it. No message has been sent yet.`);
     } catch {
-      setFeedback(`Copy isn't available in this browser. You can still use the email button or write to ${contactEmail}.`);
+      setManualBrief(fullBrief);
+      setFeedback("Automatic copying isn't available here. Select the brief below and copy it manually into an email.");
     }
   }
 
@@ -83,8 +86,8 @@ export default function ProjectInquiryForm() {
         <span className="inquiry-heading-label"><span aria-hidden="true" className="contact-console-light" /> PROJECT BRIEF</span>
         <span className="inquiry-heading-step">01 / TELL US</span>
       </div>
-      <form className="inquiry-form" onSubmit={prepareEmail}>
-        <p className="inquiry-intro">A few details help us start the right conversation.</p>
+      <form className="inquiry-form" onSubmit={copyBrief}>
+        <p className="inquiry-intro">A few details help us start the right conversation. Copy your completed brief or open it in your email app.</p>
         <div className="inquiry-field-row">
           <div className="inquiry-field">
             <label htmlFor="inquiry-name">Your name <span>*</span></label>
@@ -116,11 +119,12 @@ export default function ProjectInquiryForm() {
           <textarea id="inquiry-details" name="details" placeholder="What problem are you solving? Who would use the website, system, or app?" rows={4} value={details} onChange={(event) => setDetails(event.target.value)} minLength={15} maxLength={800} required />
         </div>
         <div className="inquiry-actions">
-          <button className="button primary-button inquiry-submit" type="submit">Open email draft <ArrowIcon diagonal /></button>
-          <button className="inquiry-copy" type="button" onClick={copyBrief}>Copy brief instead</button>
+          <button className="button primary-button inquiry-submit" type="submit">Copy project brief <ArrowIcon /></button>
+          <button className="inquiry-copy" type="button" onClick={prepareEmail}>Open email app <ArrowIcon diagonal /></button>
         </div>
-        <p className="inquiry-privacy">No account needed. Your details stay in this browser until you choose to send them through your email app.</p>
+        <p className="inquiry-privacy">No account needed. This form prepares a brief; it does not send messages automatically.</p>
         <p className="inquiry-feedback" role="status" aria-live="polite">{feedback}</p>
+        {manualBrief && <textarea className="inquiry-manual-brief" aria-label="Your project brief for manual copying" readOnly value={manualBrief} rows={5} onFocus={(event) => event.currentTarget.select()} />}
       </form>
     </div>
   );

@@ -200,6 +200,11 @@ export default function ScrollExperience() {
       if (href.origin !== window.location.origin || href.pathname !== window.location.pathname || href.search !== window.location.search || !href.hash) return;
 
       const id = decodeURIComponent(href.hash.slice(1));
+      if (id === "main-content") {
+        event.preventDefault();
+        document.getElementById("main-content")?.focus({ preventScroll: true });
+        return;
+      }
       const target = document.getElementById(id);
       const section = target?.closest<HTMLElement>(".story-scene");
       if (!section) return;
@@ -211,10 +216,13 @@ export default function ScrollExperience() {
 
       // Deep links to the form can move within the final scene if needed.
       if (target && target !== section) {
+        const deepLink = `${window.location.pathname}${window.location.search}#${id}`;
+        window.history.replaceState(null, "", deepLink);
         window.setTimeout(() => {
           const position = target.getBoundingClientRect().top - section.getBoundingClientRect().top + section.scrollTop - 22;
           section.scrollTo({ top: Math.max(0, position), behavior: "smooth" });
-        }, 80);
+          if (id === "project-brief") document.getElementById("inquiry-name")?.focus({ preventScroll: true });
+        }, index === activeRef.current && !shell?.dataset.transitioning ? 100 : TRANSITION_DURATION + 60);
       }
     }
 
@@ -262,6 +270,7 @@ export default function ScrollExperience() {
             href={`#${scene.id}`}
             key={scene.id}
             aria-label={`Go to ${scene.label}`}
+            title={`Go to ${scene.label}`}
             aria-current={activeIndex === index ? "location" : undefined}
             className={activeIndex === index ? "is-current" : ""}
           >
@@ -284,10 +293,10 @@ export default function ScrollExperience() {
         >
           Motion {motionEnabled ? "on" : "off"}
         </button>
-        <button type="button" aria-label="Previous scene" disabled={activeIndex === 0} onClick={() => navigateRef.current(activeIndex - 1)}>
+        <button type="button" aria-label="Previous scene" title="Previous section" disabled={activeIndex === 0} onClick={() => navigateRef.current(activeIndex - 1)}>
           <span aria-hidden="true">↑</span>
         </button>
-        <button type="button" aria-label="Next scene" disabled={activeIndex === lastIndex} onClick={() => navigateRef.current(activeIndex + 1)}>
+        <button type="button" aria-label="Next scene" title="Next section" disabled={activeIndex === lastIndex} onClick={() => navigateRef.current(activeIndex + 1)}>
           <span aria-hidden="true">↓</span>
         </button>
       </nav>

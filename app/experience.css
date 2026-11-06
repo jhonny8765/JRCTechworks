@@ -421,15 +421,15 @@ body:has(.story-shell.presentation-ready) {
 .presentation-ready .scene-controls { display: flex; }
 .scene-counter { color: #e9f8ff; font-size: 12px; font-weight: 850; letter-spacing: .09em; margin-right: 8px; }
 .scene-counter span { color: #7d9ab7; }
-.scene-controls button { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(137, 188, 215, .25); background: rgba(52, 107, 145, .24); color: #9ceaf1; font: inherit; font-size: 20px; cursor: pointer; transition: transform 180ms, background 180ms, color 180ms; }
+.scene-controls button { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(137, 188, 215, .25); background: rgba(52, 107, 145, .24); color: #9ceaf1; font: inherit; font-size: 20px; cursor: pointer; transition: transform 180ms, background 180ms, color 180ms; }
 .scene-controls button:not(:disabled):hover { transform: translateY(-2px); background: rgba(99, 196, 215, .26); color: #fff; }
 .scene-controls button:disabled { cursor: not-allowed; opacity: .28; }
 .scene-controls button:focus-visible { outline: 2px solid #97eafa; outline-offset: 2px; }
 .scene-controls .scene-motion-toggle {
   width: auto;
-  min-width: 70px;
-  height: 30px;
-  padding: 0 9px;
+  min-width: 82px;
+  height: 38px;
+  padding: 0 11px;
   border-radius: 999px;
   font-size: 10px;
   font-weight: 800;
