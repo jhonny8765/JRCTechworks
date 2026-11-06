@@ -2,10 +2,10 @@ import SiteHeader from "@/components/site-header";
 import BrowserFrame from "@/components/browser-frame";
 import ArrowIcon from "@/components/arrow-icon";
 import ServiceIcon from "@/components/service-icon";
+import SiteFooter from "@/components/site-footer";
 import { projects } from "@/lib/projects";
 import { services } from "@/lib/services";
-
-const email = "mailto:jhonreyc2001@gmail.com?subject=Project%20inquiry%20for%20JRC%20Techworks";
+import { contactEmail, projectInquiryHref, socialLinks } from "@/lib/contact";
 
 export default function Home() {
   return (
@@ -31,7 +31,7 @@ export default function Home() {
               </p>
               <div className="hero-actions fade-up delay-3">
                 <a className="button primary-button" href="#work">Explore our work <ArrowIcon /></a>
-                <a className="button outline-button" href={email}>Start a project <ArrowIcon diagonal /></a>
+                <a className="button outline-button" href={projectInquiryHref}>Start a project <ArrowIcon diagonal /></a>
               </div>
               <p className="hero-caption fade-up delay-4">
                 <span className="caption-line" aria-hidden="true" />
@@ -103,7 +103,7 @@ export default function Home() {
             </div>
             <div className="services-bottom">
               <p>Have a different idea? We love building around unique workflows.</p>
-              <a href={email}>Tell us what you have in mind <ArrowIcon diagonal /></a>
+              <a href={projectInquiryHref}>Tell us what you have in mind <ArrowIcon diagonal /></a>
             </div>
           </div>
         </section>
@@ -170,19 +170,108 @@ export default function Home() {
                 Thoughtful design, clean engineering, and attention to the little
                 details — that's how an idea becomes something people rely on.
               </p>
-              <a href={email}>Have something in mind? Let's build it <ArrowIcon diagonal /></a>
+              <a href={projectInquiryHref}>Have something in mind? Let's build it <ArrowIcon diagonal /></a>
+            </div>
+          </div>
+        </section>
+
+        <section id="about" className="about-section" aria-labelledby="about-title">
+          <div className="container about-layout">
+            <div className="about-copy">
+              <p className="section-label"><span>04 /</span> WHO WE ARE</p>
+              <h2 id="about-title">Two builders.<br /><em>One shared vision.</em></h2>
+              <p className="about-lead">
+                JRC Techworks is an independent, two-person software studio based in the Philippines.
+                We design and build the websites, applications, and everyday business tools that help ideas move forward.
+              </p>
+              <p className="about-support">
+                Small by design, we keep the conversation close to the work — from understanding a workflow to building something people can actually use.
+              </p>
+              <div className="about-principle">
+                <span className="about-principle-mark" aria-hidden="true">✳</span>
+                <span>OUR FOCUS</span>
+                <strong>Make useful technology feel effortless.</strong>
+              </div>
+            </div>
+
+            <div className="team-panel" aria-label="Meet the JRC Techworks team">
+              <div className="team-panel-top">
+                <span>THE PEOPLE BEHIND THE BUILD</span>
+                <span className="team-count">02 <small>/ BUILDERS</small></span>
+              </div>
+              <div className="team-orbit" aria-hidden="true">
+                <div className="team-orbit-ring team-orbit-ring-one" />
+                <div className="team-orbit-ring team-orbit-ring-two" />
+                <div className="team-orbit-initial team-orbit-initial-one">JRC</div>
+                <div className="team-orbit-initial team-orbit-initial-two">02</div>
+                <span className="team-orbit-caption">IDEAS × DESIGN × DEVELOPMENT</span>
+              </div>
+              <div className="team-list">
+                <div className="team-member">
+                  <span className="team-member-index">01</span>
+                  <div>
+                    <strong>Jhon Rey Consolacion</strong>
+                    <p>Developer &amp; automation builder</p>
+                  </div>
+                  <span className="team-member-dot" aria-hidden="true" />
+                </div>
+                <div className="team-member">
+                  <span className="team-member-index">02</span>
+                  <div>
+                    <strong>Studio collaborator</strong>
+                    <p>Second member of JRC Techworks</p>
+                  </div>
+                  <span className="team-member-dot" aria-hidden="true" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="contact" className="contact-section" aria-labelledby="contact-title">
+          <div className="container">
+            <div className="contact-panel">
+              <div className="contact-copy">
+                <p className="section-label"><span>05 /</span> LET'S CONNECT</p>
+                <h2 id="contact-title">Have a project<br />in mind?<br /><em>Let's make it work.</em></h2>
+                <p>
+                  A website, a custom system, or a workflow you wish could run itself?
+                  Tell us what you have in mind and we can talk through the next steps.
+                </p>
+                <a className="button primary-button contact-primary" href={projectInquiryHref}>
+                  Start a conversation <ArrowIcon diagonal />
+                </a>
+                <a className="contact-email-address" href={projectInquiryHref}>{contactEmail}</a>
+              </div>
+              <div className="contact-console">
+                <div className="contact-console-header">
+                  <span className="contact-console-light" />
+                  <span>DIRECT CONNECTIONS</span>
+                  <span className="contact-console-status">OPEN TO IDEAS</span>
+                </div>
+                <div className="contact-console-body">
+                  <p className="contact-console-intro">Choose how you want to reach us.</p>
+                  <a className="contact-channel" href={projectInquiryHref}>
+                    <span className="channel-glyph" aria-hidden="true">@</span>
+                    <span className="channel-copy"><strong>Email</strong><small>{contactEmail}</small></span>
+                    <ArrowIcon diagonal />
+                  </a>
+                  {socialLinks.map((link) => (
+                    <a className="contact-channel" href={link.href} key={link.label} target="_blank" rel="noopener noreferrer">
+                      <span className="channel-glyph" aria-hidden="true">{link.monogram}</span>
+                      <span className="channel-copy"><strong>{link.label}</strong><small>{link.detail}</small></span>
+                      <ArrowIcon diagonal />
+                    </a>
+                  ))}
+                  <p className="contact-console-note"><span aria-hidden="true">✳</span> Real conversation, no automated inquiry form.</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="footer">
-        <div className="container footer-row">
-          <a href="#top" className="footer-logo">JRC<span>TECHWORKS</span></a>
-          <p>Building technology that works for you.</p>
-          <span>© {new Date().getFullYear()} JRC Techworks</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

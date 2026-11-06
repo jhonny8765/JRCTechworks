@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { projectInquiryHref } from "@/lib/contact";
 
 const navLinks = [
   { label: "Home", href: "/#top" },
   { label: "Services", href: "/#services" },
   { label: "Our work", href: "/#work" },
-  { label: "Approach", href: "/#approach" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function SiteHeader() {
@@ -37,7 +39,7 @@ export default function SiteHeader() {
 
         <a
           className="header-contact"
-          href="mailto:jhonreyc2001@gmail.com?subject=Project%20inquiry%20for%20JRC%20Techworks"
+          href={projectInquiryHref}
         >
           Let's talk
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -67,7 +69,7 @@ export default function SiteHeader() {
           <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
         ))}
         <a
-          href="mailto:jhonreyc2001@gmail.com?subject=Project%20inquiry%20for%20JRC%20Techworks"
+          href={projectInquiryHref}
           onClick={() => setMenuOpen(false)}
         >Start a project</a>
       </nav>

@@ -1,6 +1,7 @@
 import SiteHeader from "@/components/site-header";
 import BrowserFrame from "@/components/browser-frame";
 import ArrowIcon from "@/components/arrow-icon";
+import SiteFooter from "@/components/site-footer";
 import type { Project } from "@/lib/projects";
 
 export default function CaseStudyPage({
@@ -120,13 +121,7 @@ export default function CaseStudyPage({
           </div>
         </section>
       </main>
-      <footer className="footer">
-        <div className="container footer-row">
-          <a href="/" className="footer-logo">JRC<span>TECHWORKS</span></a>
-          <p>Building technology that works for you.</p>
-          <a href="/#work" className="footer-back">← All projects</a>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
