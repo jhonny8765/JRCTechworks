@@ -25,6 +25,7 @@ The homepage uses screenshots supplied by the project owner:
 - Phase 5: Responsive, accessibility, and source-level performance checks with targeted fixes.
 - Phase 6: Published on Cloudflare Pages at https://jrc-techworks.pages.dev.
 - Phase 7: Search and sharing metadata, canonical URLs, sitemap, robots rules, and a branded social preview.
+- Phase 8: Clear three-step studio process, direct live-product links on case studies, and a consistent brand guide.
 
 The GitHub repository is the source of truth. Cloudflare Pages is connected to its `main` branch.
 
@@ -50,3 +51,4 @@ the other member remains unnamed until their public identity is confirmed.
 See [`docs/phase-5-qa.md`](docs/phase-5-qa.md) for the Phase 5 test matrix,
 issues fixed, verified image sizes, and remaining limitations.
 See [`docs/phase-7-seo.md`](docs/phase-7-seo.md) for SEO checks and optional indexing steps.
+See [`docs/brand-guide.md`](docs/brand-guide.md) for the Phase 8 identity, design, and content guidance.

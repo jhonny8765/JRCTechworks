@@ -158,19 +158,37 @@ export default function Home() {
         </section>
 
         <section id="approach" className="approach-section" aria-labelledby="approach-title">
-          <div className="container approach-layout">
-            <div>
-              <p className="section-label"><span>03 /</span> OUR APPROACH</p>
-              <h2 id="approach-title">Good technology<br /><em>gets out of the way.</em></h2>
+          <div className="container">
+            <div className="approach-layout">
+              <div>
+                <p className="section-label"><span>03 /</span> HOW WE WORK</p>
+                <h2 id="approach-title">Good technology<br /><em>starts with listening.</em></h2>
+              </div>
+              <div className="approach-text">
+                <p>
+                  Every business works differently. We start with the people and the
+                  problem, then shape the design and software around what matters.
+                </p>
+                <a href={projectInquiryHref}>Tell us what you're building <ArrowIcon diagonal /></a>
+              </div>
             </div>
-            <div className="approach-text">
-              <p>
-                Useful software starts by understanding the people who will use it.
-                Thoughtful design, clean engineering, and attention to the little
-                details — that's how an idea becomes something people rely on.
-              </p>
-              <a href={projectInquiryHref}>Have something in mind? Let's build it <ArrowIcon diagonal /></a>
-            </div>
+            <ol className="approach-steps" aria-label="Our three-step approach">
+              <li className="approach-step">
+                <span className="approach-step-index">01 / DISCOVER</span>
+                <h3>Understand the work.</h3>
+                <p>We talk through your goals, the people using the tool, and where the current process gets difficult.</p>
+              </li>
+              <li className="approach-step">
+                <span className="approach-step-index">02 / MAKE</span>
+                <h3>Design and build.</h3>
+                <p>We turn the workflow into clear screens and working features you can review as the idea takes shape.</p>
+              </li>
+              <li className="approach-step">
+                <span className="approach-step-index">03 / REFINE</span>
+                <h3>Make it useful.</h3>
+                <p>We review the experience with you, refine the important details, and keep the next steps clear.</p>
+              </li>
+            </ol>
           </div>
         </section>
 

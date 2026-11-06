@@ -108,6 +108,19 @@ export default function CaseStudyPage({
           </div>
         </section>
 
+        <section className="case-live-section" aria-labelledby="case-live-title">
+          <div className="container case-live-layout">
+            <div>
+              <p className="section-label"><span>04 /</span> SEE IT FOR YOURSELF</p>
+              <h2 id="case-live-title">A real product, not a mockup.</h2>
+              <p>The screenshots above come from the public-facing project. You can open the live website and see the experience directly.</p>
+            </div>
+            <a className="button outline-button case-live-link" href={project.url} target="_blank" rel="noopener noreferrer">
+              Explore {project.title} <ArrowIcon diagonal />
+            </a>
+          </div>
+        </section>
+
         <section className="case-next-section" aria-label="Next project">
           <div className="container case-next-grid">
             <div>
