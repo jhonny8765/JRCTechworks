@@ -424,6 +424,24 @@ body:has(.story-shell.presentation-ready) {
 .scene-controls button:disabled { cursor: not-allowed; opacity: .28; }
 .scene-controls button:focus-visible { outline: 2px solid #97eafa; outline-offset: 2px; }
 
+@media (min-width: 1101px) {
+  .scene-controls {
+    top: 96px;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1101px) and (max-width: 1400px) {
+  .scene-rail { right: 4px; padding: 10px 2px; border: 0; background: rgba(10, 18, 31, .7); }
+  .scene-rail a { width: 30px; min-height: 28px; justify-content: center; gap: 0; }
+  .scene-rail-index { display: none; }
+  .scene-rail-bar { width: 12px; }
+  .scene-rail .is-current .scene-rail-bar { width: 22px; }
+}
+
 @media (max-width: 900px) {
   .story-shell.presentation-ready .story-main { inset: 76px 0 0; }
   .story-shell.presentation-ready .story-scene .scene-frame { padding-top: 28px; padding-bottom: 64px; }
