@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: siteName,
   alternates: { canonical: "/" },
+  verification: { google: "oDnGoRP8wlV08lpXtKHJjozyPSXbnnReOTN_o0EF0Ow" },
   icons: { icon: "/favicon.svg" },
   robots: { index: true, follow: true },
   openGraph: {
