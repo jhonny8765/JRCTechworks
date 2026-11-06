@@ -11,8 +11,7 @@ const scenes = [
 ] as const;
 
 const lastIndex = scenes.length - 1;
-const TRANSITION_DURATION = 1300;
-const TRANSITION_EASING = "cubic-bezier(.48, .05, .18, 1)";
+const TRANSITION_DURATION = 1100;
 
 function indexFromHash(hash: string): number {
   const id = decodeURIComponent(hash.replace(/^#/, ""));
@@ -80,30 +79,16 @@ export default function ScrollExperience() {
     setMotionEnabled(initialMotion);
     shell.classList.toggle("motion-disabled", !initialMotion);
     shell.classList.remove("motion-user-enabled");
-    const supportsKeyframes = sections.every((section) => typeof section.animate === "function");
-    shell.classList.toggle("motion-scripted", supportsKeyframes);
-
     let lockedUntil = 0;
     let lastWheelAt = 0;
     let wheelConsumed = false;
     let touchY: number | null = null;
     let touchTarget: EventTarget | null = null;
-    let runningAnimations: Animation[] = [];
     let finishTimer: number | null = null;
 
-    function clearAnimations() {
+    function clearTransition() {
       if (finishTimer !== null) window.clearTimeout(finishTimer);
       finishTimer = null;
-      const oldAnimations = runningAnimations;
-      runningAnimations = [];
-      oldAnimations.forEach((animation) => {
-        animation.onfinish = null;
-        animation.cancel();
-      });
-      sections.forEach((section) => {
-        section.style.removeProperty("visibility");
-        section.style.removeProperty("z-index");
-      });
       delete shell?.dataset.transitioning;
     }
 
@@ -112,7 +97,7 @@ export default function ScrollExperience() {
       const wasReady = shell?.classList.contains("presentation-ready");
       if (activeRef.current === next && wasReady) return;
       const previous = activeRef.current;
-      clearAnimations();
+      clearTransition();
 
       activeRef.current = next;
       setActiveIndex(next);
@@ -126,44 +111,15 @@ export default function ScrollExperience() {
       });
 
       shell?.style.setProperty("--active-scene", String(next));
+      // The main track is exactly one viewport high; every child panel is
+      // another viewport high. Moving the ONE track by 100% per section gives
+      // continuous real movement without swapping hidden layers or fading.
+      shell?.style.setProperty("--scene-offset", `${next * -100}%`);
 
-      if (wasReady && motionRef.current && supportsKeyframes && previous !== next) {
-        // Move both complete screens together. The old fade/28% exit looked
-        // like a flash when the entering panel was still below the viewport.
+      if (wasReady && motionRef.current && previous !== next) {
         const direction = next > previous ? 1 : -1;
-        const outgoing = sections[previous];
-        const incoming = sections[next];
-        outgoing.style.visibility = "visible";
-        outgoing.style.zIndex = "3";
-        incoming.style.visibility = "visible";
-        incoming.style.zIndex = "4";
         if (shell) shell.dataset.transitioning = direction > 0 ? "forward" : "backward";
-
-        const timing: KeyframeAnimationOptions = {
-          duration: TRANSITION_DURATION,
-          easing: TRANSITION_EASING,
-          fill: "both",
-        };
-        const enterAnimation = incoming.animate([
-          { transform: `translate3d(0, ${direction * 100}%, 0)`, opacity: 1 },
-          { transform: "translate3d(0, 0, 0)", opacity: 1 },
-        ], timing);
-        const exitAnimation = outgoing.animate([
-          { transform: "translate3d(0, 0, 0)", opacity: 1 },
-          { transform: `translate3d(0, ${direction * -100}%, 0)`, opacity: 1 },
-        ], timing);
-
-        runningAnimations = [enterAnimation, exitAnimation];
-        let finished = 0;
-        runningAnimations.forEach((animation) => {
-          animation.onfinish = () => {
-            finished += 1;
-            if (finished === 2) clearAnimations();
-          };
-        });
-        // Background tabs can suspend animation finish events. Do not leave
-        // scrolling locked if the browser misses one of them.
-        finishTimer = window.setTimeout(clearAnimations, TRANSITION_DURATION + 150);
+        finishTimer = window.setTimeout(clearTransition, TRANSITION_DURATION + 80);
       }
 
       if (method !== "none") {
@@ -191,7 +147,7 @@ export default function ScrollExperience() {
       if (now - lastWheelAt > 340) wheelConsumed = false;
       lastWheelAt = now;
 
-      if (wheelConsumed || now < lockedUntil || runningAnimations.length > 0 || Math.abs(event.deltaY) < 5) return;
+      if (wheelConsumed || now < lockedUntil || Math.abs(event.deltaY) < 5) return;
       wheelConsumed = true;
       lockedUntil = now + (motionRef.current ? TRANSITION_DURATION + 160 : 400);
       setScene(activeRef.current + direction);
@@ -223,7 +179,7 @@ export default function ScrollExperience() {
       if (touchY === null || !event.changedTouches.length) return;
       const distance = touchY - event.changedTouches[0].clientY;
       touchY = null;
-      if (Math.abs(distance) < 65 || isInteractive(touchTarget) || runningAnimations.length > 0) return;
+      if (Math.abs(distance) < 65 || isInteractive(touchTarget) || shell?.dataset.transitioning) return;
 
       const direction = Math.sign(distance);
       const current = sections[activeRef.current];
@@ -272,7 +228,7 @@ export default function ScrollExperience() {
 
     return () => {
       window.history.scrollRestoration = previousRestoration;
-      clearAnimations();
+      clearTransition();
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("touchstart", onTouchStart);
@@ -281,8 +237,9 @@ export default function ScrollExperience() {
       window.removeEventListener("popstate", onHistoryChange);
       window.removeEventListener("hashchange", onHistoryChange);
       shell.classList.remove("presentation-ready");
-      shell.classList.remove("motion-scripted", "motion-disabled", "motion-user-enabled");
+      shell.classList.remove("motion-disabled", "motion-user-enabled");
       shell.style.removeProperty("--active-scene");
+      shell.style.removeProperty("--scene-offset");
       sections.forEach((section) => {
         section.inert = false;
         section.removeAttribute("aria-hidden");

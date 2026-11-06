@@ -246,14 +246,17 @@ body:has(.story-shell.presentation-ready) {
   position: absolute;
   inset: 79px 0 0;
   height: auto;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
+  transform: translate3d(0, var(--scene-offset, 0%), 0);
+  transition: transform 1100ms cubic-bezier(.58, .05, .2, 1);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .story-shell.presentation-ready .story-scene {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  position: relative;
+  inset: auto;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -265,47 +268,25 @@ body:has(.story-shell.presentation-ready) {
   scrollbar-color: rgba(98, 203, 231, .25) transparent;
   scroll-snap-align: none;
   border-bottom: 0;
-  transform: translate3d(0, 105%, 0) scale(.988);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    transform 900ms cubic-bezier(.76, 0, .2, 1),
-    opacity 680ms ease,
-    visibility 0s linear 900ms;
-  will-change: transform, opacity;
-}
-
-.story-shell.presentation-ready .story-scene[data-slide-state="before"] {
-  transform: translate3d(0, -105%, 0) scale(.988);
-}
-
-.story-shell.presentation-ready .story-scene[data-slide-state="after"] {
-  transform: translate3d(0, 105%, 0) scale(.988);
-}
-
-.story-shell.presentation-ready .story-scene[data-slide-state="active"] {
-  z-index: 2;
-  transform: translate3d(0, 0, 0) scale(1);
+  transform: none;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition:
-    transform 900ms cubic-bezier(.76, 0, .2, 1),
-    opacity 650ms ease,
-    visibility 0s;
-}
-
-/* The scripted scene timelines own the movement; CSS is a no-JS fallback. */
-.story-shell.presentation-ready.motion-scripted .story-scene,
-.story-shell.presentation-ready.motion-scripted .story-scene[data-slide-state="active"] {
   transition: none;
+  will-change: auto;
 }
 
-.story-shell.presentation-ready.motion-disabled .story-scene,
-.story-shell.presentation-ready.motion-disabled .story-scene[data-slide-state="active"] {
+.story-shell.presentation-ready .story-scene:not([data-slide-state="active"]) {
+  pointer-events: none;
+}
+
+.story-shell.presentation-ready .story-scene[data-slide-state="active"] {
+  pointer-events: auto;
+}
+
+/* Only the single slide track moves. All panels stay rendered and stacked. */
+.story-shell.presentation-ready.motion-disabled .story-main {
   transition: none !important;
-  transform: none !important;
 }
 
 .story-shell.presentation-ready .story-scene .scene-frame {
@@ -498,8 +479,7 @@ body:has(.story-shell.presentation-ready) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene,
-  .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene[data-slide-state="active"],
+  .story-shell.presentation-ready:not(.motion-user-enabled) .story-main,
   .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene [data-reveal],
   .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene[data-slide-state="active"] [data-reveal] {
     transition: none !important;
