@@ -34,14 +34,14 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .motion-enabled .story-shell [data-reveal].is-visible { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 .motion-enabled .story-shell .scene-heading + [data-reveal] { transition-delay: 110ms; }
 .scene-rail { position: fixed; top: 50%; right: 16px; transform: translateY(-50%); z-index: 50; display: flex; flex-direction: column; gap: 2px; align-items: flex-end; padding: 16px 12px 15px 17px; border: 1px solid rgba(126, 178, 213, .15); border-radius: 13px; background: rgba(10, 18, 31, .83); backdrop-filter: blur(22px); box-shadow: 0 13px 45px rgba(0, 0, 0, .2); }
-.scene-rail-caption, .scene-rail-end { color: #6485a7; font-size: 8px; font-weight: 800; letter-spacing: .13em; margin: 3px 0 12px; }
-.scene-rail-end { margin: 13px 0 3px; font-size: 7px; }
+.scene-rail-caption, .scene-rail-end { color: #8aacc5; font-size: 10px; font-weight: 800; letter-spacing: .13em; margin: 3px 0 12px; }
+.scene-rail-end { margin: 13px 0 3px; font-size: 9px; }
 .scene-rail a { display: flex; align-items: center; justify-content: flex-end; width: 135px; min-height: 32px; gap: 10px; color: #8195b0; transition: color 200ms; }
 .scene-rail a:hover, .scene-rail a.is-current { color: #e8f8ff; }
-.scene-rail-index { font-size: 9px; font-weight: 800; }
+.scene-rail-index { font-size: 10px; font-weight: 800; }
 .scene-rail-bar { width: 19px; height: 2px; background: #455a73; border-radius: 8px; transition: width 240ms, background 240ms, box-shadow 240ms; }
 .scene-rail .is-current .scene-rail-bar { background: #75deed; width: 34px; box-shadow: 0 0 16px rgba(102, 222, 238, .42); }
-.scene-rail-name { min-width: 39px; text-align: right; font-size: 9px; font-weight: 700; }
+.scene-rail-name { min-width: 39px; text-align: right; font-size: 11px; font-weight: 700; }
 
 /* The selected project replaces the long stack of portfolio cards. */
 .work-showcase { min-width: 0; }
@@ -80,7 +80,9 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .service-option.is-active { color: #f4fdff; border-color: rgba(98, 219, 237, .47); background: linear-gradient(95deg, rgba(43, 115, 142, .32), rgba(25, 38, 62, .65)); }
 .service-option:focus-visible, .work-switcher button:focus-visible, .studio-tabs button:focus-visible { outline: 2px solid #82e4f1; outline-offset: 3px; }
 .service-option-number { color: #6895b1; font-size: 10px; font-weight: 820; }
-.service-option-arrow { margin-left: auto; color: #6899b3; font-size: 17px; }
+.service-option-arrow { display: inline-flex; align-items: center; justify-content: center; margin-left: auto; color: #83b9d0; }
+.service-option-arrow svg { width: 16px; height: 16px; transition: transform 200ms ease; }
+.service-option:hover .service-option-arrow svg, .service-option.is-active .service-option-arrow svg { transform: translate(2px, -2px); }
 .service-option.is-active .service-option-arrow { color: #75e3ed; }
 .service-stage { min-width: 0; min-height: 441px; position: relative; isolation: isolate; display: flex; flex-direction: column; overflow: hidden; padding: 35px 43px; border: 1px solid rgba(123, 191, 220, .3); border-radius: 18px; background: radial-gradient(ellipse at 105% 5%, rgba(64, 173, 196, .14), transparent 46%), linear-gradient(145deg, #16283e, #0b1727 75%); animation: scene-panel-in 450ms both; }
 .service-stage::before { content: ""; position: absolute; z-index: -1; inset: 0; background-image: radial-gradient(circle, rgba(114, 197, 222, .12) 1px, transparent 1px); background-size: 23px 23px; mask-image: linear-gradient(110deg, transparent, black 80%); }
@@ -396,7 +398,7 @@ body:has(.story-shell.presentation-ready) {
 .story-shell.presentation-ready > .footer { display: none; }
 
 .story-shell.presentation-ready .scene-scroll-cue { bottom: 18px; }
-.story-shell.presentation-ready .scene-scroll-cue span:first-child::after { content: " / SWIPE"; }
+.story-shell.presentation-ready .scene-scroll-cue { font-size: 10px; letter-spacing: .12em; }
 
 /* Always-visible controls also make the presentation usable without a wheel. */
 .scene-controls {
@@ -485,11 +487,35 @@ body:has(.story-shell.presentation-ready) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .story-shell.presentation-ready:not(.motion-user-enabled) .story-main,
+  .story-shell.presentation-ready:not(.motion-user-enabled) .story-main { transition: none !important; }
   .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene [data-reveal],
   .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene[data-slide-state="active"] [data-reveal] {
     transition: none !important;
     transform: none !important;
+    opacity: 1 !important;
   }
   .story-shell.presentation-ready .scene-scroll-cue span:last-child { animation: none; }
+}
+
+/* Keep the full contact journey visible on common desktop laptop displays. */
+@media (min-width: 1101px) and (min-height: 760px) {
+  .story-shell.presentation-ready .scene-contact .scene-frame { padding-top: 12px; padding-bottom: 12px; }
+  .story-shell.presentation-ready .scene-contact .contact-panel { padding: 18px 25px; }
+  .story-shell.presentation-ready .scene-contact .contact-copy h3 { margin-bottom: 13px; }
+  .story-shell.presentation-ready .scene-contact .contact-primary { margin-top: 17px; }
+  .story-shell.presentation-ready .scene-contact .contact-copy > p.contact-alternative { margin-top: 16px !important; }
+  .story-shell.presentation-ready .scene-contact .inquiry-heading { padding: 12px 21px; }
+  .story-shell.presentation-ready .scene-contact .inquiry-form { padding: 15px 21px 14px; }
+  .story-shell.presentation-ready .scene-contact .inquiry-intro { margin-bottom: 13px; }
+  .story-shell.presentation-ready .scene-contact .inquiry-field { gap: 5px; margin-bottom: 11px; }
+  .story-shell.presentation-ready .scene-contact .inquiry-field input,
+  .story-shell.presentation-ready .scene-contact .inquiry-field select,
+  .story-shell.presentation-ready .scene-contact .inquiry-field textarea { padding: 9px 12px; }
+  .story-shell.presentation-ready .scene-contact .inquiry-field textarea { min-height: 76px; }
+  .story-shell.presentation-ready .scene-contact .inquiry-submit { min-height: 42px; }
+  .story-shell.presentation-ready .scene-contact .inquiry-privacy { margin-top: 8px; }
+  .story-shell.presentation-ready .scene-contact .contact-channels { margin-top: 8px; }
+  .story-shell.presentation-ready .scene-contact .contact-console-header { padding: 9px 18px; }
+  .story-shell.presentation-ready .scene-contact .contact-channel-grid { padding: 9px; }
+  .story-shell.presentation-ready .scene-contact .contact-channel-grid .contact-channel { padding: 8px 11px; }
 }

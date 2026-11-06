@@ -24,16 +24,17 @@ export default function ServicesExplorer() {
             key={item.number}
             onClick={() => setSelected(index)}
             onKeyDown={(event) => {
-              if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+              if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) return;
               event.preventDefault();
-              const next = (selected + (event.key === "ArrowDown" ? 1 : -1) + services.length) % services.length;
+              const forward = event.key === "ArrowDown" || event.key === "ArrowRight";
+              const next = (selected + (forward ? 1 : -1) + services.length) % services.length;
               setSelected(next);
               document.getElementById(`service-tab-${next}`)?.focus();
             }}
           >
             <span className="service-option-number">{item.number}</span>
             <span>{item.title}</span>
-            <span className="service-option-arrow" aria-hidden="true">↗</span>
+            <span className="service-option-arrow" aria-hidden="true"><ArrowIcon diagonal /></span>
           </button>
         ))}
       </div>
@@ -49,7 +50,11 @@ export default function ServicesExplorer() {
           <div className="service-stage-tags">
             {service.deliverables.map((item) => <span key={item}>{item}</span>)}
           </div>
-          <a className="service-stage-link" href={`/?service=${encodeURIComponent(service.title)}#contact`}>
+          <a
+            className="service-stage-link"
+            href="#contact"
+            onClick={() => window.dispatchEvent(new CustomEvent("jrc:servicechange", { detail: service.title }))}
+          >
             Let's build this <ArrowIcon diagonal />
           </a>
         </div>

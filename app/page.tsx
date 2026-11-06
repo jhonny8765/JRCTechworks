@@ -67,7 +67,7 @@ export default function Home() {
             </div>
           </div>
           <a className="scene-scroll-cue" href="#work" aria-label="Scroll to selected work">
-            <span>SCROLL TO EXPLORE</span><span aria-hidden="true">↓</span>
+            <span>SCROLL OR SWIPE TO ADVANCE</span><span aria-hidden="true">↓</span>
           </a>
         </section>
 

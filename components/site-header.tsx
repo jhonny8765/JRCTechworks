@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const navLinks = [
   { label: "Home", href: "/#top" },
@@ -12,6 +12,21 @@ const navLinks = [
 
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeScene, setActiveScene] = useState("top");
+
+  useEffect(() => {
+    const current = document.querySelector<HTMLElement>(".story-shell")?.dataset.currentScene;
+    if (current) setActiveScene(current);
+
+    function onSceneChange(event: Event) {
+      if (event instanceof CustomEvent && typeof event.detail === "string") {
+        setActiveScene(event.detail);
+      }
+    }
+
+    window.addEventListener("jrc:scenechange", onSceneChange);
+    return () => window.removeEventListener("jrc:scenechange", onSceneChange);
+  }, []);
 
   return (
     <header className="site-header" onKeyDown={(event) => { if (event.key === "Escape") setMenuOpen(false); }}>
@@ -33,7 +48,7 @@ export default function SiteHeader() {
 
         <nav className="desktop-nav" aria-label="Main navigation">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href}>{link.label}</a>
+            <a key={link.href} href={link.href} aria-current={activeScene === link.href.split("#")[1] ? "location" : undefined}>{link.label}</a>
           ))}
         </nav>
 
@@ -66,7 +81,7 @@ export default function SiteHeader() {
         inert={!menuOpen}
       >
         {navLinks.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
+          <a key={link.href} href={link.href} aria-current={activeScene === link.href.split("#")[1] ? "location" : undefined} onClick={() => setMenuOpen(false)}>{link.label}</a>
         ))}
         <a
           href="/#contact"

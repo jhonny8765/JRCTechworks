@@ -27,6 +27,15 @@ export default function ProjectInquiryForm() {
     if (requestedService && serviceNames.some((option) => option === requestedService)) {
       setService(requestedService);
     }
+
+    function onServiceChange(event: Event) {
+      if (event instanceof CustomEvent && typeof event.detail === "string" && serviceNames.some((option) => option === event.detail)) {
+        setService(event.detail);
+      }
+    }
+
+    window.addEventListener("jrc:servicechange", onServiceChange);
+    return () => window.removeEventListener("jrc:servicechange", onServiceChange);
   }, []);
 
   function briefText() {

@@ -111,6 +111,8 @@ export default function ScrollExperience() {
       });
 
       shell?.style.setProperty("--active-scene", String(next));
+      if (shell) shell.dataset.currentScene = scenes[next].id;
+      window.dispatchEvent(new CustomEvent("jrc:scenechange", { detail: scenes[next].id }));
       // The main track is exactly one viewport high; every child panel is
       // another viewport high. Moving the ONE track by 100% per section gives
       // continuous real movement without swapping hidden layers or fading.
@@ -240,6 +242,7 @@ export default function ScrollExperience() {
       shell.classList.remove("motion-disabled", "motion-user-enabled");
       shell.style.removeProperty("--active-scene");
       shell.style.removeProperty("--scene-offset");
+      delete shell.dataset.currentScene;
       sections.forEach((section) => {
         section.inert = false;
         section.removeAttribute("aria-hidden");
