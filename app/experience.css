@@ -296,6 +296,18 @@ body:has(.story-shell.presentation-ready) {
     visibility 0s;
 }
 
+/* The scripted scene timelines own the movement; CSS is a no-JS fallback. */
+.story-shell.presentation-ready.motion-scripted .story-scene,
+.story-shell.presentation-ready.motion-scripted .story-scene[data-slide-state="active"] {
+  transition: none;
+}
+
+.story-shell.presentation-ready.motion-disabled .story-scene,
+.story-shell.presentation-ready.motion-disabled .story-scene[data-slide-state="active"] {
+  transition: none !important;
+  transform: none !important;
+}
+
 .story-shell.presentation-ready .story-scene .scene-frame {
   width: 100%;
   padding-top: clamp(25px, 3.1vh, 38px);
@@ -423,6 +435,18 @@ body:has(.story-shell.presentation-ready) {
 .scene-controls button:not(:disabled):hover { transform: translateY(-2px); background: rgba(99, 196, 215, .26); color: #fff; }
 .scene-controls button:disabled { cursor: not-allowed; opacity: .28; }
 .scene-controls button:focus-visible { outline: 2px solid #97eafa; outline-offset: 2px; }
+.scene-controls .scene-motion-toggle {
+  width: auto;
+  min-width: 70px;
+  height: 30px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  background: rgba(82, 144, 170, .16);
+}
+.scene-controls .scene-motion-toggle[aria-pressed="false"] { color: #98a7ba; }
 
 @media (min-width: 1101px) {
   .scene-controls {
@@ -474,10 +498,10 @@ body:has(.story-shell.presentation-ready) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .story-shell.presentation-ready .story-scene,
-  .story-shell.presentation-ready .story-scene[data-slide-state="active"],
-  .story-shell.presentation-ready .story-scene [data-reveal],
-  .story-shell.presentation-ready .story-scene[data-slide-state="active"] [data-reveal] {
+  .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene,
+  .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene[data-slide-state="active"],
+  .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene [data-reveal],
+  .story-shell.presentation-ready:not(.motion-user-enabled) .story-scene[data-slide-state="active"] [data-reveal] {
     transition: none !important;
     transform: none !important;
   }

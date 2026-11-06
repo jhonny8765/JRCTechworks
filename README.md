@@ -28,7 +28,7 @@ The homepage uses screenshots supplied by the project owner:
 - Phase 8: Clear three-step studio process, direct live-product links on case studies, and a consistent brand guide.
 - Phase 9: Service-specific project inquiry links, a guided email brief, and clearer calls to action across the site.
 - Phase 10: Custom domain was intentionally skipped; the free `pages.dev` address stays in use.
-- Phase 11: Experience redesign — a five-scene animated slideshow with directional wheel, touch, keyboard, and button navigation; switchable work/services/studio views; and internally scrollable content when needed on small screens.
+- Phase 11: Experience redesign — a five-scene animated slideshow with explicit directional scene animations, a user-controlled motion toggle, wheel/touch/keyboard/button navigation, switchable work/services/studio views, and internally scrollable content when needed on small screens.
 
 The GitHub repository is the source of truth. Cloudflare Pages is connected to its `main` branch.
 

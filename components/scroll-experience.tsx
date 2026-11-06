@@ -11,6 +11,8 @@ const scenes = [
 ] as const;
 
 const lastIndex = scenes.length - 1;
+const TRANSITION_DURATION = 1180;
+const TRANSITION_EASING = "cubic-bezier(.68, 0, .18, 1)";
 
 function indexFromHash(hash: string): number {
   const id = decodeURIComponent(hash.replace(/^#/, ""));
@@ -48,8 +50,24 @@ function canScrollWithinScene(target: EventTarget | null, section: HTMLElement, 
 
 export default function ScrollExperience() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [motionEnabled, setMotionEnabled] = useState(true);
   const activeRef = useRef(0);
+  const motionRef = useRef(true);
   const navigateRef = useRef<(index: number, method?: "push" | "replace" | "none") => void>(() => {});
+
+  function toggleMotion() {
+    const enabled = !motionRef.current;
+    motionRef.current = enabled;
+    setMotionEnabled(enabled);
+    const shell = document.querySelector<HTMLElement>(".story-shell");
+    shell?.classList.toggle("motion-disabled", !enabled);
+    shell?.classList.toggle("motion-user-enabled", enabled);
+    try {
+      window.localStorage.setItem("jrc-slide-motion", enabled ? "on" : "off");
+    } catch {
+      // Storage can be disabled in private browsing; the toggle still works.
+    }
+  }
 
   useEffect(() => {
     const shell = document.querySelector<HTMLElement>(".story-shell");
@@ -58,15 +76,48 @@ export default function ScrollExperience() {
 
     const previousRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let storedMotion: string | null = null;
+    try {
+      storedMotion = window.localStorage.getItem("jrc-slide-motion");
+    } catch {
+      // Continue with the system preference when storage is unavailable.
+    }
+    const initialMotion = storedMotion === "on" || (storedMotion !== "off" && !reducedMotion);
+    motionRef.current = initialMotion;
+    setMotionEnabled(initialMotion);
+    shell.classList.toggle("motion-disabled", !initialMotion);
+    shell.classList.toggle("motion-user-enabled", storedMotion === "on");
+    const supportsKeyframes = sections.every((section) => typeof section.animate === "function");
+    shell.classList.toggle("motion-scripted", supportsKeyframes);
+
     let lockedUntil = 0;
     let lastWheelAt = 0;
     let wheelConsumed = false;
     let touchY: number | null = null;
     let touchTarget: EventTarget | null = null;
+    let runningAnimations: Animation[] = [];
+
+    function clearAnimations() {
+      const oldAnimations = runningAnimations;
+      runningAnimations = [];
+      oldAnimations.forEach((animation) => {
+        animation.onfinish = null;
+        animation.cancel();
+      });
+      sections.forEach((section) => {
+        section.style.removeProperty("visibility");
+        section.style.removeProperty("z-index");
+      });
+      delete shell?.dataset.transitioning;
+    }
 
     function setScene(index: number, method: "push" | "replace" | "none" = "replace") {
       const next = Math.max(0, Math.min(lastIndex, index));
-      if (activeRef.current === next && shell?.classList.contains("presentation-ready")) return;
+      const wasReady = shell?.classList.contains("presentation-ready");
+      if (activeRef.current === next && wasReady) return;
+      const previous = activeRef.current;
+      clearAnimations();
 
       activeRef.current = next;
       setActiveIndex(next);
@@ -80,6 +131,44 @@ export default function ScrollExperience() {
       });
 
       shell?.style.setProperty("--active-scene", String(next));
+
+      if (wasReady && motionRef.current && supportsKeyframes && previous !== next) {
+        // Real timelines keep both scenes painted for the whole movement. A hidden
+        // CSS layer can otherwise appear as an instant flash on some browsers.
+        const direction = next > previous ? 1 : -1;
+        const outgoing = sections[previous];
+        const incoming = sections[next];
+        outgoing.style.visibility = "visible";
+        outgoing.style.zIndex = "3";
+        incoming.style.visibility = "visible";
+        incoming.style.zIndex = "4";
+        if (shell) shell.dataset.transitioning = direction > 0 ? "forward" : "backward";
+
+        const timing: KeyframeAnimationOptions = {
+          duration: TRANSITION_DURATION,
+          easing: TRANSITION_EASING,
+          fill: "both",
+        };
+        const enterAnimation = incoming.animate([
+          { transform: `translate3d(0, ${direction * 105}%, 0) scale(.988)`, opacity: 0.45 },
+          { transform: `translate3d(0, ${direction * 52}%, 0) scale(.994)`, opacity: 1, offset: 0.52 },
+          { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 },
+        ], timing);
+        const exitAnimation = outgoing.animate([
+          { transform: "translate3d(0, 0, 0) scale(1)", opacity: 1 },
+          { transform: `translate3d(0, ${direction * -28}%, 0) scale(.965)`, opacity: 0.16 },
+        ], timing);
+
+        runningAnimations = [enterAnimation, exitAnimation];
+        let finished = 0;
+        runningAnimations.forEach((animation) => {
+          animation.onfinish = () => {
+            finished += 1;
+            if (finished === 2) clearAnimations();
+          };
+        });
+      }
+
       if (method !== "none") {
         const destination = `${window.location.pathname}${window.location.search}#${scenes[next].id}`;
         window.history[method === "push" ? "pushState" : "replaceState"](null, "", destination);
@@ -105,9 +194,9 @@ export default function ScrollExperience() {
       if (now - lastWheelAt > 340) wheelConsumed = false;
       lastWheelAt = now;
 
-      if (wheelConsumed || now < lockedUntil || Math.abs(event.deltaY) < 5) return;
+      if (wheelConsumed || now < lockedUntil || runningAnimations.length > 0 || Math.abs(event.deltaY) < 5) return;
       wheelConsumed = true;
-      lockedUntil = now + 850;
+      lockedUntil = now + (motionRef.current ? TRANSITION_DURATION + 160 : 400);
       setScene(activeRef.current + direction);
     }
 
@@ -137,7 +226,7 @@ export default function ScrollExperience() {
       if (touchY === null || !event.changedTouches.length) return;
       const distance = touchY - event.changedTouches[0].clientY;
       touchY = null;
-      if (Math.abs(distance) < 65 || isInteractive(touchTarget)) return;
+      if (Math.abs(distance) < 65 || isInteractive(touchTarget) || runningAnimations.length > 0) return;
 
       const direction = Math.sign(distance);
       const current = sections[activeRef.current];
@@ -186,6 +275,7 @@ export default function ScrollExperience() {
 
     return () => {
       window.history.scrollRestoration = previousRestoration;
+      clearAnimations();
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("touchstart", onTouchStart);
@@ -194,6 +284,7 @@ export default function ScrollExperience() {
       window.removeEventListener("popstate", onHistoryChange);
       window.removeEventListener("hashchange", onHistoryChange);
       shell.classList.remove("presentation-ready");
+      shell.classList.remove("motion-scripted", "motion-disabled", "motion-user-enabled");
       shell.style.removeProperty("--active-scene");
       sections.forEach((section) => {
         section.inert = false;
@@ -225,6 +316,15 @@ export default function ScrollExperience() {
 
       <nav className="scene-controls" aria-label="Slide controls">
         <span className="scene-counter" aria-live="polite">{scenes[activeIndex].number} <span>/ 05</span></span>
+        <button
+          type="button"
+          className="scene-motion-toggle"
+          aria-label={motionEnabled ? "Turn slide animations off" : "Turn slide animations on"}
+          aria-pressed={motionEnabled}
+          onClick={toggleMotion}
+        >
+          Motion {motionEnabled ? "on" : "off"}
+        </button>
         <button type="button" aria-label="Previous scene" disabled={activeIndex === 0} onClick={() => navigateRef.current(activeIndex - 1)}>
           <span aria-hidden="true">↑</span>
         </button>
