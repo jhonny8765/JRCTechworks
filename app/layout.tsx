@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { contactEmail, socialLinks } from "@/lib/contact";
 import { defaultSocialImage, siteDescription, siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
+import "./experience.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

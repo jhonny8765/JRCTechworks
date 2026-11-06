@@ -3,8 +3,8 @@ import ArrowIcon from "@/components/arrow-icon";
 
 const footerLinks = [
   { label: "Home", href: "/#top" },
-  { label: "Services", href: "/#services" },
   { label: "Selected work", href: "/#work" },
+  { label: "Services", href: "/#services" },
   { label: "About the studio", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ];

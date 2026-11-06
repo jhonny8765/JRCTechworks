@@ -27,6 +27,8 @@ The homepage uses screenshots supplied by the project owner:
 - Phase 7: Search and sharing metadata, canonical URLs, sitemap, robots rules, and a branded social preview.
 - Phase 8: Clear three-step studio process, direct live-product links on case studies, and a consistent brand guide.
 - Phase 9: Service-specific project inquiry links, a guided email brief, and clearer calls to action across the site.
+- Phase 10: Custom domain was intentionally skipped; the free `pages.dev` address stays in use.
+- Phase 11: Experience redesign — five compact scroll scenes, interactive featured work and services, a combined studio/process scene, and progressive motion.
 
 The GitHub repository is the source of truth. Cloudflare Pages is connected to its `main` branch.
 
@@ -59,3 +61,4 @@ issues fixed, verified image sizes, and remaining limitations.
 See [`docs/phase-7-seo.md`](docs/phase-7-seo.md) for SEO checks and optional indexing steps.
 See [`docs/brand-guide.md`](docs/brand-guide.md) for the Phase 8 identity, design, and content guidance.
 See [`docs/phase-9-inquiries.md`](docs/phase-9-inquiries.md) for the client-acquisition flow and QA.
+See [`docs/phase-11-experience.md`](docs/phase-11-experience.md) for the new navigation and motion behavior.
