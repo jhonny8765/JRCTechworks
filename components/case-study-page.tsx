@@ -133,6 +133,16 @@ export default function CaseStudyPage({
             </a>
           </div>
         </section>
+        <section className="case-inquiry-section" aria-labelledby="case-inquiry-title">
+          <div className="container case-inquiry-layout">
+            <div>
+              <p className="section-label">HAVE SOMETHING SIMILAR IN MIND?</p>
+              <h2 id="case-inquiry-title">Let's talk about <em>your idea.</em></h2>
+              <p>Tell us what you're trying to build. We can start by understanding your workflow and goals.</p>
+            </div>
+            <a className="button primary-button" href="/#contact">Discuss a project <ArrowIcon diagonal /></a>
+          </div>
+        </section>
       </main>
       <SiteFooter />
     </div>

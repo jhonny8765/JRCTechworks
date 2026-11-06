@@ -3,6 +3,7 @@ import BrowserFrame from "@/components/browser-frame";
 import ArrowIcon from "@/components/arrow-icon";
 import ServiceIcon from "@/components/service-icon";
 import SiteFooter from "@/components/site-footer";
+import ProjectInquiryForm from "@/components/project-inquiry-form";
 import { projects } from "@/lib/projects";
 import { services } from "@/lib/services";
 import { contactEmail, projectInquiryHref, socialLinks } from "@/lib/contact";
@@ -30,8 +31,8 @@ export default function Home() {
                 we turn complex ideas into digital experiences that feel simple.
               </p>
               <div className="hero-actions fade-up delay-3">
-                <a className="button primary-button" href="#work">Explore our work <ArrowIcon /></a>
-                <a className="button outline-button" href={projectInquiryHref}>Start a project <ArrowIcon diagonal /></a>
+                <a className="button primary-button" href="#contact">Discuss your project <ArrowIcon diagonal /></a>
+                <a className="button outline-button" href="#work">Explore our work <ArrowIcon /></a>
               </div>
               <p className="hero-caption fade-up delay-4">
                 <span className="caption-line" aria-hidden="true" />
@@ -97,12 +98,15 @@ export default function Home() {
                   <div className="service-deliverables">
                     {service.deliverables.map((item) => <span key={item}>{item}</span>)}
                   </div>
+                  <a className="service-inquiry-link" href={`/?service=${encodeURIComponent(service.title)}#contact`}>
+                    Discuss this service <ArrowIcon />
+                  </a>
                 </article>
               ))}
             </div>
             <div className="services-bottom">
               <p>Have a different idea? We love building around unique workflows.</p>
-              <a href={projectInquiryHref}>Tell us what you have in mind <ArrowIcon diagonal /></a>
+              <a href="#contact">Tell us what you have in mind <ArrowIcon diagonal /></a>
             </div>
           </div>
         </section>
@@ -169,7 +173,7 @@ export default function Home() {
                   Every business works differently. We start with the people and the
                   problem, then shape the design and software around what matters.
                 </p>
-                <a href={projectInquiryHref}>Tell us what you're building <ArrowIcon diagonal /></a>
+                <a href="#contact">Tell us what you're building <ArrowIcon diagonal /></a>
               </div>
             </div>
             <ol className="approach-steps" aria-label="Our three-step approach">
@@ -255,19 +259,23 @@ export default function Home() {
                   A website, a custom system, or a workflow you wish could run itself?
                   Tell us what you have in mind and we can talk through the next steps.
                 </p>
-                <a className="button primary-button contact-primary" href={projectInquiryHref}>
-                  Start a conversation <ArrowIcon diagonal />
+                <a className="button primary-button contact-primary" href="#project-brief">
+                  Share your project brief <ArrowIcon diagonal />
                 </a>
+                <p className="contact-alternative">Prefer to talk directly?</p>
                 <a className="contact-email-address" href={projectInquiryHref}>{contactEmail}</a>
               </div>
-              <div className="contact-console">
+              <div id="project-brief" className="contact-form-anchor">
+                <ProjectInquiryForm />
+              </div>
+            </div>
+            <div className="contact-console contact-channels">
                 <div className="contact-console-header">
                   <span className="contact-console-light" />
-                  <span>DIRECT CONNECTIONS</span>
-                  <span className="contact-console-status">OPEN TO IDEAS</span>
+                  <span>OTHER WAYS TO CONNECT</span>
+                  <span className="contact-console-status">CHOOSE YOUR CHANNEL</span>
                 </div>
-                <div className="contact-console-body">
-                  <p className="contact-console-intro">Choose how you want to reach us.</p>
+                <div className="contact-console-body contact-channel-grid">
                   <a className="contact-channel" href={projectInquiryHref}>
                     <span className="channel-glyph" aria-hidden="true">@</span>
                     <span className="channel-copy"><strong>Email</strong><small>{contactEmail}</small></span>
@@ -280,9 +288,7 @@ export default function Home() {
                       <ArrowIcon diagonal />
                     </a>
                   ))}
-                  <p className="contact-console-note"><span aria-hidden="true">✳</span> Real conversation, no automated inquiry form.</p>
                 </div>
-              </div>
             </div>
           </div>
         </section>

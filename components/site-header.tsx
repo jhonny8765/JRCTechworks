@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { projectInquiryHref } from "@/lib/contact";
 
 const navLinks = [
   { label: "Home", href: "/#top" },
@@ -40,7 +39,7 @@ export default function SiteHeader() {
 
         <a
           className="header-contact"
-          href={projectInquiryHref}
+          href="/#contact"
         >
           Let's talk
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -70,7 +69,7 @@ export default function SiteHeader() {
           <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
         ))}
         <a
-          href={projectInquiryHref}
+          href="/#contact"
           onClick={() => setMenuOpen(false)}
         >Start a project</a>
       </nav>
