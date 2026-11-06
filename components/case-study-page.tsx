@@ -15,7 +15,7 @@ export default function CaseStudyPage({
     <div id="top" className={"site-shell case-study-shell case-" + project.theme}>
       <div className="ambient ambient-purple" aria-hidden="true" />
       <SiteHeader />
-      <main>
+      <main id="main-content">
         <section className="case-hero" aria-labelledby="case-title">
           <div className="container">
             <nav className="case-breadcrumb" aria-label="Breadcrumb">

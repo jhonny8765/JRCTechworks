@@ -22,7 +22,7 @@ The homepage uses screenshots supplied by the project owner:
 - Phase 2: Responsive homepage, visual identity, and real project previews.
 - Phase 3: Six-service overview and dedicated SukiSuite and Better Yield case studies.
 - Phase 4: Two-person studio introduction, contact section, social links, and consistent footer navigation.
-- Phase 5 (planned): Performance, accessibility, and responsive QA.
+- Phase 5: Responsive, accessibility, and source-level performance checks with targeted fixes.
 - Phase 6 (planned): Deployment after approval.
 
 The GitHub repository is the source of truth. Deployment is intentionally deferred until approval.
@@ -43,3 +43,9 @@ message storage is configured.
 
 JRC Techworks is described as a two-person studio. Jhon Rey Consolacion is named;
 the other member remains unnamed until their public identity is confirmed.
+
+## Quality assurance
+
+See [`docs/phase-5-qa.md`](docs/phase-5-qa.md) for the Phase 5 test matrix,
+issues fixed, verified image sizes, and remaining limitations. The code is still
+not deployed publicly; Phase 6 requires separate approval.

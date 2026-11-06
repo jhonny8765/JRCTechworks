@@ -1,5 +1,10 @@
 import Image from "next/image";
 
+const imageDimensions: Record<string, { width: number; height: number }> = {
+  "/projects/sukisuite.png": { width: 1597, height: 806 },
+  "/projects/better-yield.png": { width: 1599, height: 813 },
+};
+
 export default function BrowserFrame({
   src,
   alt,
@@ -15,6 +20,8 @@ export default function BrowserFrame({
   priority?: boolean;
   sizes?: string;
 }) {
+  const dimensions = imageDimensions[src] ?? { width: 1599, height: 813 };
+
   return (
     <div className={"browser-frame " + className}>
       <div className="browser-bar" aria-hidden="true">
@@ -25,8 +32,8 @@ export default function BrowserFrame({
       <Image
         src={src}
         alt={alt}
-        width={1599}
-        height={813}
+        width={dimensions.width}
+        height={dimensions.height}
         className="browser-image"
         priority={priority}
         sizes={sizes}

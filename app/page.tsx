@@ -14,7 +14,7 @@ export default function Home() {
       <div className="ambient ambient-blue" aria-hidden="true" />
       <SiteHeader />
 
-      <main>
+      <main id="main-content">
         <section className="hero" aria-labelledby="hero-title">
           <div className="container hero-layout">
             <div className="hero-copy">
@@ -59,7 +59,6 @@ export default function Home() {
                   alt="Actual Better Yield POS sign-in interface"
                   hostname="better-yield-magpet-pos.pages.dev"
                   className="yield-frame"
-                  priority
                 />
               </div>
               <div className="art-label art-label-bottom" aria-hidden="true"><span>&lt;/&gt;</span> DESIGN + ENGINEERING</div>

@@ -15,7 +15,8 @@ export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="site-header">
+    <header className="site-header" onKeyDown={(event) => { if (event.key === "Escape") setMenuOpen(false); }}>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <div className="container header-inner">
         <a
           href="/#top"
