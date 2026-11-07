@@ -41,6 +41,7 @@ export default function Home() {
                 <span className="caption-line" aria-hidden="true" />
                 WEB <b>•</b> SOFTWARE <b>•</b> POS <b>•</b> AUTOMATION
               </p>
+              <p className="mobile-swipe-hint">SWIPE UP TO EXPLORE <span aria-hidden="true">↑</span></p>
             </div>
             <div className="hero-art" data-reveal aria-label="Previews of real SukiSuite and Better Yield projects">
               <div className="art-grid" aria-hidden="true" />

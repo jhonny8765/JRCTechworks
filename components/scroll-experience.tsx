@@ -68,8 +68,7 @@ export default function ScrollExperience() {
     let lockedUntil = 0;
     let lastWheelAt = 0;
     let wheelConsumed = false;
-    let touchY: number | null = null;
-    let touchTarget: EventTarget | null = null;
+    let touchStart: { x: number; y: number; scrollTop: number; target: EventTarget | null; sceneIndex: number } | null = null;
     let finishTimer: number | null = null;
     let exitingIndex: number | null = null;
     let queuedNavigation: { index: number; method: "push" | "replace" | "none" } | null = null;
@@ -196,21 +195,41 @@ export default function ScrollExperience() {
     }
 
     function onTouchStart(event: TouchEvent) {
-      if (event.touches.length !== 1) return;
-      touchY = event.touches[0].clientY;
-      touchTarget = event.target;
+      touchStart = null;
+      if (event.touches.length !== 1 || !(event.target instanceof Node)) return;
+      const scene = sections[activeRef.current];
+      // Swipes on the fixed header, open menu, or browser chrome are not
+      // presentation gestures. The gesture must begin inside the live scene.
+      if (!scene.contains(event.target)) return;
+      touchStart = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+        scrollTop: scene.scrollTop,
+        target: event.target,
+        sceneIndex: activeRef.current,
+      };
     }
 
     function onTouchEnd(event: TouchEvent) {
-      if (touchY === null || !event.changedTouches.length) return;
-      const distance = touchY - event.changedTouches[0].clientY;
-      touchY = null;
-      if (Math.abs(distance) < 65 || isInteractive(touchTarget) || shell?.dataset.transitioning) return;
+      const started = touchStart;
+      touchStart = null;
+      if (!started || !event.changedTouches.length || started.sceneIndex !== activeRef.current) return;
+      const distance = started.y - event.changedTouches[0].clientY;
+      const horizontalDistance = started.x - event.changedTouches[0].clientX;
+      if (Math.abs(distance) < 70 || Math.abs(distance) < Math.abs(horizontalDistance) * 1.3) return;
+      if (isInteractive(started.target) || shell.dataset.transitioning) return;
 
       const direction = Math.sign(distance);
       const current = sections[activeRef.current];
-      if (canScrollWithinScene(touchTarget, current, direction)) return;
+      // If this gesture already scrolled long mobile scene content, don't
+      // also advance to another slide when the finger lifts at the edge.
+      if (Math.abs(current.scrollTop - started.scrollTop) > 2) return;
+      if (canScrollWithinScene(started.target, current, direction)) return;
       setScene(activeRef.current + direction);
+    }
+
+    function onTouchCancel() {
+      touchStart = null;
     }
 
     function onAnchorClick(event: MouseEvent) {
@@ -261,6 +280,7 @@ export default function ScrollExperience() {
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchCancel);
     document.addEventListener("click", onAnchorClick, true);
     window.addEventListener("popstate", onHistoryChange);
     window.addEventListener("hashchange", onHistoryChange);
@@ -273,6 +293,7 @@ export default function ScrollExperience() {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchCancel);
       document.removeEventListener("click", onAnchorClick, true);
       window.removeEventListener("popstate", onHistoryChange);
       window.removeEventListener("hashchange", onHistoryChange);

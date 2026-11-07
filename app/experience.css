@@ -24,6 +24,7 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .story-shell .scene-home .hero-art { height: min(600px, 70svh); }
 .story-shell .scene-scroll-cue { display: inline-flex; position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%); align-items: center; gap: 14px; color: #8fa6c1; font-size: 9px; font-weight: 810; letter-spacing: .18em; z-index: 3; white-space: nowrap; }
 .story-shell .scene-scroll-cue span:last-child { display: grid; place-items: center; height: 28px; width: 28px; border: 1px solid rgba(140, 190, 221, .3); color: #7edcec; border-radius: 50%; font-size: 16px; animation: scene-cue 2.6s ease-in-out infinite; }
+.mobile-swipe-hint { display: none; }
 @keyframes scene-cue { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 .story-shell .scene-work { background: radial-gradient(ellipse at 85% 48%, rgba(77, 70, 161, .16), transparent 48%), #080f1c; }
 .story-shell .scene-services { background: radial-gradient(ellipse at 5% 62%, rgba(24, 113, 151, .16), transparent 47%), #0a101e; }
@@ -143,6 +144,8 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .story-shell .scene-home .hero-layout { min-height: auto; }
   .story-shell .scene-home .hero-art { height: 540px; }
   .story-shell .scene-scroll-cue { display: none; }
+  .story-shell .mobile-swipe-hint { display: flex; align-items: center; justify-content: center; gap: 11px; margin: 14px 0 0; color: #90cde0; font-size: 10px; font-weight: 800; letter-spacing: .16em; }
+  .story-shell .mobile-swipe-hint span { display: inline-flex; font-size: 20px; line-height: 1; animation: scene-cue 2.6s ease-in-out infinite; }
   .work-feature { grid-template-columns: 1fr; }
   .work-feature-copy { padding: 33px; }
   .work-feature-visual { min-height: 355px; }
@@ -197,7 +200,7 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 }
 @media (prefers-reduced-motion: reduce) {
   html:has(.story-shell) { scroll-snap-type: none; scroll-behavior: auto; }
-  .story-shell .scene-scroll-cue span:last-child, .work-feature, .service-stage, .studio-panel { animation: none; }
+  .story-shell .scene-scroll-cue span:last-child, .story-shell .mobile-swipe-hint span, .work-feature, .service-stage, .studio-panel { animation: none; }
   .work-feature-frame { transform: none; }
 }
 
