@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { contactEmail } from "@/lib/contact";
+import { contactEmail, gmailComposeHref, outlookComposeHref } from "@/lib/contact";
 
 export default function CopyEmailButton() {
   const [status, setStatus] = useState("");
@@ -29,6 +29,8 @@ export default function CopyEmailButton() {
       <button type="button" className={"contact-copy-email" + (copied ? " is-copied" : "")} onClick={copyEmail}>
         {copied ? "✓ Email copied" : "Copy email address"}
       </button>
+      <a className="contact-webmail-link" href={gmailComposeHref} target="_blank" rel="noopener noreferrer" aria-label="Compose an email to JRC Techworks in Gmail (opens new tab)">Gmail <span aria-hidden="true">↗</span></a>
+      <a className="contact-webmail-link" href={outlookComposeHref} target="_blank" rel="noopener noreferrer" aria-label="Compose an email to JRC Techworks in Outlook (opens new tab)">Outlook <span aria-hidden="true">↗</span></a>
       <span className="contact-email-feedback" role="status" aria-live="polite">{status}</span>
     </div>
   );

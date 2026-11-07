@@ -3,6 +3,12 @@ export const contactEmail = "jhonreyc2001@gmail.com";
 export const projectInquiryHref =
   "mailto:jhonreyc2001@gmail.com?subject=Project%20inquiry%20for%20JRC%20Techworks";
 
+// Webmail drafts work even on devices without a configured mailto handler.
+// Visitors still review and send the message themselves.
+const inquirySubject = encodeURIComponent("Project inquiry for JRC Techworks");
+export const gmailComposeHref = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contactEmail)}&su=${inquirySubject}`;
+export const outlookComposeHref = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(contactEmail)}&subject=${inquirySubject}`;
+
 export const socialLinks = [
   {
     label: "Facebook",

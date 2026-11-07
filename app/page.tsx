@@ -8,7 +8,7 @@ import ServicesExplorer from "@/components/services-explorer";
 import StudioScene from "@/components/studio-scene";
 import ProjectInquiryForm from "@/components/project-inquiry-form";
 import CopyEmailButton from "@/components/copy-email-button";
-import { contactEmail, projectInquiryHref, socialLinks } from "@/lib/contact";
+import { contactEmail, gmailComposeHref, socialLinks } from "@/lib/contact";
 
 export default function Home() {
   return (
@@ -136,7 +136,7 @@ export default function Home() {
                   Start your brief <ArrowIcon diagonal />
                 </a>
                 <p className="contact-alternative">Prefer email?</p>
-                <a className="contact-email-address" href={projectInquiryHref}>{contactEmail}</a>
+                <span className="contact-email-address">{contactEmail}</span>
                 <CopyEmailButton />
               </div>
               <div id="project-brief" className="contact-form-anchor">
@@ -150,9 +150,9 @@ export default function Home() {
                 <span className="contact-console-status">CHOOSE YOUR CHANNEL</span>
               </div>
               <div className="contact-console-body contact-channel-grid">
-                <a className="contact-channel" href={projectInquiryHref}>
+                <a className="contact-channel" href={gmailComposeHref} target="_blank" rel="noopener noreferrer" aria-label="Compose an email in Gmail (opens new tab)">
                   <span className="channel-glyph" aria-hidden="true">@</span>
-                  <span className="channel-copy"><strong>Email</strong><small>{contactEmail}</small></span>
+                  <span className="channel-copy"><strong>Compose email</strong><small>Gmail in your browser</small></span>
                   <ArrowIcon diagonal />
                 </a>
                 {socialLinks.map((link) => (

@@ -90,6 +90,9 @@ export default function ProjectInquiryForm() {
 
   async function copyBrief(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // Keep the confirmation in view instead of leaving an unnecessary
+    // expanded provider menu beneath it.
+    setEmailOptionsOpen(false);
     const fullBrief = `To: ${contactEmail}\nSubject: Project inquiry — ${service} | JRC Techworks\n\n${briefText()}`;
 
     try {

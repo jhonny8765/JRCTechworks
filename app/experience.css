@@ -361,8 +361,17 @@ body:has(.story-shell.presentation-ready) {
   animation-delay: 310ms;
 }
 
+.story-shell.presentation-ready[data-transitioning="backward"] .story-scene[data-slide-state="active"] [data-reveal] {
+  animation-name: story-content-enter-back;
+}
+
 @keyframes story-content-enter {
   from { opacity: 0; transform: translate3d(0, 25px, 0) scale(.987); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes story-content-enter-back {
+  from { opacity: 0; transform: translate3d(0, -25px, 0) scale(.987); }
   to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
 
@@ -452,12 +461,17 @@ body:has(.story-shell.presentation-ready) {
 }
 
 .contact-email-tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-top: 10px; }
+.contact-webmail-link { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; color: #a6dbea; font-size: 11px; font-weight: 730; padding: 6px 3px; transition: color 160ms, transform 160ms; }
+.contact-webmail-link:hover { color: white; transform: translateY(-1px); }
+.contact-webmail-link:active { transform: translateY(1px); }
+.contact-webmail-link span { color: #74dbe9; }
+.contact-email-address { text-decoration: none; }
 .contact-copy-email { min-height: 32px; border: 1px solid rgba(123, 189, 222, .32); border-radius: 7px; background: rgba(56, 143, 174, .15); color: #a2e8f4; padding: 6px 12px; font: inherit; font-size: 11px; font-weight: 760; cursor: pointer; transition: color 180ms, background 180ms, border-color 180ms; }
 .contact-copy-email:hover { background: rgba(72, 169, 195, .25); color: #fff; border-color: rgba(126, 222, 244, .6); }
 .contact-copy-email:active { transform: translateY(1px) scale(.985); }
 .contact-copy-email.is-copied { border-color: rgba(113, 232, 196, .48); background: rgba(68, 160, 130, .22); color: #b4f8df; }
 .contact-copy-email:focus-visible { outline: 2px solid #89e6f4; outline-offset: 3px; }
-.contact-email-feedback { color: #a4eddd; font-size: 10px; line-height: 1.45; max-width: 230px; }
+.contact-email-feedback { flex-basis: 100%; color: #a4eddd; font-size: 10px; line-height: 1.45; }
 .contact-email-feedback:empty { display: none; }
 
 @media (max-width: 600px) {

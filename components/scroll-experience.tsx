@@ -191,6 +191,18 @@ export default function ScrollExperience() {
 
       if (next === undefined) return;
       event.preventDefault();
+      // On short screens a scene can have its own scrollable content. Read
+      // that content first, and only advance the presentation at its edge.
+      if (!["Home", "End"].includes(event.key)) {
+        const current = sections[activeRef.current];
+        const direction = next > activeRef.current ? 1 : -1;
+        if (canScrollWithinScene(current, current, direction)) {
+          const step = event.key === "ArrowDown" || event.key === "ArrowUp"
+            ? 100 : current.clientHeight * 0.8;
+          current.scrollBy({ top: direction * step, behavior: motionRef.current ? "smooth" : "instant" });
+          return;
+        }
+      }
       setScene(next);
     }
 
