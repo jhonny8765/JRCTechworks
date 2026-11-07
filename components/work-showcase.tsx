@@ -19,13 +19,15 @@ export default function WorkShowcase() {
             role="tab"
             aria-controls="featured-project-panel"
             aria-selected={selected === index}
+            tabIndex={selected === index ? 0 : -1}
             className={selected === index ? "is-active" : ""}
             key={item.slug}
             onClick={() => setSelected(index)}
             onKeyDown={(event) => {
-              if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+              if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
               event.preventDefault();
-              const next = (selected + (event.key === "ArrowRight" ? 1 : -1) + projects.length) % projects.length;
+              const next = event.key === "Home" ? 0 : event.key === "End" ? projects.length - 1 :
+                (selected + (event.key === "ArrowRight" ? 1 : -1) + projects.length) % projects.length;
               setSelected(next);
               document.getElementById(`project-tab-${next}`)?.focus();
             }}

@@ -59,7 +59,10 @@ export default function ProjectInquiryForm() {
 
   function prepareEmail() {
     const form = document.querySelector<HTMLFormElement>(".inquiry-form");
-    if (!form?.reportValidity()) return;
+    if (!form?.reportValidity()) {
+      setFeedback("Please complete the required fields above before opening the email draft.");
+      return;
+    }
     const subject = `Project inquiry — ${service} | JRC Techworks`;
     const mailto = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText())}`;
     setFeedback("Your email app may open with the draft. You still need to press Send. If nothing opens, choose Copy project brief instead.");
@@ -86,7 +89,7 @@ export default function ProjectInquiryForm() {
         <span className="inquiry-heading-label"><span aria-hidden="true" className="contact-console-light" /> PROJECT BRIEF</span>
         <span className="inquiry-heading-step">01 / TELL US</span>
       </div>
-      <form className="inquiry-form" onSubmit={copyBrief}>
+      <form className="inquiry-form" onSubmit={copyBrief} onInvalid={() => setFeedback("Please complete the required fields above before copying your brief.")}>
         <p className="inquiry-intro">A few details help us start the right conversation. Copy your completed brief or open it in your email app.</p>
         <div className="inquiry-field-row">
           <div className="inquiry-field">

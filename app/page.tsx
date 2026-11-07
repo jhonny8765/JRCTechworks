@@ -7,6 +7,7 @@ import WorkShowcase from "@/components/work-showcase";
 import ServicesExplorer from "@/components/services-explorer";
 import StudioScene from "@/components/studio-scene";
 import ProjectInquiryForm from "@/components/project-inquiry-form";
+import CopyEmailButton from "@/components/copy-email-button";
 import { contactEmail, projectInquiryHref, socialLinks } from "@/lib/contact";
 
 export default function Home() {
@@ -34,7 +35,7 @@ export default function Home() {
               </p>
               <div className="hero-actions">
                 <a className="button primary-button" href="#work">See what we build <ArrowIcon /></a>
-                <a className="button outline-button" href="#contact">Start a project <ArrowIcon diagonal /></a>
+                <a className="button outline-button" href="#project-brief">Start a project <ArrowIcon diagonal /></a>
               </div>
               <p className="hero-caption">
                 <span className="caption-line" aria-hidden="true" />
@@ -133,6 +134,7 @@ export default function Home() {
                 </a>
                 <p className="contact-alternative">Prefer email?</p>
                 <a className="contact-email-address" href={projectInquiryHref}>{contactEmail}</a>
+                <CopyEmailButton />
               </div>
               <div id="project-brief" className="contact-form-anchor">
                 <ProjectInquiryForm />

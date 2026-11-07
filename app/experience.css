@@ -413,7 +413,7 @@ body:has(.story-shell.presentation-ready) {
   border: 1px solid rgba(113, 170, 209, .23);
   border-radius: 999px;
   background: rgba(11, 24, 41, .92);
-  padding: 7px 8px 7px 18px;
+  padding: 7px 8px 10px 18px;
   box-shadow: 0 18px 45px rgba(0, 0, 0, .24);
   backdrop-filter: blur(18px);
 }
@@ -421,6 +421,9 @@ body:has(.story-shell.presentation-ready) {
 .presentation-ready .scene-controls { display: flex; }
 .scene-counter { color: #e9f8ff; font-size: 12px; font-weight: 850; letter-spacing: .09em; margin-right: 8px; }
 .scene-counter span { color: #7d9ab7; }
+.scene-current-name { border-left: 1px solid rgba(138, 182, 216, .2); padding-left: 12px; margin-right: 7px; color: #a7c3dc; font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.scene-progress { position: absolute; left: 18px; right: 18px; bottom: 0; height: 2px; background: rgba(121, 162, 197, .16); overflow: hidden; }
+.scene-progress span { display: block; height: 100%; background: linear-gradient(90deg, #77e7e6, #91aaf8); box-shadow: 0 0 12px rgba(97, 221, 237, .5); transition: width 900ms cubic-bezier(.16, .8, .2, 1); }
 .scene-controls button { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(137, 188, 215, .25); background: rgba(52, 107, 145, .24); color: #9ceaf1; font: inherit; font-size: 20px; cursor: pointer; transition: transform 180ms, background 180ms, color 180ms; }
 .scene-controls button:not(:disabled):hover { transform: translateY(-2px); background: rgba(99, 196, 215, .26); color: #fff; }
 .scene-controls button:disabled { cursor: not-allowed; opacity: .28; }
@@ -449,8 +452,8 @@ body:has(.story-shell.presentation-ready) {
 }
 
 @media (min-width: 1101px) and (max-width: 1400px) {
-  .scene-rail { right: 4px; padding: 10px 2px; border: 0; background: rgba(10, 18, 31, .7); }
-  .scene-rail a { width: 30px; min-height: 28px; justify-content: center; gap: 0; }
+  .scene-rail { right: 4px; padding: 10px 3px; border: 1px solid rgba(126, 178, 213, .15); background: rgba(10, 18, 31, .82); }
+  .scene-rail a { width: 44px; min-height: 44px; justify-content: center; gap: 0; }
   .scene-rail-index { display: none; }
   .scene-rail-bar { width: 12px; }
   .scene-rail .is-current .scene-rail-bar { width: 22px; }
@@ -468,7 +471,15 @@ body:has(.story-shell.presentation-ready) {
   .story-shell.presentation-ready .studio-story,
   .story-shell.presentation-ready .studio-process { min-height: 0; }
   .scene-controls { right: 14px; bottom: max(12px, env(safe-area-inset-bottom)); }
+  .scene-current-name { display: none; }
 }
+
+.contact-email-tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-top: 10px; }
+.contact-copy-email { min-height: 32px; border: 1px solid rgba(123, 189, 222, .32); border-radius: 7px; background: rgba(56, 143, 174, .15); color: #a2e8f4; padding: 6px 12px; font: inherit; font-size: 11px; font-weight: 760; cursor: pointer; transition: color 180ms, background 180ms, border-color 180ms; }
+.contact-copy-email:hover { background: rgba(72, 169, 195, .25); color: #fff; border-color: rgba(126, 222, 244, .6); }
+.contact-copy-email:focus-visible { outline: 2px solid #89e6f4; outline-offset: 3px; }
+.contact-email-feedback { color: #a4eddd; font-size: 10px; line-height: 1.45; max-width: 230px; }
+.contact-email-feedback:empty { display: none; }
 
 @media (max-width: 600px) {
   .story-shell.presentation-ready .scene-heading { margin-bottom: 15px; }

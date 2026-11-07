@@ -137,8 +137,24 @@ export default function ScrollExperience() {
     window.scrollTo(0, 0);
     shell.classList.add("presentation-ready");
 
+    // A direct link from a case study to the brief should land on the
+    // actual form, including on short mobile viewports.
+    if (window.location.hash === "#project-brief") {
+      window.requestAnimationFrame(() => {
+        const target = document.getElementById("project-brief");
+        const section = sections[lastIndex];
+        if (!target) return;
+        const position = target.getBoundingClientRect().top - section.getBoundingClientRect().top + section.scrollTop - 18;
+        section.scrollTop = Math.max(0, position);
+        document.getElementById("inquiry-name")?.focus({ preventScroll: true });
+      });
+    }
+
     function onWheel(event: WheelEvent) {
       if (event.ctrlKey || event.defaultPrevented) return;
+
+      // Scrolling inside an open selection or text area should not switch slides.
+      if (event.target instanceof Element && event.target.closest("select, textarea, [contenteditable='true']")) return;
 
       const current = sections[activeRef.current];
       const direction = Math.sign(event.deltaY);
@@ -164,6 +180,7 @@ export default function ScrollExperience() {
         PageDown: activeRef.current + 1,
         ArrowUp: activeRef.current - 1,
         PageUp: activeRef.current - 1,
+        " ": activeRef.current + (event.shiftKey ? -1 : 1),
         Home: 0,
         End: lastIndex,
       }[event.key];
@@ -284,10 +301,12 @@ export default function ScrollExperience() {
 
       <nav className="scene-controls" aria-label="Slide controls">
         <span className="scene-counter" aria-live="polite">{scenes[activeIndex].number} <span>/ 05</span></span>
+        <span className="scene-current-name" aria-live="polite">{scenes[activeIndex].label}</span>
         <button
           type="button"
           className="scene-motion-toggle"
           aria-label={motionEnabled ? "Turn slide animations off" : "Turn slide animations on"}
+          title={motionEnabled ? "Turn animations off" : "Turn animations on"}
           aria-pressed={motionEnabled}
           onClick={toggleMotion}
         >
@@ -299,6 +318,7 @@ export default function ScrollExperience() {
         <button type="button" aria-label="Next scene" title="Next section" disabled={activeIndex === lastIndex} onClick={() => navigateRef.current(activeIndex + 1)}>
           <span aria-hidden="true">↓</span>
         </button>
+        <span className="scene-progress" aria-hidden="true"><span style={{ width: `${((activeIndex + 1) / scenes.length) * 100}%` }} /></span>
       </nav>
     </>
   );
