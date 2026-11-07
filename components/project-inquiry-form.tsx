@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import ArrowIcon from "@/components/arrow-icon";
 import { contactEmail } from "@/lib/contact";
 import { services } from "@/lib/services";
@@ -23,6 +23,8 @@ export default function ProjectInquiryForm() {
   const [feedback, setFeedback] = useState("");
   const [manualBrief, setManualBrief] = useState("");
   const [copied, setCopied] = useState(false);
+  const [emailOptionsOpen, setEmailOptionsOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (!copied) return;
@@ -64,17 +66,27 @@ export default function ProjectInquiryForm() {
     ].join("\n");
   }
 
-  function prepareEmail() {
-    const form = document.querySelector<HTMLFormElement>(".inquiry-form");
-    if (!form?.reportValidity()) {
-      setFeedback("Please complete the required fields above before opening the email draft.");
+  function toggleEmailOptions() {
+    if (emailOptionsOpen) {
+      setEmailOptionsOpen(false);
       return;
     }
-    const subject = `Project inquiry — ${service} | JRC Techworks`;
-    const mailto = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(briefText())}`;
-    setFeedback("Your email app may open with the draft. You still need to press Send. If nothing opens, choose Copy project brief instead.");
-    window.location.href = mailto;
+
+    if (!formRef.current?.reportValidity()) {
+      setFeedback("Complete the required fields above to prepare an email draft.");
+      return;
+    }
+
+    setFeedback("");
+    setEmailOptionsOpen(true);
   }
+
+  const emailSubject = encodeURIComponent(`Project inquiry — ${service} | JRC Techworks`);
+  const emailBody = encodeURIComponent(briefText());
+  const emailTo = encodeURIComponent(contactEmail);
+  const gmailHref = `https://mail.google.com/mail/?view=cm&fs=1&to=${emailTo}&su=${emailSubject}&body=${emailBody}`;
+  const outlookHref = `https://outlook.office.com/mail/deeplink/compose?to=${emailTo}&subject=${emailSubject}&body=${emailBody}`;
+  const mailAppHref = `mailto:${contactEmail}?subject=${emailSubject}&body=${emailBody}`;
 
   async function copyBrief(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -98,8 +110,8 @@ export default function ProjectInquiryForm() {
         <span className="inquiry-heading-label"><span aria-hidden="true" className="contact-console-light" /> PROJECT BRIEF</span>
         <span className="inquiry-heading-step">01 / TELL US</span>
       </div>
-      <form className="inquiry-form" onSubmit={copyBrief} onInvalid={() => setFeedback("Please complete the required fields above before copying your brief.")}>
-        <p className="inquiry-intro">A few details help us start the right conversation. Copy your completed brief or open it in your email app.</p>
+      <form ref={formRef} className="inquiry-form" onSubmit={copyBrief} onChange={() => { setEmailOptionsOpen(false); setCopied(false); }} onInvalid={() => setFeedback("Please complete the required fields above first.")}>
+        <p className="inquiry-intro">A few details help us start the right conversation. Copy your brief or choose where to compose your email.</p>
         <div className="inquiry-field-row">
           <div className="inquiry-field">
             <label htmlFor="inquiry-name">Your name <span>*</span></label>
@@ -132,8 +144,21 @@ export default function ProjectInquiryForm() {
         </div>
         <div className="inquiry-actions">
           <button className={"button primary-button inquiry-submit" + (copied ? " is-copied" : "")} type="submit">{copied ? "✓ Brief copied" : "Copy project brief"} <ArrowIcon /></button>
-          <button className="inquiry-copy" type="button" onClick={prepareEmail}>Open email app <ArrowIcon diagonal /></button>
+          <button className="inquiry-copy" type="button" aria-controls="inquiry-send-options" aria-expanded={emailOptionsOpen} onClick={toggleEmailOptions}>
+            {emailOptionsOpen ? "Hide email options" : "Compose email"} <ArrowIcon diagonal />
+          </button>
         </div>
+        {emailOptionsOpen && (
+          <div id="inquiry-send-options" className="inquiry-send-options" role="group" aria-label="Choose where to compose your email">
+            <p className="inquiry-send-title">CHOOSE YOUR EMAIL SERVICE</p>
+            <div className="inquiry-send-links">
+              <a href={gmailHref} target="_blank" rel="noopener noreferrer" onClick={() => setFeedback("Gmail opened in a new tab. Review your draft and press Send there. You may need to sign in.")}>Gmail (web) <ArrowIcon diagonal /></a>
+              <a href={outlookHref} target="_blank" rel="noopener noreferrer" onClick={() => setFeedback("Outlook opened in a new tab. Review your draft and press Send there. You may need to sign in.")}>Outlook (web) <ArrowIcon diagonal /></a>
+              <a href={mailAppHref} onClick={() => setFeedback("This option needs an email app configured on your device. If nothing opens, try Gmail or Outlook, or copy your brief.")}>Installed mail app <ArrowIcon diagonal /></a>
+            </div>
+            <p className="inquiry-send-help">Webmail opens a new tab with your details filled in. Nothing is sent until you review and press Send.</p>
+          </div>
+        )}
         <p className="inquiry-privacy">No account needed. This form prepares a brief; it does not send messages automatically.</p>
         <p className="inquiry-feedback" role="status" aria-live="polite">{feedback}</p>
         {manualBrief && <textarea className="inquiry-manual-brief" aria-label="Your project brief for manual copying" readOnly value={manualBrief} rows={5} onFocus={(event) => event.currentTarget.select()} />}
