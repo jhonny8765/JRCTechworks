@@ -2,6 +2,14 @@
 html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px; }
 .story-shell .site-header { position: sticky; top: 0; z-index: 40; background: rgba(8, 14, 26, .77); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom-color: rgba(117, 175, 210, .13); }
 .story-shell .header-inner { min-height: 79px; }
+/* During hydration, show one composed home scene instead of briefly exposing
+   all five stacked sections. With scripting disabled, the full readable page
+   remains available as a progressive-enhancement fallback. */
+@media (scripting: enabled) {
+  .story-shell:not(.presentation-ready) .story-scene:not(.scene-home),
+  .story-shell:not(.presentation-ready) > .footer { display: none; }
+  .story-shell:not(.presentation-ready) .scene-home { min-height: 100dvh; }
+}
 .story-shell .story-main { position: relative; }
 .story-shell .story-scene { position: relative; min-height: min(100svh, 1050px); scroll-snap-align: start; isolation: isolate; display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid rgba(121, 160, 204, .12); }
 .story-shell .story-scene::after { position: absolute; content: ""; inset: 0; z-index: -1; pointer-events: none; background-image: linear-gradient(rgba(142, 186, 225, .032) 1px, transparent 1px), linear-gradient(90deg, rgba(142, 186, 225, .032) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(90deg, transparent 12%, black 50%, transparent 91%); }
