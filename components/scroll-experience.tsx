@@ -11,7 +11,7 @@ const scenes = [
 ] as const;
 
 const lastIndex = scenes.length - 1;
-const TRANSITION_DURATION = 1100;
+const TRANSITION_DURATION = 1000;
 
 function indexFromHash(hash: string): number {
   const id = decodeURIComponent(hash.replace(/^#/, ""));
@@ -49,81 +49,87 @@ function canScrollWithinScene(target: EventTarget | null, section: HTMLElement, 
 
 export default function ScrollExperience() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [motionEnabled, setMotionEnabled] = useState(true);
   const activeRef = useRef(0);
   const motionRef = useRef(true);
-  const navigateRef = useRef<(index: number, method?: "push" | "replace" | "none") => void>(() => {});
-
-  function toggleMotion() {
-    const enabled = !motionRef.current;
-    motionRef.current = enabled;
-    setMotionEnabled(enabled);
-    const shell = document.querySelector<HTMLElement>(".story-shell");
-    shell?.classList.toggle("motion-disabled", !enabled);
-    shell?.classList.toggle("motion-user-enabled", enabled);
-  }
 
   useEffect(() => {
-    const shell = document.querySelector<HTMLElement>(".story-shell");
+    const shellElement = document.querySelector<HTMLElement>(".story-shell");
     const sections = scenes.map(({ id }) => document.getElementById(id)).filter((section): section is HTMLElement => Boolean(section));
-    if (!shell || sections.length !== scenes.length) return;
+    if (!shellElement || sections.length !== scenes.length) return;
+    const shell: HTMLElement = shellElement;
 
     const previousRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Each visit starts with motion enabled unless the visitor requests reduced
-    // motion. An old saved "off" setting could otherwise silently make the
-    // entire presentation flash between scenes on future visits.
-    const initialMotion = !reducedMotion;
-    motionRef.current = initialMotion;
-    setMotionEnabled(initialMotion);
-    shell.classList.toggle("motion-disabled", !initialMotion);
-    shell.classList.remove("motion-user-enabled");
+    // Follow the visitor's system accessibility preference. The removed
+    // floating control can no longer accidentally disable the experience.
+    motionRef.current = !reducedMotion;
+    shell.classList.toggle("motion-disabled", reducedMotion);
     let lockedUntil = 0;
     let lastWheelAt = 0;
     let wheelConsumed = false;
     let touchY: number | null = null;
     let touchTarget: EventTarget | null = null;
     let finishTimer: number | null = null;
+    let exitingIndex: number | null = null;
+    let queuedNavigation: { index: number; method: "push" | "replace" | "none" } | null = null;
 
-    function clearTransition() {
+    function clearTransition(runQueued = true) {
       if (finishTimer !== null) window.clearTimeout(finishTimer);
       finishTimer = null;
-      delete shell?.dataset.transitioning;
+      if (exitingIndex !== null) {
+        const previous = sections[exitingIndex];
+        previous.dataset.slideState = exitingIndex < activeRef.current ? "before" : "after";
+        previous.scrollTop = 0;
+        exitingIndex = null;
+      }
+      delete shell.dataset.transitioning;
+      if (runQueued && queuedNavigation) {
+        const pending = queuedNavigation;
+        queuedNavigation = null;
+        setScene(pending.index, pending.method);
+      }
     }
 
     function setScene(index: number, method: "push" | "replace" | "none" = "replace") {
       const next = Math.max(0, Math.min(lastIndex, index));
-      const wasReady = shell?.classList.contains("presentation-ready");
+      const wasReady = shell.classList.contains("presentation-ready");
       // Prevent focus or anchor navigation from shifting the clipped shell.
-      if (shell && shell.scrollTop !== 0) shell.scrollTop = 0;
+      if (shell.scrollTop !== 0) shell.scrollTop = 0;
       if (activeRef.current === next && wasReady) return;
+      if (exitingIndex !== null) {
+        // Queue the final destination while a transition is in flight; this
+        // avoids interrupting animations and flashing through other slides.
+        queuedNavigation = { index: next, method };
+        return;
+      }
       const previous = activeRef.current;
-      clearTransition();
+      const animate = wasReady && motionRef.current && previous !== next;
 
       activeRef.current = next;
       setActiveIndex(next);
 
       sections.forEach((section, sectionIndex) => {
         const isActive = sectionIndex === next;
-        section.dataset.slideState = isActive ? "active" : sectionIndex < next ? "before" : "after";
+        // Every slide is positioned just above or below the viewport. Only
+        // the old and new slides animate; intermediate slides stay hidden,
+        // even when a header link jumps from Home directly to Contact.
+        section.dataset.slideState = isActive ? "active" :
+          animate && sectionIndex === previous ? (next > previous ? "exit-before" : "exit-after") :
+          sectionIndex < next ? "before" : "after";
         section.inert = !isActive;
         section.setAttribute("aria-hidden", String(!isActive));
-        if (!isActive) section.scrollTop = 0;
+        // Don't jump a visible departing scene back to the top mid-animation.
+        if (!isActive && !(animate && sectionIndex === previous)) section.scrollTop = 0;
       });
 
-      shell?.style.setProperty("--active-scene", String(next));
-      if (shell) shell.dataset.currentScene = scenes[next].id;
+      shell.dataset.currentScene = scenes[next].id;
       window.dispatchEvent(new CustomEvent("jrc:scenechange", { detail: scenes[next].id }));
-      // The main track is exactly one viewport high; every child panel is
-      // another viewport high. Moving the ONE track by 100% per section gives
-      // continuous real movement without swapping hidden layers or fading.
-      shell?.style.setProperty("--scene-offset", `${next * -100}%`);
 
-      if (wasReady && motionRef.current && previous !== next) {
-        const direction = next > previous ? 1 : -1;
-        if (shell) shell.dataset.transitioning = direction > 0 ? "forward" : "backward";
-        finishTimer = window.setTimeout(clearTransition, TRANSITION_DURATION + 80);
+      if (animate) {
+        exitingIndex = previous;
+        shell.dataset.transitioning = next > previous ? "forward" : "backward";
+        finishTimer = window.setTimeout(() => clearTransition(), TRANSITION_DURATION + 90);
       }
 
       if (method !== "none") {
@@ -132,7 +138,6 @@ export default function ScrollExperience() {
       }
     }
 
-    navigateRef.current = setScene;
     setScene(indexFromHash(window.location.hash), "none");
     window.scrollTo(0, 0);
     shell.classList.add("presentation-ready");
@@ -167,7 +172,7 @@ export default function ScrollExperience() {
       if (now - lastWheelAt > 340) wheelConsumed = false;
       lastWheelAt = now;
 
-      if (wheelConsumed || now < lockedUntil || Math.abs(event.deltaY) < 5) return;
+      if (wheelConsumed || now < lockedUntil || exitingIndex !== null || Math.abs(event.deltaY) < 5) return;
       wheelConsumed = true;
       lockedUntil = now + (motionRef.current ? TRANSITION_DURATION + 160 : 400);
       setScene(activeRef.current + direction);
@@ -235,11 +240,16 @@ export default function ScrollExperience() {
       if (target && target !== section) {
         const deepLink = `${window.location.pathname}${window.location.search}#${id}`;
         window.history.replaceState(null, "", deepLink);
-        window.setTimeout(() => {
+        const focusTargetWhenReady = () => {
+          if (activeRef.current !== index || exitingIndex !== null) {
+            window.setTimeout(focusTargetWhenReady, 100);
+            return;
+          }
           const position = target.getBoundingClientRect().top - section.getBoundingClientRect().top + section.scrollTop - 22;
           section.scrollTo({ top: Math.max(0, position), behavior: "smooth" });
           if (id === "project-brief") document.getElementById("inquiry-name")?.focus({ preventScroll: true });
-        }, index === activeRef.current && !shell?.dataset.transitioning ? 100 : TRANSITION_DURATION + 60);
+        };
+        window.setTimeout(focusTargetWhenReady, 100);
       }
     }
 
@@ -257,7 +267,8 @@ export default function ScrollExperience() {
 
     return () => {
       window.history.scrollRestoration = previousRestoration;
-      clearTransition();
+      queuedNavigation = null;
+      clearTransition(false);
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("touchstart", onTouchStart);
@@ -266,9 +277,7 @@ export default function ScrollExperience() {
       window.removeEventListener("popstate", onHistoryChange);
       window.removeEventListener("hashchange", onHistoryChange);
       shell.classList.remove("presentation-ready");
-      shell.classList.remove("motion-disabled", "motion-user-enabled");
-      shell.style.removeProperty("--active-scene");
-      shell.style.removeProperty("--scene-offset");
+      shell.classList.remove("motion-disabled");
       delete shell.dataset.currentScene;
       sections.forEach((section) => {
         section.inert = false;
@@ -279,47 +288,8 @@ export default function ScrollExperience() {
   }, []);
 
   return (
-    <>
-      <nav className="scene-rail" aria-label="Page sections">
-        <span className="scene-rail-caption">EXPLORE / 05</span>
-        {scenes.map((scene, index) => (
-          <a
-            href={`#${scene.id}`}
-            key={scene.id}
-            aria-label={`Go to ${scene.label}`}
-            title={`Go to ${scene.label}`}
-            aria-current={activeIndex === index ? "location" : undefined}
-            className={activeIndex === index ? "is-current" : ""}
-          >
-            <span className="scene-rail-index">{scene.number}</span>
-            <span className="scene-rail-bar" aria-hidden="true" />
-            <span className="scene-rail-name">{scene.label}</span>
-          </a>
-        ))}
-        <span className="scene-rail-end">JRC / TECHWORKS</span>
-      </nav>
-
-      <nav className="scene-controls" aria-label="Slide controls">
-        <span className="scene-counter" aria-live="polite">{scenes[activeIndex].number} <span>/ 05</span></span>
-        <span className="scene-current-name" aria-live="polite">{scenes[activeIndex].label}</span>
-        <button
-          type="button"
-          className="scene-motion-toggle"
-          aria-label={motionEnabled ? "Turn slide animations off" : "Turn slide animations on"}
-          title={motionEnabled ? "Turn animations off" : "Turn animations on"}
-          aria-pressed={motionEnabled}
-          onClick={toggleMotion}
-        >
-          Motion {motionEnabled ? "on" : "off"}
-        </button>
-        <button type="button" aria-label="Previous scene" title="Previous section" disabled={activeIndex === 0} onClick={() => navigateRef.current(activeIndex - 1)}>
-          <span aria-hidden="true">↑</span>
-        </button>
-        <button type="button" aria-label="Next scene" title="Next section" disabled={activeIndex === lastIndex} onClick={() => navigateRef.current(activeIndex + 1)}>
-          <span aria-hidden="true">↓</span>
-        </button>
-        <span className="scene-progress" aria-hidden="true"><span style={{ width: `${((activeIndex + 1) / scenes.length) * 100}%` }} /></span>
-      </nav>
-    </>
+    <div className="story-header-progress" role="progressbar" aria-label="Presentation progress" aria-valuemin={1} aria-valuemax={scenes.length} aria-valuenow={activeIndex + 1}>
+      <span style={{ width: `${((activeIndex + 1) / scenes.length) * 100}%` }} />
+    </div>
   );
 }
