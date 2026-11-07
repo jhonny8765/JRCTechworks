@@ -22,6 +22,13 @@ export default function ProjectInquiryForm() {
   const [details, setDetails] = useState("");
   const [feedback, setFeedback] = useState("");
   const [manualBrief, setManualBrief] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), 4500);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
 
   useEffect(() => {
     const requestedService = new URLSearchParams(window.location.search).get("service");
@@ -75,9 +82,11 @@ export default function ProjectInquiryForm() {
 
     try {
       await navigator.clipboard.writeText(fullBrief);
+      setCopied(true);
       setManualBrief("");
       setFeedback(`Copied! Paste your brief into an email to ${contactEmail}, then send it. No message has been sent yet.`);
     } catch {
+      setCopied(false);
       setManualBrief(fullBrief);
       setFeedback("Automatic copying isn't available here. Select the brief below and copy it manually into an email.");
     }
@@ -122,7 +131,7 @@ export default function ProjectInquiryForm() {
           <textarea id="inquiry-details" name="details" placeholder="What problem are you solving? Who would use the website, system, or app?" rows={4} value={details} onChange={(event) => setDetails(event.target.value)} minLength={15} maxLength={800} required />
         </div>
         <div className="inquiry-actions">
-          <button className="button primary-button inquiry-submit" type="submit">Copy project brief <ArrowIcon /></button>
+          <button className={"button primary-button inquiry-submit" + (copied ? " is-copied" : "")} type="submit">{copied ? "✓ Brief copied" : "Copy project brief"} <ArrowIcon /></button>
           <button className="inquiry-copy" type="button" onClick={prepareEmail}>Open email app <ArrowIcon diagonal /></button>
         </div>
         <p className="inquiry-privacy">No account needed. This form prepares a brief; it does not send messages automatically.</p>

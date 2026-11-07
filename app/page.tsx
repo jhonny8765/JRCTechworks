@@ -48,7 +48,7 @@ export default function Home() {
               <div className="art-circle circle-one" aria-hidden="true" />
               <div className="art-circle circle-two" aria-hidden="true" />
               <div className="art-label art-label-top" aria-hidden="true"><span className="tiny-pulse" /> ACTUAL WORK. NOT CONCEPTS.</div>
-              <div className="hero-screen hero-screen-suki">
+              <a className="hero-screen hero-screen-suki" href="/work/sukisuite" aria-label="Explore the SukiSuite case study">
                 <BrowserFrame
                   src="/projects/sukisuite.png"
                   alt="Actual SukiSuite homepage and booking management interface"
@@ -56,15 +56,17 @@ export default function Home() {
                   className="suki-frame"
                   priority
                 />
-              </div>
-              <div className="hero-screen hero-screen-yield">
+                <span className="hero-screen-action" aria-hidden="true">EXPLORE CASE STUDY ↗</span>
+              </a>
+              <a className="hero-screen hero-screen-yield" href="/work/better-yield" aria-label="Explore the Better Yield POS case study">
                 <BrowserFrame
                   src="/projects/better-yield.png"
                   alt="Actual Better Yield POS sign-in interface"
                   hostname="better-yield-magpet-pos.pages.dev"
                   className="yield-frame"
                 />
-              </div>
+                <span className="hero-screen-action" aria-hidden="true">EXPLORE CASE STUDY ↗</span>
+              </a>
               <div className="art-label art-label-bottom" aria-hidden="true"><span>&lt;/&gt;</span> DESIGN + ENGINEERING</div>
             </div>
           </div>

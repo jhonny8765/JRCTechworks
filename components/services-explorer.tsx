@@ -24,10 +24,11 @@ export default function ServicesExplorer() {
             key={item.number}
             onClick={() => setSelected(index)}
             onKeyDown={(event) => {
-              if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) return;
+              if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
               event.preventDefault();
               const forward = event.key === "ArrowDown" || event.key === "ArrowRight";
-              const next = (selected + (forward ? 1 : -1) + services.length) % services.length;
+              const next = event.key === "Home" ? 0 : event.key === "End" ? services.length - 1 :
+                (selected + (forward ? 1 : -1) + services.length) % services.length;
               setSelected(next);
               document.getElementById(`service-tab-${next}`)?.focus();
             }}

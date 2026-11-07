@@ -63,10 +63,15 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .work-feature-live svg { width: 16px; height: 16px; }
 .work-feature-footnote { color: #627e9b; font-size: 8px; letter-spacing: .15em; font-weight: 780; margin: 27px 0 0; }
 .work-feature-visual { position: relative; display: flex; align-items: center; justify-content: center; padding: 29px 0; isolation: isolate; overflow: hidden; }
+.work-feature-visual:focus-visible { outline: 3px solid #8de5f4; outline-offset: -6px; border-radius: 10px; }
+.work-preview-action { position: absolute; z-index: 3; bottom: 24px; right: 25px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(130, 227, 240, .44); border-radius: 9px; background: rgba(8, 24, 39, .92); color: #a5f4ff; padding: 12px 14px; font-size: 10px; font-weight: 830; letter-spacing: .1em; opacity: 0; transform: translateY(8px); transition: opacity 250ms, transform 250ms; pointer-events: none; }
+.work-preview-action svg { width: 16px; height: 16px; }
+.work-feature-visual:hover .work-preview-action, .work-feature-visual:focus-visible .work-preview-action { opacity: 1; transform: translateY(0); }
+.work-feature-visual:hover .work-feature-frame, .work-feature-visual:focus-visible .work-feature-frame { transform: perspective(1000px) rotateY(-3deg) rotateZ(0); }
 .work-feature-visual::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: -1; background-image: linear-gradient(rgba(157, 190, 223, .042) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 190, 223, .042) 1px, transparent 1px); background-size: 36px 36px; }
 .work-feature-glow { position: absolute; z-index: -1; width: 470px; height: 470px; border-radius: 50%; background: #6854b8; filter: blur(120px); opacity: .27; }
 .work-feature-yield .work-feature-glow { background: #15836a; opacity: .29; }
-.work-feature-frame { width: min(680px, 110%); flex: none; transform: perspective(1000px) rotateY(-6deg) rotateZ(1deg); box-shadow: 0 26px 85px rgba(0, 0, 0, .53); border-radius: 14px; }
+.work-feature-frame { width: min(680px, 110%); flex: none; transform: perspective(1000px) rotateY(-6deg) rotateZ(1deg); box-shadow: 0 26px 85px rgba(0, 0, 0, .53); border-radius: 14px; transition: transform 370ms cubic-bezier(.2,.8,.2,1); }
 .work-feature-frame .browser-bar { height: 31px; }
 
 /* Compact six-option services explorer. */
@@ -95,6 +100,9 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .service-stage-link { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: #87e6f1; }
 .service-stage-link svg { height: 16px; width: 16px; }
 .service-stage-link:hover { color: #fff; }
+.service-stage-link svg, .work-feature-live svg, .studio-story-copy a svg { transition: transform 200ms ease; }
+.service-stage-link:hover svg, .work-feature-live:hover svg, .studio-story-copy a:hover svg { transform: translate(3px, -3px); }
+.service-stage-link:active, .work-feature-live:active, .studio-story-copy a:active { opacity: .76; }
 .service-stage-watermark { position: absolute; top: 30px; right: 42px; font-size: 185px; line-height: 1; letter-spacing: -.1em; font-weight: 850; color: rgba(127, 201, 229, .04); pointer-events: none; }
 
 /* About and process are now two views of one scene. */
@@ -446,6 +454,8 @@ body:has(.story-shell.presentation-ready) {
 .contact-email-tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-top: 10px; }
 .contact-copy-email { min-height: 32px; border: 1px solid rgba(123, 189, 222, .32); border-radius: 7px; background: rgba(56, 143, 174, .15); color: #a2e8f4; padding: 6px 12px; font: inherit; font-size: 11px; font-weight: 760; cursor: pointer; transition: color 180ms, background 180ms, border-color 180ms; }
 .contact-copy-email:hover { background: rgba(72, 169, 195, .25); color: #fff; border-color: rgba(126, 222, 244, .6); }
+.contact-copy-email:active { transform: translateY(1px) scale(.985); }
+.contact-copy-email.is-copied { border-color: rgba(113, 232, 196, .48); background: rgba(68, 160, 130, .22); color: #b4f8df; }
 .contact-copy-email:focus-visible { outline: 2px solid #89e6f4; outline-offset: 3px; }
 .contact-email-feedback { color: #a4eddd; font-size: 10px; line-height: 1.45; max-width: 230px; }
 .contact-email-feedback:empty { display: none; }

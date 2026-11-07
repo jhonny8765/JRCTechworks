@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navLinks = [
   { label: "Home", href: "/#top" },
@@ -13,6 +13,8 @@ const navLinks = [
 export default function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeScene, setActiveScene] = useState("top");
+  const headerRef = useRef<HTMLElement>(null);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const current = document.querySelector<HTMLElement>(".story-shell")?.dataset.currentScene;
@@ -21,15 +23,37 @@ export default function SiteHeader() {
     function onSceneChange(event: Event) {
       if (event instanceof CustomEvent && typeof event.detail === "string") {
         setActiveScene(event.detail);
+        setMenuOpen(false);
       }
     }
 
+    function onOutsidePointer(event: PointerEvent) {
+      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+
+    function onResize() {
+      if (window.innerWidth > 1080) setMenuOpen(false);
+    }
+
     window.addEventListener("jrc:scenechange", onSceneChange);
-    return () => window.removeEventListener("jrc:scenechange", onSceneChange);
+    window.addEventListener("pointerdown", onOutsidePointer);
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("jrc:scenechange", onSceneChange);
+      window.removeEventListener("pointerdown", onOutsidePointer);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   return (
-    <header className="site-header" onKeyDown={(event) => { if (event.key === "Escape") setMenuOpen(false); }}>
+    <header ref={headerRef} className="site-header" onKeyDown={(event) => {
+      if (event.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+        menuToggleRef.current?.focus();
+      }
+    }}>
       <a className="skip-link" href="#main-content">Skip to main content</a>
       <div className="container header-inner">
         <a
@@ -63,6 +87,7 @@ export default function SiteHeader() {
         </a>
 
         <button
+          ref={menuToggleRef}
           className={"menu-toggle" + (menuOpen ? " is-open" : "")}
           type="button"
           aria-expanded={menuOpen}
@@ -78,6 +103,7 @@ export default function SiteHeader() {
         id="mobile-navigation"
         className={"mobile-nav" + (menuOpen ? " is-open" : "")}
         aria-label="Mobile navigation"
+        aria-hidden={!menuOpen}
         inert={!menuOpen}
       >
         {navLinks.map((link) => (

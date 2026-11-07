@@ -62,7 +62,7 @@ export default function WorkShowcase() {
           </div>
           <p className="work-feature-footnote">REAL PRODUCT SCREEN / PROVIDED BY PROJECT CREATOR</p>
         </div>
-        <div className="work-feature-visual">
+        <a className="work-feature-visual" href={`/work/${project.slug}`} aria-label={`View ${project.title} case study`}>
           <div className="work-feature-glow" aria-hidden="true" />
           <BrowserFrame
             src={project.screenshot}
@@ -71,7 +71,8 @@ export default function WorkShowcase() {
             className="work-feature-frame"
             sizes="(max-width: 900px) 94vw, 720px"
           />
-        </div>
+          <span className="work-preview-action" aria-hidden="true">OPEN CASE STUDY <ArrowIcon diagonal /></span>
+        </a>
       </article>
     </div>
   );
