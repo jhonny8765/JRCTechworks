@@ -217,7 +217,13 @@ export default function ScrollExperience() {
       const distance = started.y - event.changedTouches[0].clientY;
       const horizontalDistance = started.x - event.changedTouches[0].clientX;
       if (Math.abs(distance) < 70 || Math.abs(distance) < Math.abs(horizontalDistance) * 1.3) return;
-      if (isInteractive(started.target) || shell.dataset.transitioning) return;
+      // Anchors may be large interactive previews. A deliberate swipe over a
+      // preview should still advance the presentation; a tap still opens it.
+      // Keep form controls and tab buttons reserved for their own gestures.
+      const touchControl = started.target instanceof Element && started.target.closest(
+        "input, textarea, select, button, [role='tab'], [contenteditable='true']",
+      );
+      if (touchControl || shell.dataset.transitioning) return;
 
       const direction = Math.sign(distance);
       const current = sections[activeRef.current];
