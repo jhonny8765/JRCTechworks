@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function SystemRescuePage() {
-  return <div className="site-shell rescue-shell"><SiteHeader /><main className="rescue-main" id="main-content" tabIndex={-1}>
+  return <div className="site-shell rescue-shell editorial-inner"><SiteHeader /><main className="rescue-main" id="main-content" tabIndex={-1}>
     <div className="rescue-aura" aria-hidden="true" />
     <section className="container rescue-heading" aria-labelledby="rescue-title">
       <div className="rescue-heading-copy">

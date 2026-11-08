@@ -3,6 +3,7 @@ import { contactEmail, socialLinks } from "@/lib/contact";
 import { defaultSocialImage, siteDescription, siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
 import "./experience.css";
+import "./editorial-preview.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#070c17",
+  themeColor: "#000000",
 };
 
 const structuredData = {

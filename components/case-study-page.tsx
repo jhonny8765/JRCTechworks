@@ -12,7 +12,7 @@ export default function CaseStudyPage({
   nextProject: Project;
 }) {
   return (
-    <div id="top" className={"site-shell case-study-shell case-" + project.theme}>
+    <div id="top" className={"site-shell case-study-shell editorial-inner case-" + project.theme}>
       <div className="ambient ambient-purple" aria-hidden="true" />
       <SiteHeader />
       <main id="main-content">
