@@ -20,8 +20,14 @@ export default function CursorCompanion() {
     if (!buddy) return;
 
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let walkTimer = 0;
     let readyFrame = 0;
+    let gazeFrame = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+    let previousLookX = 0;
+    let previousLookY = 0;
     const startingScene = document.querySelector<HTMLElement>(".story-shell")?.dataset.currentScene;
     if (isScene(startingScene)) setScene(startingScene);
     readyFrame = window.requestAnimationFrame(() => setReady(true));
@@ -29,14 +35,28 @@ export default function CursorCompanion() {
     const clamp = (value: number, min: number, max: number) =>
       Math.max(min, Math.min(max, value));
 
-    const onPointerMove = (event: PointerEvent) => {
-      if (event.pointerType === "touch" || !finePointer.matches) return;
-      // The robot stays put; only its eyes follow the visitor.
+    const updateGaze = () => {
+      gazeFrame = 0;
+      if (document.visibilityState === "hidden") return;
+      // One layout read per rendered frame at most, even on high-frequency mice.
       const bounds = buddy.getBoundingClientRect();
-      const lookX = clamp((event.clientX - (bounds.left + 56)) / 34, -4, 4);
-      const lookY = clamp((event.clientY - (bounds.top + 61)) / 42, -3, 3);
-      buddy.style.setProperty("--buddy-look-x", `${lookX}px`);
-      buddy.style.setProperty("--buddy-look-y", `${lookY}px`);
+      const lookX = clamp((pointerX - (bounds.left + 56)) / 34, -4, 4);
+      const lookY = clamp((pointerY - (bounds.top + 61)) / 42, -3, 3);
+      if (Math.abs(lookX - previousLookX) > 0.12) {
+        buddy.style.setProperty("--buddy-look-x", `${lookX.toFixed(2)}px`);
+        previousLookX = lookX;
+      }
+      if (Math.abs(lookY - previousLookY) > 0.12) {
+        buddy.style.setProperty("--buddy-look-y", `${lookY.toFixed(2)}px`);
+        previousLookY = lookY;
+      }
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch" || !finePointer.matches || reducedMotion.matches) return;
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (!gazeFrame) gazeFrame = window.requestAnimationFrame(updateGaze);
     };
 
     const onSceneChange = (event: Event) => {
@@ -46,7 +66,7 @@ export default function CursorCompanion() {
       setScene(next);
       setWalking(true);
       setExcited(false);
-      walkTimer = window.setTimeout(() => setWalking(false), 1080);
+      walkTimer = window.setTimeout(() => setWalking(false), 800);
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -55,6 +75,7 @@ export default function CursorCompanion() {
     return () => {
       window.clearTimeout(walkTimer);
       window.cancelAnimationFrame(readyFrame);
+      window.cancelAnimationFrame(gazeFrame);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("jrc:scenechange", onSceneChange);
     };

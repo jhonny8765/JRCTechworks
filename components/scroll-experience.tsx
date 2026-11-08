@@ -11,7 +11,7 @@ const scenes = [
 ] as const;
 
 const lastIndex = scenes.length - 1;
-const TRANSITION_DURATION = 1000;
+const TRANSITION_DURATION = 750;
 
 function indexFromHash(hash: string): number {
   const id = decodeURIComponent(hash.replace(/^#/, ""));
@@ -160,6 +160,15 @@ export default function ScrollExperience() {
       // Scrolling inside an open selection or text area should not switch slides.
       if (event.target instanceof Element && event.target.closest("select, textarea, [contenteditable='true']")) return;
 
+      // Trackpads can emit dozens of wheel events while two full-screen scenes
+      // are moving. Avoid repeated layout/style reads until the move settles.
+      const now = performance.now();
+      if (exitingIndex !== null || now < lockedUntil) {
+        event.preventDefault();
+        lastWheelAt = now;
+        return;
+      }
+
       const current = sections[activeRef.current];
       const direction = Math.sign(event.deltaY);
       if (!direction) return;
@@ -167,7 +176,6 @@ export default function ScrollExperience() {
 
       // One wheel or trackpad gesture = one scene. Momentum cannot skip slides.
       event.preventDefault();
-      const now = performance.now();
       if (now - lastWheelAt > 340) wheelConsumed = false;
       lastWheelAt = now;
 
@@ -328,7 +336,7 @@ export default function ScrollExperience() {
 
   return (
     <div className="story-header-progress" role="progressbar" aria-label="Presentation progress" aria-valuemin={1} aria-valuemax={scenes.length} aria-valuenow={activeIndex + 1}>
-      <span style={{ width: `${((activeIndex + 1) / scenes.length) * 100}%` }} />
+      <span style={{ transform: `scaleX(${(activeIndex + 1) / scenes.length})` }} />
     </div>
   );
 }

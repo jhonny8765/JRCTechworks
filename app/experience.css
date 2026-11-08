@@ -69,8 +69,8 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .work-feature-visual:hover .work-preview-action, .work-feature-visual:focus-visible .work-preview-action { opacity: 1; transform: translateY(0); }
 .work-feature-visual:hover .work-feature-frame, .work-feature-visual:focus-visible .work-feature-frame { transform: perspective(1000px) rotateY(-3deg) rotateZ(0); }
 .work-feature-visual::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: -1; background-image: linear-gradient(rgba(157, 190, 223, .042) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 190, 223, .042) 1px, transparent 1px); background-size: 36px 36px; }
-.work-feature-glow { position: absolute; z-index: -1; width: 470px; height: 470px; border-radius: 50%; background: #6854b8; filter: blur(120px); opacity: .27; }
-.work-feature-yield .work-feature-glow { background: #15836a; opacity: .29; }
+.work-feature-glow { position: absolute; z-index: -1; width: 470px; height: 470px; border-radius: 50%; background: radial-gradient(circle, rgba(104, 84, 184, .27), rgba(104, 84, 184, .1) 42%, transparent 72%); }
+.work-feature-yield .work-feature-glow { background: radial-gradient(circle, rgba(21, 131, 106, .25), rgba(21, 131, 106, .09) 42%, transparent 72%); }
 .work-feature-frame { width: min(680px, 110%); flex: none; transform: perspective(1000px) rotateY(-6deg) rotateZ(1deg); box-shadow: 0 26px 85px rgba(0, 0, 0, .53); border-radius: 14px; transition: transform 370ms cubic-bezier(.2,.8,.2,1); }
 .work-feature-frame .browser-bar { height: 31px; }
 
@@ -244,6 +244,11 @@ body:has(.story-shell.presentation-ready) {
   left: 0;
   right: 0;
   z-index: 80;
+  /* Nothing scrolls behind this header in presentation mode; blur would
+     re-sample the whole header while the full-screen slides move. */
+  background: rgba(8, 14, 26, .97);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .story-shell.presentation-ready .story-viewport {
@@ -267,10 +272,12 @@ body:has(.story-shell.presentation-ready) {
 .presentation-ready .story-header-progress { display: block; }
 .story-header-progress > span {
   display: block;
+  width: 100%;
   height: 100%;
   background: linear-gradient(90deg, #72dbef, #a2a7ff);
   box-shadow: 0 0 14px rgba(102, 218, 241, .5);
-  transition: width 1000ms cubic-bezier(.22, .8, .2, 1);
+  transform-origin: left center;
+  transition: transform 750ms cubic-bezier(.22, .8, .2, 1);
 }
 
 .story-shell.presentation-ready .story-main {
@@ -300,7 +307,17 @@ body:has(.story-shell.presentation-ready) {
   visibility: hidden;
   pointer-events: none;
   transition: none;
-  will-change: transform, opacity;
+}
+
+/* Reserve compositor layers for the moving slides, not all five full-screen
+   scenes at once (which can consume significant GPU memory on laptops). */
+.story-shell.presentation-ready .story-scene[data-slide-state="active"],
+.story-shell.presentation-ready .story-scene[data-slide-state^="exit-"] {
+  will-change: transform;
+}
+
+.story-shell.presentation-ready .story-scene:not([data-slide-state="active"]) .hero-screen {
+  animation-play-state: paused;
 }
 
 .story-shell.presentation-ready .story-scene[data-slide-state="before"],
@@ -314,7 +331,7 @@ body:has(.story-shell.presentation-ready) {
   visibility: visible;
   pointer-events: auto;
   z-index: 3;
-  transition: transform 1000ms cubic-bezier(.76, 0, .22, 1), opacity 600ms ease;
+  transition: transform 750ms cubic-bezier(.72, 0, .24, 1), opacity 450ms ease;
 }
 
 .story-shell.presentation-ready .story-scene[data-slide-state="exit-before"],
@@ -322,7 +339,7 @@ body:has(.story-shell.presentation-ready) {
   opacity: 1;
   visibility: visible;
   z-index: 2;
-  transition: transform 1000ms cubic-bezier(.76, 0, .22, 1);
+  transition: transform 750ms cubic-bezier(.72, 0, .24, 1);
 }
 
 .story-shell.presentation-ready.motion-disabled .story-scene,
@@ -353,12 +370,12 @@ body:has(.story-shell.presentation-ready) {
 }
 
 .story-shell.presentation-ready .story-scene[data-slide-state="active"] [data-reveal] {
-  animation: story-content-enter 750ms cubic-bezier(.17, .82, .23, 1) 140ms both;
+  animation: story-content-enter 540ms cubic-bezier(.17, .82, .23, 1) 100ms both;
 }
 
 .story-shell.presentation-ready .story-scene[data-slide-state="active"] .scene-heading + [data-reveal],
 .story-shell.presentation-ready .story-scene[data-slide-state="active"] .hero-art[data-reveal] {
-  animation-delay: 310ms;
+  animation-delay: 190ms;
 }
 
 .story-shell.presentation-ready[data-transitioning="backward"] .story-scene[data-slide-state="active"] [data-reveal] {
@@ -508,8 +525,11 @@ body:has(.story-shell.presentation-ready) {
    its position) follow the mouse, and it walks between scenes. */
 .cursor-companion {
   position: fixed;
-  top: clamp(170px, 21vh, 215px);
-  left: clamp(22px, 2.4vw, 42px);
+  top: 0;
+  left: 0;
+  --buddy-x: clamp(22px, 2.4vw, 42px);
+  --buddy-y: clamp(170px, 21vh, 215px);
+  transform: translate3d(var(--buddy-x), var(--buddy-y), 0);
   z-index: 90;
   width: 112px;
   height: 138px;
@@ -518,14 +538,16 @@ body:has(.story-shell.presentation-ready) {
   touch-action: manipulation;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  will-change: transform;
 }
 .cursor-companion.is-ready {
-  transition: top 1050ms cubic-bezier(.35, .65, .2, 1), left 1050ms cubic-bezier(.35, .65, .2, 1);
+  /* Compositor-only movement: left/top would relayout the page each frame. */
+  transition: transform 760ms cubic-bezier(.35, .7, .2, 1);
 }
-.cursor-companion[data-scene="work"] { left: calc(50% - 56px); top: clamp(175px, 21vh, 220px); }
-.cursor-companion[data-scene="services"] { left: calc(100% - 166px); top: clamp(400px, 68vh, 710px); }
-.cursor-companion[data-scene="about"] { left: 30%; top: clamp(175px, 21vh, 220px); }
-.cursor-companion[data-scene="contact"] { left: 29.5%; top: clamp(375px, 61.5vh, 670px); }
+.cursor-companion[data-scene="work"] { --buddy-x: calc(50vw - 56px); --buddy-y: clamp(175px, 21vh, 220px); }
+.cursor-companion[data-scene="services"] { --buddy-x: calc(100vw - 166px); --buddy-y: clamp(400px, 68vh, 710px); }
+.cursor-companion[data-scene="about"] { --buddy-x: 30vw; --buddy-y: clamp(175px, 21vh, 220px); }
+.cursor-companion[data-scene="contact"] { --buddy-x: 29.5vw; --buddy-y: clamp(375px, 61.5vh, 670px); }
 .cursor-companion:focus-visible { outline: 2px solid #92f5fb; outline-offset: 5px; border-radius: 22px; }
 .cursor-companion__float {
   position: relative;
