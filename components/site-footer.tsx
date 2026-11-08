@@ -6,6 +6,7 @@ const footerLinks = [
   { label: "Selected work", href: "/#work" },
   { label: "Services", href: "/#services" },
   { label: "About the studio", href: "/#about" },
+  { label: "JRC Arcade", href: "/arcade" },
   { label: "Contact", href: "/#contact" },
 ];
 

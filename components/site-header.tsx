@@ -7,6 +7,7 @@ const navLinks = [
   { label: "Our work", href: "/#work" },
   { label: "Services", href: "/#services" },
   { label: "About", href: "/#about" },
+  { label: "Arcade", href: "/arcade" },
   { label: "Contact", href: "/#contact" },
 ];
 
@@ -72,7 +73,7 @@ export default function SiteHeader() {
 
         <nav className="desktop-nav" aria-label="Main navigation">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} aria-current={activeScene === link.href.split("#")[1] ? "location" : undefined}>{link.label}</a>
+            <a key={link.href} href={link.href} aria-current={link.href.includes("#") && activeScene === link.href.split("#")[1] ? "location" : undefined}>{link.label}</a>
           ))}
         </nav>
 
