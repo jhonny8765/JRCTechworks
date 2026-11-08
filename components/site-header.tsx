@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Services", href: "/#services" },
   { label: "About", href: "/#about" },
   { label: "Arcade", href: "/arcade" },
+  { label: "JRC Bot", href: "/#rescue" },
   { label: "Contact", href: "/#contact" },
 ];
 
