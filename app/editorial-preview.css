@@ -1,0 +1,316 @@
+/* JRC Techworks — editorial direction preview.
+   Inspired by the supplied cinematic studio reference, adapted to retain
+   JRC's actual work, interactive sections, arcade and assistant. */
+
+.editorial-preview {
+  --background: #000;
+  --panel: #050505;
+  --panel-light: #0b0b0b;
+  --text: #fff;
+  --muted: #b4b4b4;
+  --line: rgba(255,255,255,.22);
+  --cyan: #fff;
+  --violet: #fff;
+  color: #fff;
+  background: #000;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.editorial-preview *, .editorial-preview *::before, .editorial-preview *::after { box-shadow: none; }
+.editorial-preview .ambient, .editorial-preview .story-scene::after,
+.editorial-preview .art-grid, .editorial-preview .art-circle,
+.editorial-preview .art-label, .editorial-preview .work-feature-glow,
+.editorial-preview .service-stage-watermark { display: none; }
+.editorial-preview .container { width: min(1440px, calc(100% - clamp(36px, 8vw, 132px))); }
+.editorial-preview .story-scene { background: #000; border-bottom: 1px solid #151515; }
+.editorial-preview .section-label, .editorial-preview .eyebrow,
+.editorial-preview .work-feature-kicker, .editorial-preview .arcade-slide-kicker,
+.editorial-preview .rescue-slide-kicker, .editorial-preview .contact-console-header,
+.editorial-preview .studio-team-label, .editorial-preview .work-feature-footnote {
+  font: 400 12px/1.5 "Courier New", monospace;
+  letter-spacing: .12em;
+  color: #c0c0c0;
+}
+.editorial-preview .section-label span { color: #fff; }
+.editorial-preview .section-label::before, .editorial-preview .eyebrow .pulse,
+.editorial-preview .eyebrow-slash { display: none; }
+
+/* The masthead is a quiet wordmark above the reel, with a bottom navigation
+   cluster on desktop. Mobile keeps the accessible menu for seven destinations. */
+.editorial-preview .site-header,
+.editorial-preview.presentation-ready .site-header {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 80;
+  background: transparent; border: 0; backdrop-filter: none;
+}
+.editorial-preview .header-inner { min-height: 94px; align-items: flex-start; padding-top: 30px; }
+.editorial-preview .brand-mark { display: none; }
+.editorial-preview .brand-name { gap: .28em; align-items: baseline; font-size: clamp(27px, 3.25vw, 52px); letter-spacing: -.06em; line-height: .95; }
+.editorial-preview .brand-name strong { font-weight: 300; color: #fff; }
+.editorial-preview .brand-name span { color: #fff; font-weight: 300; }
+.editorial-preview .desktop-nav {
+  position: fixed; right: clamp(35px, 5vw, 80px); bottom: 34px;
+  z-index: 85; gap: 19px; margin: 0; padding: 0;
+}
+.editorial-preview .desktop-nav a,
+.editorial-preview .header-contact { font: 400 15px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif; color: #fff; }
+.editorial-preview .desktop-nav a { border-bottom: 1px solid transparent; padding: 0 0 5px; }
+.editorial-preview .desktop-nav a:hover,
+.editorial-preview .desktop-nav a[aria-current="location"] { border-bottom-color: #fff; color: #fff; }
+.editorial-preview .desktop-nav a::after { display: none; }
+.editorial-preview .header-contact { border: 0; border-bottom: 1px solid #fff; border-radius: 0; padding: 0 0 5px; gap: 9px; background: transparent; }
+.editorial-preview .header-contact:hover { background: transparent; transform: none; }
+.editorial-preview .header-contact svg { color: #fff; }
+.editorial-preview .story-header-progress { display: none; }
+
+/* Hero: product imagery becomes a full-bleed reel, not framed software cards. */
+.editorial-preview .scene-home { overflow: hidden; }
+.editorial-preview .scene-home .hero-layout,
+.editorial-preview.presentation-ready .scene-home .hero-layout { display: block; height: 100%; min-height: min(850px, 100svh); }
+.editorial-preview .scene-home .hero-copy,
+.editorial-preview.presentation-ready .scene-home .hero-copy {
+  position: relative; z-index: 6; width: min(740px, 72%);
+  padding: clamp(130px, 18vh, 220px) 0 100px;
+}
+.editorial-preview .scene-home .hero-title,
+.editorial-preview.presentation-ready .scene-home .hero-title {
+  font-size: clamp(62px, 8.2vw, 136px); font-weight: 300;
+  line-height: .9; letter-spacing: -.08em; margin: 33px 0;
+  color: #fff;
+}
+.editorial-preview .scene-home .hero-title .muted-title,
+.editorial-preview .scene-home .hero-title .gradient-type {
+  color: #fff; background: none; -webkit-text-fill-color: #fff; font-weight: 300;
+}
+.editorial-preview .hero-description { color: #dedede; max-width: 445px; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.4; }
+.editorial-preview .hero-caption { color: #e0e0e0; margin-top: 40px; font: 400 11px/1.5 "Courier New", monospace; letter-spacing: .1em; }
+.editorial-preview .hero-caption b { color: #fff; }
+.editorial-preview .caption-line { background: #fff; }
+.editorial-preview .hero-art,
+.editorial-preview.presentation-ready .scene-home .hero-art {
+  position: absolute; inset: 0 0 0 auto; width: 66%; height: 100%;
+  pointer-events: none; overflow: hidden; z-index: 1;
+}
+.editorial-preview .hero-art::after {
+  content: ""; position: absolute; z-index: 3; inset: 0;
+  background: linear-gradient(90deg, #000 0%, rgba(0,0,0,.68) 25%, rgba(0,0,0,.08) 100%);
+  pointer-events: none;
+}
+.editorial-preview .hero-screen-suki,
+.editorial-preview .hero-screen-suki:hover { position: absolute; inset: 0; width: 100%; height: 100%; transform: none; animation: none; pointer-events: auto; }
+.editorial-preview .hero-screen-suki .browser-frame { width: 100%; height: 100%; border: 0; border-radius: 0; background: #000; }
+.editorial-preview .hero-screen-suki .browser-bar { display: none; }
+.editorial-preview .hero-screen-suki .browser-image { width: 100%; height: 100%; object-fit: cover; object-position: center top; filter: grayscale(.7) brightness(.54); }
+.editorial-preview .hero-screen-yield, .editorial-preview .hero-screen-action { display: none; }
+.editorial-preview .scene-scroll-cue { color: #fff; bottom: 30px; left: clamp(35px, 5vw, 80px); font: 400 12px/1.3 "Courier New", monospace; letter-spacing: .1em; }
+.editorial-preview .scene-scroll-cue span:last-child { color: #fff; }
+.editorial-preview .mobile-swipe-hint { color: #fff; }
+
+/* Editorial headline rhythm. The italic serif is a deliberate counterpoint. */
+.editorial-preview .scene-frame { padding-block: clamp(100px, 12vh, 160px); }
+.editorial-preview .scene-heading { align-items: start; gap: clamp(40px, 6vw, 130px); margin-bottom: 38px; }
+.editorial-preview .scene-heading h2,
+.editorial-preview.presentation-ready .scene-heading h2 {
+  color: #fff; font-size: clamp(54px, 6.4vw, 105px);
+  font-weight: 300; line-height: .94; letter-spacing: -.072em;
+}
+.editorial-preview .scene-heading h2 em { color: #fff; font: 400 .95em/.95 "Times New Roman", Georgia, serif; letter-spacing: -.055em; }
+.editorial-preview .scene-heading > p { color: #bdbdbd; font-size: 17px; line-height: 1.4; max-width: 290px; }
+.editorial-preview .scene-next-link { color: #fff; font-size: 15px; font-weight: 400; border-bottom: 1px solid #fff; padding-bottom: 8px; }
+.editorial-preview .scene-next-link:hover { color: #fff; gap: 14px; }
+.editorial-preview .button,
+.editorial-preview .primary-button, .editorial-preview .outline-button {
+  min-height: 44px; padding: 0 0 9px; border: 0; border-bottom: 1px solid #fff;
+  border-radius: 0; background: transparent; color: #fff;
+  font-size: 16px; font-weight: 400; gap: 20px;
+}
+.editorial-preview .button:hover, .editorial-preview .button:active { background: transparent; color: #fff; transform: none; }
+.editorial-preview .hero-actions { gap: 35px; margin-top: 33px; }
+
+/* Work should feel like an image gallery rather than a SaaS dashboard. */
+.editorial-preview .work-showcase { border-top: 1px solid #4a4a4a; }
+.editorial-preview .work-switcher { margin: 0; border-bottom: 1px solid #4a4a4a; background: transparent; }
+.editorial-preview .work-switcher button { color: #aaa; font-size: 15px; font-weight: 400; padding: 19px 15px; background: transparent; border-radius: 0; border: 0; border-bottom: 1px solid transparent; }
+.editorial-preview .work-switcher button.is-active { color: #fff; border-bottom: 1px solid #fff; background: transparent; }
+.editorial-preview .work-switcher-hint { color: #999; font-family: "Courier New", monospace; }
+.editorial-preview .work-feature { background: #000; border: 0; border-bottom: 1px solid #4a4a4a; border-radius: 0; overflow: hidden; }
+.editorial-preview .work-feature-copy { background: #000; padding: clamp(26px, 3.5vw, 60px) clamp(22px, 3.5vw, 60px) clamp(25px, 3vw, 50px) 0; }
+.editorial-preview .work-feature-copy h3 { font-size: clamp(52px, 5.5vw, 84px); font-weight: 300; line-height: .96; letter-spacing: -.065em; }
+.editorial-preview .work-feature-copy h3 span { color: #fff; }
+.editorial-preview .work-feature-description { color: #bdbdbd; font-size: 17px; line-height: 1.4; }
+.editorial-preview .work-feature-tags span { color: #bbb; background: transparent; border: 0; padding: 0 15px 0 0; font: 400 12px/1.6 "Courier New", monospace; }
+.editorial-preview .work-feature-live { color: #fff; border-bottom: 1px solid #fff; font-size: 15px; font-weight: 400; }
+.editorial-preview .work-feature-visual { background: #050505; border-radius: 0; min-height: 430px; overflow: hidden; }
+.editorial-preview .work-feature-frame { transform: none; width: 100%; height: 100%; border: 0; border-radius: 0; }
+.editorial-preview .work-feature-frame .browser-bar { display: none; }
+.editorial-preview .work-feature-frame .browser-image { height: 100%; width: 100%; object-fit: cover; object-position: left top; }
+.editorial-preview .work-preview-action { color: #fff; background: #000; border: 0; border-radius: 0; }
+
+/* Capabilities become an indexed typographic list. */
+.editorial-preview .services-explorer { border-top: 1px solid #4a4a4a; gap: 0; }
+.editorial-preview .services-select { background: transparent; padding: 0; }
+.editorial-preview .service-option { background: transparent; border: 0; border-bottom: 1px solid #383838; border-radius: 0; color: #d5d5d5; padding: 20px 15px 20px 0; font-size: clamp(17px, 1.6vw, 23px); font-weight: 300; }
+.editorial-preview .service-option.is-active { color: #fff; background: transparent; border-bottom-color: #fff; }
+.editorial-preview .service-option-arrow { color: #fff; }
+.editorial-preview .service-stage { background: #000; border: 0; border-radius: 0; padding: clamp(20px, 4vw, 70px); }
+.editorial-preview .service-stage-top { color: #aaa; font-family: "Courier New", monospace; }
+.editorial-preview .service-stage-icon { display: none; }
+.editorial-preview .service-stage-content h3 { font-size: clamp(52px, 5vw, 78px); font-weight: 300; line-height: .96; letter-spacing: -.06em; }
+.editorial-preview .service-stage-content > p:not(.section-label) { color: #bcbcbc; font-size: 17px; line-height: 1.45; }
+.editorial-preview .service-stage-tags span { background: transparent; border: 0; padding-left: 0; color: #b4b4b4; }
+.editorial-preview .service-stage-link { border-bottom: 1px solid #fff; color: #fff; font-weight: 400; }
+
+/* Studio manifesto with a spare line-based people listing. */
+.editorial-preview .studio-tabs { background: transparent; border-bottom: 1px solid #4a4a4a; }
+.editorial-preview .studio-tabs button { background: transparent; color: #aaa; border: 0; border-bottom: 1px solid transparent; border-radius: 0; font-size: 16px; font-weight: 400; }
+.editorial-preview .studio-tabs button.is-active { color: #fff; border-bottom-color: #fff; background: transparent; }
+.editorial-preview .studio-panel { background: #000; border: 0; border-radius: 0; }
+.editorial-preview .studio-story-copy, .editorial-preview .studio-team-card { background: #000; }
+.editorial-preview .studio-story-copy h3, .editorial-preview .studio-process h3 { color: #fff; font: 400 clamp(45px, 4.5vw, 72px)/1.02 "Times New Roman", Georgia, serif; letter-spacing: -.055em; }
+.editorial-preview .studio-story-copy h3 em, .editorial-preview .studio-process h3 em { color: #fff; }
+.editorial-preview .studio-story-copy > p:not(.section-label), .editorial-preview .studio-process > div > p:not(.section-label) { color: #bdbdbd; font-size: 17px; line-height: 1.45; }
+.editorial-preview .studio-story-copy > a { color: #fff; border-bottom: 1px solid #fff; }
+.editorial-preview .studio-team-card { border-color: #555; }
+.editorial-preview .studio-team-monogram { display: none; }
+.editorial-preview .studio-team-member { border-top: 1px solid #444; }
+.editorial-preview .studio-team-member strong { color: #fff; font-weight: 400; }
+.editorial-preview .studio-team-member small { color: #aaa; }
+.editorial-preview .studio-process-list li { border-color: #444; }
+
+/* The arcade is the colorful work, but the frame stays monochrome. */
+.editorial-preview .arcade-slide-layout { border: 1px solid #454545; border-radius: 0; background: #000; overflow: hidden; }
+.editorial-preview .arcade-slide-feature { background: #000; border-color: #454545; }
+.editorial-preview .arcade-slide-emblem-glow { display: none; }
+.editorial-preview .arcade-slide-emblem strong { color: #fff; font-weight: 300; letter-spacing: -.075em; }
+.editorial-preview .arcade-slide-emblem strong span { color: #fff; }
+.editorial-preview .arcade-slide-emblem-mark, .editorial-preview .arcade-slide-emblem small { color: #aaa; }
+.editorial-preview .arcade-slide-feature-bottom p { color: #bfbfbf; }
+.editorial-preview .arcade-slide-cards { gap: 0; padding: 0; background: #000; }
+.editorial-preview .arcade-slide-card { background: #050505; border: 0; border-bottom: 1px solid #454545; border-radius: 0; box-shadow: none; }
+.editorial-preview .arcade-slide-card:hover { background: #111; transform: none; }
+.editorial-preview .arcade-slide-card-number { color: #b7b7b7; font-family: "Courier New", monospace; }
+.editorial-preview .arcade-slide-card-copy strong { color: #fff; font-weight: 400; }
+.editorial-preview .arcade-slide-card-copy small { color: #aaa; }
+.editorial-preview .arcade-slide-card-arrow { color: #fff; }
+.editorial-preview .rescue-slide-panel { background: #000; border: 1px solid #454545; border-radius: 0; overflow: hidden; }
+.editorial-preview .rescue-slide-info { background: #000; }
+.editorial-preview .rescue-slide-info h3 { color: #fff; font-weight: 300; letter-spacing: -.06em; }
+.editorial-preview .rescue-slide-info h3 span { color: #fff; }
+.editorial-preview .rescue-slide-info > p:not(.rescue-slide-kicker) { color: #bdbdbd; }
+.editorial-preview .rescue-slide-pills span { color: #bbb; background: transparent; border: 1px solid #444; border-radius: 0; }
+.editorial-preview .rescue-slide-screen { border-radius: 0; }
+
+/* Inquiry journey: black form fields, crisp white boundaries, plain links. */
+.editorial-preview .contact-panel, .editorial-preview .contact-console { background: #000; border: 1px solid #454545; border-radius: 0; }
+.editorial-preview .contact-copy { background: #000; }
+.editorial-preview .contact-copy h3 { color: #fff; font: 400 clamp(46px, 4.8vw, 75px)/1 "Times New Roman", Georgia, serif; letter-spacing: -.06em; }
+.editorial-preview .contact-copy h3 em { color: #fff; }
+.editorial-preview .contact-copy > p:not(.section-label) { color: #b8b8b8; }
+.editorial-preview .contact-email-address { color: #fff; }
+.editorial-preview .contact-copy-email { color: #fff; border: 1px solid #777; background: transparent; border-radius: 0; }
+.editorial-preview .contact-console-header { background: #000; border-bottom: 1px solid #454545; }
+.editorial-preview .contact-console-light { background: #fff; box-shadow: none; }
+.editorial-preview .contact-console-body { background: #000; }
+.editorial-preview .contact-channel { background: #000; border: 0; border-bottom: 1px solid #383838; border-radius: 0; }
+.editorial-preview .contact-channel:hover { background: #101010; transform: none; }
+.editorial-preview .contact-channel strong, .editorial-preview .contact-channel svg { color: #fff; }
+.editorial-preview .contact-channel small { color: #aaa; }
+.editorial-preview .channel-glyph { border: 1px solid #555; background: #000; color: #fff; border-radius: 0; }
+.editorial-preview .contact-form-anchor { background: #000; }
+.editorial-preview .contact-form-anchor input,
+.editorial-preview .contact-form-anchor select,
+.editorial-preview .contact-form-anchor textarea { color: #fff; background: #050505; border: 1px solid #555; border-radius: 10px; }
+.editorial-preview .contact-form-anchor input:focus,
+.editorial-preview .contact-form-anchor select:focus,
+.editorial-preview .contact-form-anchor textarea:focus { border-color: #fff; box-shadow: none; }
+.editorial-preview .contact-form-anchor button { background: #fff; color: #000; border-radius: 0; box-shadow: none; }
+
+.editorial-preview .footer { background: #000; border-top: 1px solid #444; }
+.editorial-preview .footer a, .editorial-preview .footer strong { color: #fff; }
+.editorial-preview .footer p, .editorial-preview .footer span { color: #aaa; }
+
+/* Keep the helper friendly, but remove its neon surface while this treatment
+   is on display. Actual games remain unchanged. */
+.editorial-preview .cursor-companion__hello { background: #000; color: #fff; border-color: #fff; }
+.editorial-preview .jrc-chat { background: #000; border-color: #777; border-radius: 0; }
+.editorial-preview .jrc-chat__header { background: #050505; }
+.editorial-preview .jrc-chat__badge, .editorial-preview .jrc-chat__form button { background: #fff; color: #000; }
+.editorial-preview .jrc-chat__message { background: #161616; }
+.editorial-preview .jrc-chat__message--user { background: #eee; color: #000; }
+
+@media (min-width: 901px) {
+  .editorial-preview.presentation-ready .story-viewport { inset: 0; }
+  .editorial-preview.presentation-ready .story-scene .scene-frame { padding-top: max(95px, 9vh); padding-bottom: 90px; }
+  .editorial-preview.presentation-ready .scene-home .hero-copy { padding-top: clamp(145px, 19vh, 260px); }
+  .editorial-preview.presentation-ready .scene-home .hero-layout { min-height: 100%; }
+  .editorial-preview.presentation-ready .scene-home .hero-title { font-size: clamp(65px, 8vw, 130px); }
+  .editorial-preview.presentation-ready .work-feature { min-height: min(460px, 52dvh); }
+  .editorial-preview.presentation-ready .service-stage { min-height: min(420px, 50dvh); }
+  .editorial-preview.presentation-ready .scene-contact .contact-panel { border-radius: 0; }
+}
+@media (max-width: 1100px) {
+  .editorial-preview .site-header { background: rgba(0,0,0,.96); }
+  .editorial-preview .header-inner { min-height: 78px; padding-top: 19px; align-items: center; }
+  .editorial-preview .brand-name { font-size: 30px; }
+  .editorial-preview .menu-toggle { background: #000; border-color: #888; border-radius: 0; }
+  .editorial-preview .mobile-nav { background: #000; border-color: #555; }
+  .editorial-preview .mobile-nav a { color: #fff; }
+  .editorial-preview .mobile-nav a[aria-current="location"] { background: #111; color: #fff; }
+  .editorial-preview .header-contact { display: none; }
+}
+@media (max-width: 900px) {
+  .editorial-preview .site-header { position: sticky; top: 0; }
+  .editorial-preview .scene-home .hero-layout { min-height: 0; }
+  .editorial-preview .scene-home .hero-copy { width: 100%; padding: 80px 0 40px; }
+  .editorial-preview .scene-home .hero-title { font-size: clamp(58px, 10vw, 90px); }
+  .editorial-preview .scene-home .hero-art { position: relative; inset: auto; width: 100%; height: min(65vw, 510px); margin-bottom: 35px; }
+  .editorial-preview .hero-art::after { background: linear-gradient(0deg, #000 0%, transparent 40%); }
+  .editorial-preview .hero-screen-suki { pointer-events: auto; }
+  .editorial-preview .scene-frame { padding-block: 85px 65px; }
+  .editorial-preview .scene-heading h2 { font-size: clamp(52px, 8vw, 74px); }
+  .editorial-preview .work-feature-copy { padding: 30px 0; }
+  .editorial-preview .work-feature-visual { min-height: 350px; }
+  .editorial-preview .services-explorer { border-top: 0; }
+  .editorial-preview .services-select { border-top: 1px solid #444; border-bottom: 1px solid #444; padding: 10px 0; }
+  .editorial-preview .service-option { border-bottom: 0; border-right: 1px solid #333; padding: 10px 17px; }
+  .editorial-preview .service-stage { padding: 35px 0; }
+}
+@media (max-width: 600px) {
+  .editorial-preview .container { width: calc(100% - 38px); }
+  .editorial-preview .header-inner { min-height: 70px; padding-top: 11px; }
+  .editorial-preview .brand-name { font-size: 24px; }
+  .editorial-preview .menu-toggle { width: 42px; height: 42px; }
+  .editorial-preview .scene-home .hero-copy { padding: 61px 0 25px; }
+  .editorial-preview .scene-home .hero-title { font-size: clamp(50px, 12.7vw, 74px); line-height: .94; margin: 24px 0; }
+  .editorial-preview .eyebrow { white-space: normal; font-size: 10px; }
+  .editorial-preview .hero-description { font-size: 16px; }
+  .editorial-preview .hero-actions { gap: 20px; }
+  .editorial-preview .button { font-size: 14px; }
+  .editorial-preview .hero-caption { font-size: 10px; white-space: normal; margin-top: 25px; }
+  .editorial-preview .scene-home .hero-art { width: calc(100vw - 38px); height: 300px; margin-bottom: 25px; }
+  .editorial-preview .scene-frame { padding: 62px 0; }
+  .editorial-preview .scene-heading h2 { font-size: clamp(48px, 11vw, 64px); }
+  .editorial-preview .scene-heading > p { font-size: 15px; }
+  .editorial-preview .work-switcher button { font-size: 13px; padding-inline: 8px; }
+  .editorial-preview .work-switcher-hint { display: none; }
+  .editorial-preview .work-feature-copy h3 { font-size: 58px; }
+  .editorial-preview .work-feature-visual { min-height: 245px; }
+  .editorial-preview .service-stage-content h3 { font-size: 49px; }
+  .editorial-preview .studio-story-copy { padding: 25px 0; }
+  .editorial-preview .studio-team-card { padding: 25px 0; }
+  .editorial-preview .studio-story-copy h3, .editorial-preview .studio-process h3 { font-size: 45px; }
+  .editorial-preview .arcade-slide-layout { border-width: 1px 0; }
+  .editorial-preview .arcade-slide-feature { padding: 25px 15px; }
+  .editorial-preview .arcade-slide-cards { grid-template-columns: 1fr; }
+  .editorial-preview .arcade-slide-card { padding: 16px 13px; }
+  .editorial-preview .arcade-slide-card-copy strong { font-size: 19px; }
+  .editorial-preview .arcade-slide-card-copy small { font-size: 12px; }
+  .editorial-preview .rescue-slide-panel { border-width: 1px 0; }
+  .editorial-preview .rescue-slide-info { padding: 25px 15px; }
+  .editorial-preview .rescue-slide-info h3 { font-size: 47px; }
+  .editorial-preview .contact-panel { border-width: 1px 0; }
+  .editorial-preview .contact-copy { padding: 23px 10px; }
+  .editorial-preview .contact-copy h3 { font-size: 50px; }
+  .editorial-preview .contact-console { border-width: 1px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-preview .hero-screen-suki, .editorial-preview .hero-screen-suki:hover { animation: none; }
+}
