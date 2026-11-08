@@ -828,12 +828,12 @@
   /* A native IntersectionObserver reveals content at its actual scroll position.
      Without JS, or with reduced motion, these elements stay visible normally. */
   .editorial-preview.motion-enabled [data-reveal] {
-    transition: opacity 700ms cubic-bezier(.17, .78, .22, 1),
-                transform 700ms cubic-bezier(.17, .78, .22, 1);
+    transition: opacity 620ms cubic-bezier(.17, .78, .22, 1),
+                transform 620ms cubic-bezier(.17, .78, .22, 1);
   }
   .editorial-preview.motion-enabled [data-reveal]:not([data-motion-visible="true"]) {
     opacity: 0;
-    transform: translate3d(0, 27px, 0);
+    transform: translate3d(0, 24px, 0);
   }
   .editorial-preview.motion-enabled [data-reveal][data-motion-visible="true"] {
     opacity: 1;
