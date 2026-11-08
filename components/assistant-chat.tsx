@@ -49,6 +49,14 @@ export default function AssistantChat({ open, onClose }: { open: boolean; onClos
     const content = raw.trim();
     if (!content || content.length > 500 || loading || finished || userTurns >= MAX_QUESTIONS) return;
     const nextMessages: ChatMessage[] = [...messages, { role: "user", content }];
+    // A clear goodbye ends the conversation locally. No extra AI credit is used.
+    if (/^(done|that's all|that's it|thank you|thanks|salamat|yun lang|iyon lang|okay na|ok na|tapos na|finished|end chat)[.!\s]*$/i.test(content)) {
+      setMessages([...nextMessages, { role: "assistant", content: "Salamat sa pag-chat! 😊 Please tap ‘Email JRC my inquiry’ below so the admin can review your details, answer any remaining questions, and prepare your price quote." }]);
+      setDraft("");
+      setError("");
+      setFinished(true);
+      return;
+    }
     setMessages(nextMessages);
     setDraft("");
     setLoading(true);
