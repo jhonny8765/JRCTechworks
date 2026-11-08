@@ -8,7 +8,8 @@ const scenes = [
   { id: "services", number: "03", label: "Services" },
   { id: "about", number: "04", label: "Studio" },
   { id: "arcade", number: "05", label: "Arcade" },
-  { id: "contact", number: "06", label: "Contact" },
+  { id: "rescue", number: "06", label: "System Rescue" },
+  { id: "contact", number: "07", label: "Contact" },
 ] as const;
 
 const lastIndex = scenes.length - 1;

@@ -3,7 +3,7 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .story-shell .site-header { position: sticky; top: 0; z-index: 40; background: rgba(8, 14, 26, .77); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom-color: rgba(117, 175, 210, .13); }
 .story-shell .header-inner { min-height: 79px; }
 /* During hydration, show one composed home scene instead of briefly exposing
-   all six stacked sections. With scripting disabled, the full readable page
+   all seven stacked sections. With scripting disabled, the full readable page
    remains available as a progressive-enhancement fallback. */
 @media (scripting: enabled) {
   .story-shell:not(.presentation-ready) .story-scene:not(.scene-home),
@@ -38,6 +38,7 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .story-shell .scene-services { background: radial-gradient(ellipse at 5% 62%, rgba(24, 113, 151, .16), transparent 47%), #0a101e; }
 .story-shell .scene-studio { background: radial-gradient(ellipse at 85% 32%, rgba(74, 65, 151, .16), transparent 45%), #090e1b; }
 .story-shell .scene-arcade { background: radial-gradient(ellipse at 66% 45%, rgba(50, 116, 167, .18), transparent 48%), #080f1d; }
+.story-shell .scene-rescue { background: radial-gradient(ellipse at 78% 50%, rgba(34, 140, 173, .19), transparent 54%), radial-gradient(ellipse at 10% 80%, rgba(65, 65, 159, .17), transparent 45%), #07101e; }
 .story-shell .scene-contact { background: radial-gradient(ellipse at 35% 70%, rgba(18, 121, 139, .09), transparent 45%), #080d18; }
 .story-shell .scene-contact.contact-section { padding: 0; }
 
@@ -181,6 +182,50 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .arcade-slide-cashier-art > span { padding: 9px 10px; background: #d6f2ea; color: #3f7177; border-radius: 5px; box-shadow: 0 6px 14px rgba(0,0,0,.18); font-size: 8px; font-weight: 800; letter-spacing: .14em; line-height: 1.8; transform: rotate(7deg); }
 .arcade-slide-cashier-art b { color: #18535a; font-size: 12px; letter-spacing: -.02em; }
 
+/* Dedicated System Rescue story slide. The preview is static CSS artwork:
+   no game bundle, animation loop, API call, or extra image download on home. */
+.rescue-slide-panel { display: grid; grid-template-columns: minmax(0,.86fr) minmax(0,1.14fr); min-height: 448px; border: 1px solid rgba(102,212,229,.37); border-radius: 22px; overflow: hidden; background: #0b1a2d; box-shadow: 0 27px 80px rgba(0,0,0,.26); }
+.rescue-slide-info { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; padding: clamp(30px,3.7vw,55px); background: radial-gradient(ellipse at 88% 14%,rgba(46,152,191,.16),transparent 64%),linear-gradient(145deg,#142d45,#0b1829 78%); }
+.rescue-slide-kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; color: #79e5e8; font-size: 9px; font-weight: 900; letter-spacing: .16em; }
+.rescue-slide-kicker span { display: block; height: 8px; width: 8px; border-radius: 50%; background: #68ebbe; box-shadow: 0 0 14px #68ebbe99; }
+.rescue-slide-info h3 { margin: 0 0 15px; color: #effcff; font-size: clamp(38px,3.8vw,59px); letter-spacing: -.07em; font-weight: 900; line-height: 1.04; }
+.rescue-slide-info h3 span { color: #77e1ed; }
+.rescue-slide-info > p:not(.rescue-slide-kicker) { color: #abc8db; line-height: 1.75; font-size: 13px; max-width: 410px; margin: 0 0 20px; }
+.rescue-slide-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 23px; }
+.rescue-slide-pills span { color: #99c5d8; padding: 8px 10px; border: 1px solid rgba(126,210,228,.25); border-radius: 999px; font-size: 9px; font-weight: 810; letter-spacing: .08em; }
+.rescue-slide-cta { min-height: 48px; gap: 25px; font-size: 12px; letter-spacing: .025em; }
+.rescue-slide-info > small { color: #668da6; font-size: 8px; letter-spacing: .08em; font-weight: 800; line-height: 1.5; margin-top: 17px; }
+.rescue-slide-screen { display: block; position: relative; isolation: isolate; min-width: 0; overflow: hidden; background: radial-gradient(ellipse at 55% 32%,rgba(58,127,177,.32),transparent 66%),repeating-linear-gradient(0deg,transparent,transparent 34px,#6abada0b 35px),linear-gradient(180deg,#0c2543,#091d33 70%,#07162b); }
+.rescue-slide-screen::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg,transparent,transparent 55px,rgba(106,209,233,.05) 56px); pointer-events: none; }
+.rescue-slide-screen:focus-visible { outline: 3px solid #8de9f6; outline-offset: -6px; }
+.rescue-slide-screen-top,.rescue-slide-screen-bottom { display: flex; position: absolute; left: 0; right: 0; z-index: 8; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 19px; color: #b7e7f0; font-size: 9px; font-weight: 850; letter-spacing: .09em; background: rgba(7,19,36,.73); }
+.rescue-slide-screen-top { top: 0; border-bottom: 1px solid rgba(109,220,234,.21); }
+.rescue-slide-screen-top > span { display: flex; align-items: center; gap: 9px; }
+.rescue-slide-screen-top i { display: block; width: 7px; height: 7px; background: #66eed1; border-radius: 50%; box-shadow: 0 0 10px #66eed1; }
+.rescue-slide-screen-top b { color: #69f3cf; font-size: 9px; white-space: nowrap; }
+.rescue-slide-screen-bottom { bottom: 0; justify-content: center; background: rgba(8,22,42,.95); border-top: 1px solid rgba(111,210,231,.25); }
+.rescue-slide-screen-bottom b { color: #4b728c; }
+.rescue-slide-screen-bottom span { margin-left: 16px; font-size: 17px; color: #8dffff; transition: transform 180ms; }
+.rescue-slide-screen:hover .rescue-slide-screen-bottom span { transform: translate(3px,-3px); }
+.rescue-slide-city { position: absolute; inset: 70px 0 65px; display: flex; align-items: end; gap: 4px; overflow: hidden; opacity: .6; }
+.rescue-slide-city i { display: block; flex: 1 1 0; height: 47%; min-width: 20px; background: repeating-linear-gradient(0deg,#346d8c60 0 3px,transparent 3px 22px),repeating-linear-gradient(90deg,#8be3f72c 0 4px,transparent 4px 23px),#163952; border-top: 1px solid #438ca566; }
+.rescue-slide-city i:nth-child(2n) { height: 66%; }.rescue-slide-city i:nth-child(3n) { height: 78%; }.rescue-slide-city i:nth-child(5n) { height: 55%; }
+.rescue-slide-platform { position: absolute; z-index: 2; height: 29px; bottom: 13%; border-top: 5px solid #56cfdc; border-bottom: 1px solid rgba(89,183,222,.21); background: repeating-linear-gradient(90deg,#15324c 0 26px,#1b4260 26px 40px); box-shadow: 0 -3px 15px #51d6e92b; }
+.rescue-slide-platform-a { left: 0; width: 46%; }.rescue-slide-platform-b { right: 0; width: 37%; }.rescue-slide-platform-c { left: 50%; bottom: 35%; width: 22%; height: 15px; border-top: 4px solid #62c7db; border-radius: 6px; }
+.rescue-slide-terminal { position: absolute; z-index: 4; left: 56%; bottom: 39%; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 86px; height: 106px; border: 4px solid #60e4ef; border-radius: 11px; background: #163b60; color: #e9feff; box-shadow: 0 0 24px #4cdbf651,0 8px 40px #0005; transform: rotate(4deg); }
+.rescue-slide-terminal b { font-size: 23px; line-height: 1; color: #79ffd2; }.rescue-slide-terminal strong { font-size: 14px; line-height: 1.1; text-align: center; letter-spacing: .07em; margin: 5px 0; }.rescue-slide-terminal small { font-size: 5px; color: #8ce5e9; font-weight: 850; letter-spacing: .07em; }
+.rescue-slide-glitch { position: absolute; z-index: 4; right: 12%; bottom: 21%; display: grid; place-items: center; width: 46px; height: 43px; border: 3px solid #bb80ff; border-radius: 15px; background: linear-gradient(125deg,#7831ac,#4e327e); box-shadow: 0 0 23px #b75fff68; transform: rotate(9deg); }
+.rescue-slide-glitch > i { position: absolute; left: 10%; right: 10%; bottom: 5px; height: 4px; border-radius: 4px; background: #f3bbff; }.rescue-slide-glitch b { color: #ecddff; font-size: 14px; letter-spacing: 3px; }
+.rescue-slide-gem { position: absolute; z-index: 3; color: #7cfff0; text-shadow: 0 0 20px #51fffacc; font-size: 19px; }
+.rescue-slide-gem-a { left: 44%; bottom: 47%; }.rescue-slide-gem-b { right: 20%; bottom: 57%; }
+.rescue-slide-bot { position: absolute; z-index: 5; display: flex; flex-direction: column; justify-content: center; align-items: center; left: 19%; bottom: 18%; width: 105px; height: 101px; background: linear-gradient(145deg,#5bd7f6,#4167c5); border: 5px solid #7df0ff; border-radius: 31px 31px 39px 39px; box-shadow: 0 0 0 5px #1b4d76,0 12px 28px #2eddf54a; transform: rotate(-7deg); transition: transform 200ms; }
+.rescue-slide-screen:hover .rescue-slide-bot { transform: translateY(-6px) rotate(-4deg); }
+.rescue-slide-bot-antenna { position: absolute; bottom: 100%; left: calc(50% - 2px); height: 17px; width: 4px; background: #78edfa; }.rescue-slide-bot-antenna::before { content: ""; position: absolute; top: -7px; left: -4px; background: #8ffff3; width: 12px; height: 12px; border-radius: 50%; }
+.rescue-slide-bot-face { display: flex; align-items: center; justify-content: center; gap: 17px; position: relative; width: 85px; height: 59px; border: 5px solid #78e9f6; border-radius: 25px; background: #092b4a; }
+.rescue-slide-bot-face i { display: block; width: 18px; height: 22px; border-radius: 50%; background: #fff; position: relative; }.rescue-slide-bot-face i::after { position: absolute; content: ""; top: 9px; left: 7px; width: 7px; height: 9px; border-radius: 50%; background: #123c67; }
+.rescue-slide-bot-face b { position: absolute; width: 13px; height: 6px; bottom: 6px; border-bottom: 2px solid #7ff4dc; border-radius: 50%; }
+.rescue-slide-bot > strong { font-size: 10px; font-weight: 950; line-height: 1; margin-top: 5px; padding: 4px 11px; border-radius: 20px; color: white; background: #104270; }
+
 /* Contact stays fully usable while visually fitting into the closing scene. */
 .story-shell .scene-contact .scene-heading { margin-bottom: 24px; }
 .story-shell .scene-contact .contact-panel { padding: clamp(27px, 3vw, 45px); gap: clamp(24px, 3vw, 45px); background: radial-gradient(circle at 5% 8%, rgba(38, 126, 169, .18), transparent 36%), #0d1627; }
@@ -233,6 +278,10 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .arcade-slide-emblem-glow { height: 130px; }
   .arcade-slide-emblem strong { font-size: 58px; }
   .arcade-slide-cards { min-height: 390px; }
+  .rescue-slide-panel { grid-template-columns: 1fr; }
+  .rescue-slide-info { padding: 31px; }
+  .rescue-slide-info h3 { font-size: 45px; }
+  .rescue-slide-screen { min-height: 330px; }
 }
 @media (max-width: 760px) {
   .story-shell .header-inner { min-height: 76px; }
@@ -285,6 +334,13 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .arcade-slide-card-copy small { font-size: 9px; }
   .arcade-slide-card-art { right: 1px; top: 29px; transform: scale(.64); }
   .arcade-slide-card-arrow { right: 10px; bottom: 10px; font-size: 14px; }
+  .rescue-slide-info { padding: 24px; }
+  .rescue-slide-info h3 { font-size: 39px; }
+  .rescue-slide-pills span { font-size: 8px; }
+  .rescue-slide-screen { min-height: 295px; }
+  .rescue-slide-bot { transform: scale(.8) rotate(-7deg); transform-origin: bottom left; }
+  .rescue-slide-terminal { transform: scale(.85) rotate(4deg); transform-origin: center bottom; }
+  .rescue-slide-screen-top,.rescue-slide-screen-bottom { font-size: 7px; padding: 12px 9px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html:has(.story-shell) { scroll-snap-type: none; scroll-behavior: auto; }
@@ -383,7 +439,7 @@ body:has(.story-shell.presentation-ready) {
   transition: none;
 }
 
-/* Reserve compositor layers for the moving slides, not all six full-screen
+/* Reserve compositor layers for the moving slides, not all seven full-screen
    scenes at once (which can consume significant GPU memory on laptops). */
 .story-shell.presentation-ready .story-scene[data-slide-state="active"],
 .story-shell.presentation-ready .story-scene[data-slide-state^="exit-"] {
@@ -491,6 +547,7 @@ body:has(.story-shell.presentation-ready) {
 }
 
 .story-shell.presentation-ready .arcade-slide-layout { min-height: min(430px, 51dvh); }
+.story-shell.presentation-ready .rescue-slide-panel { min-height: min(430px, 51dvh); }
 .story-shell.presentation-ready .arcade-slide-card { min-height: 0; }
 
 .story-shell.presentation-ready .studio-team-monogram {

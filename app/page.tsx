@@ -170,7 +170,43 @@ export default function Home() {
                 </a>
               </div>
             </div>
-            <a className="scene-next-link" href="#contact">Ready to build something? <ArrowIcon /></a>
+            <a className="scene-next-link" href="#rescue">Meet JRC Bot: System Rescue <ArrowIcon /></a>
+          </div>
+        </section>
+
+        <section id="rescue" className="story-scene scene-rescue" aria-labelledby="rescue-slide-title">
+          <div className="container scene-frame">
+            <div className="scene-heading" data-reveal>
+              <div>
+                <p className="section-label"><span>06 /</span> FEATURED JRC ORIGINAL</p>
+                <h2 id="rescue-slide-title">Small bot.<br /><em>Big mission.</em></h2>
+              </div>
+              <p>Meet the little robot who fixes big problems. Our newest browser game is built around the business systems we love creating.</p>
+            </div>
+            <div className="rescue-slide-panel" data-reveal>
+              <div className="rescue-slide-info">
+                <p className="rescue-slide-kicker"><span /> NOW PLAYABLE / FREE</p>
+                <h3>JRC BOT:<br /><span>SYSTEM RESCUE.</span></h3>
+                <p>Jump between platforms, dodge glitches, and repair three worlds: a broken cashier, a chaotic stockroom, and a booking system in trouble.</p>
+                <div className="rescue-slide-pills"><span>03 LEVELS</span><span>DOUBLE JUMP + DASH</span><span>ONLINE SCORES</span></div>
+                <a className="button primary-button rescue-slide-cta" href="/arcade/system-rescue">PLAY THE GAME <ArrowIcon diagonal /></a>
+                <small>YOUR PLAYER NAME &amp; PERSONAL BEST STAY SAVED IN THIS BROWSER.</small>
+              </div>
+              <a className="rescue-slide-screen" href="/arcade/system-rescue" aria-label="Play JRC Bot: System Rescue">
+                <span className="rescue-slide-screen-top"><span><i /> SYSTEM RESCUE / WORLD 01</span><b>● LIVE GAME</b></span>
+                <span className="rescue-slide-city" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /><i /><i /></span>
+                <span className="rescue-slide-terminal" aria-hidden="true"><b>✓</b><strong>POS<br />REPAIR</strong><small>RESTORE SYSTEM</small></span>
+                <span className="rescue-slide-glitch" aria-hidden="true"><i/><b>× ×</b></span>
+                <span className="rescue-slide-bot" aria-hidden="true"><i className="rescue-slide-bot-antenna"/><span className="rescue-slide-bot-face"><i/><i/><b/></span><strong>JRC</strong></span>
+                <span className="rescue-slide-platform rescue-slide-platform-a" aria-hidden="true" />
+                <span className="rescue-slide-platform rescue-slide-platform-b" aria-hidden="true" />
+                <span className="rescue-slide-platform rescue-slide-platform-c" aria-hidden="true" />
+                <span className="rescue-slide-gem rescue-slide-gem-a" aria-hidden="true">◆</span>
+                <span className="rescue-slide-gem rescue-slide-gem-b" aria-hidden="true">◆</span>
+                <span className="rescue-slide-screen-bottom">JUMP THE GAPS <b>•</b> FIX THE GLITCHES <b>•</b> SAVE THE DAY <span>↗</span></span>
+              </a>
+            </div>
+            <a className="scene-next-link" href="#contact">Ready to build something real? <ArrowIcon /></a>
           </div>
         </section>
 
@@ -178,7 +214,7 @@ export default function Home() {
           <div className="container scene-frame">
             <div className="scene-heading" data-reveal>
               <div>
-                <p className="section-label"><span>06 /</span> YOUR TURN</p>
+                <p className="section-label"><span>07 /</span> YOUR TURN</p>
                 <h2 id="contact-title">Let's build <em>something useful.</em></h2>
               </div>
               <p>Got a website, POS, inventory tool, app, or automation in mind? Start with a short brief.</p>
