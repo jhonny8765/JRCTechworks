@@ -17,6 +17,10 @@ export default function AssistantChat({ open, onClose }: { open: boolean; onClos
   const [loading, setLoading] = useState(false);
   const [finished, setFinished] = useState(false);
   const [error, setError] = useState("");
+  const [leadName, setLeadName] = useState("");
+  const [leadContact, setLeadContact] = useState("");
+  const [copyStatus, setCopyStatus] = useState("");
+  const [manualBrief, setManualBrief] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<AbortController | null>(null);
@@ -95,8 +99,40 @@ export default function AssistantChat({ open, onClose }: { open: boolean; onClos
     void send(draft);
   };
 
-  const transcript = messages.map((message) => `${message.role === "user" ? "Visitor" : "JRC assistant"}: ${message.content}`).join("\n\n");
-  const emailLink = `mailto:${leadEmail}?subject=${encodeURIComponent("Project inquiry from JRC website chat")}&body=${encodeURIComponent(`Hello JRC Techworks,\n\nHere's my chat and project inquiry:\n\n${transcript}\n\nPlease contact me about a quote.\n\nMy name: \nPreferred contact: `)}`;
+  // Webmail links work without an installed default mail application. Include
+  // visitor answers (not every assistant reply) to keep the URL manageable.
+  const inquiry = messages.filter((message) => message.role === "user")
+    .map((message, index) => `${index + 1}. ${message.content.slice(0, 420)}`).join("\n");
+  const emailSubject = "Project inquiry from JRC website chat";
+  const emailText = [
+    "Hello JRC Techworks,",
+    "",
+    "I would like to ask for a project quotation or follow-up.",
+    `Name: ${leadName.trim() || "Not provided"}`,
+    `Preferred contact: ${leadContact.trim() || "Reply to this email"}`,
+    "",
+    "My questions and project details:",
+    inquiry || "I'd like to discuss a project.",
+    "",
+    "Thank you!",
+  ].join("\n");
+  const encodedTo = encodeURIComponent(leadEmail);
+  const encodedSubject = encodeURIComponent(emailSubject);
+  const encodedBody = encodeURIComponent(emailText);
+  const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodedTo}&su=${encodedSubject}&body=${encodedBody}`;
+  const outlookLink = `https://outlook.office.com/mail/deeplink/compose?to=${encodedTo}&subject=${encodedSubject}&body=${encodedBody}`;
+
+  const copyInquiry = async () => {
+    const fullText = `To: ${leadEmail}\nSubject: ${emailSubject}\n\n${emailText}`;
+    try {
+      await navigator.clipboard.writeText(fullText);
+      setManualBrief("");
+      setCopyStatus("Copied! Paste into your email or Messenger, then press Send.");
+    } catch {
+      setManualBrief(fullText);
+      setCopyStatus("Copy the prepared message below and paste it into your email.");
+    }
+  };
 
   if (!open) return null;
 
@@ -118,9 +154,19 @@ export default function AssistantChat({ open, onClose }: { open: boolean; onClos
       {finished ? (
         <div className="jrc-chat__finish">
           <strong>Salamat! Ready for the next step?</strong>
-          <p>Send your chat to JRC. The admin will review your details, answer follow-up questions, and give a price quote. This opens an email draft for you to send.</p>
-          <a className="jrc-chat__send" href={emailLink}>Email JRC my inquiry ↗</a>
-          <button type="button" className="jrc-chat__secondary" onClick={() => { setMessages([greeting]); setDraft(""); setFinished(false); setError(""); }}>Start new chat</button>
+          <p>Para makapagbigay kami ng quotation, add your contact details. Open a webmail draft and press Send there—the admin will review your inquiry.</p>
+          <div className="jrc-chat__lead-fields">
+            <label htmlFor="jrc-lead-name">Your name (optional)<input id="jrc-lead-name" type="text" autoComplete="name" maxLength={80} placeholder="Your name" value={leadName} onChange={(event) => setLeadName(event.target.value)} /></label>
+            <label htmlFor="jrc-lead-contact">Email or phone (optional)<input id="jrc-lead-contact" type="text" autoComplete="email" maxLength={120} placeholder="Where can we reach you?" value={leadContact} onChange={(event) => setLeadContact(event.target.value)} /></label>
+          </div>
+          <a className="jrc-chat__send" href={gmailLink} target="_blank" rel="noopener noreferrer" onClick={() => setCopyStatus("Gmail opens in a new tab. Review your message and press Send. You may need to sign in.")}>Open Gmail draft ↗</a>
+          <div className="jrc-chat__other-actions">
+            <a href={outlookLink} target="_blank" rel="noopener noreferrer" onClick={() => setCopyStatus("Outlook opens in a new tab. Review your message and press Send.")}>Use Outlook ↗</a>
+            <button type="button" onClick={() => void copyInquiry()}>Copy inquiry</button>
+          </div>
+          {copyStatus && <p className="jrc-chat__copy-status" role="status">{copyStatus}</p>}
+          {manualBrief && <textarea className="jrc-chat__manual-brief" readOnly aria-label="Prepared inquiry text to copy" value={manualBrief} rows={4} onFocus={(event) => event.target.select()} />}
+          <button type="button" className="jrc-chat__secondary" onClick={() => { setMessages([greeting]); setDraft(""); setFinished(false); setError(""); setCopyStatus(""); setManualBrief(""); setLeadName(""); setLeadContact(""); }}>Start new chat</button>
         </div>
       ) : (
         <>

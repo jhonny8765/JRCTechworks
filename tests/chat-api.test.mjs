@@ -17,6 +17,9 @@ test("returns safe assistant reply via server-side binding", async () => {
   assert.equal(result.status, 200);
   assert.equal((await result.json()).reply, "We can track stocks daily.");
   assert.equal(invocation.options.messages[0].role, "system");
+  assert.match(invocation.options.messages[0].content, /SukiSuite/);
+  assert.match(invocation.options.messages[0].content, /Better Yield POS/);
+  assert.match(invocation.options.messages[0].content, /human admin/);
   assert.equal(invocation.options.messages.at(-1).role, "user");
   assert.equal(result.headers.get("Cache-Control"), "no-store");
 });
