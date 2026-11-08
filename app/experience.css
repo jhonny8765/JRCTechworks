@@ -331,7 +331,10 @@ body:has(.story-shell.presentation-ready) {
   visibility: visible;
   pointer-events: auto;
   z-index: 3;
-  transition: transform 750ms cubic-bezier(.72, 0, .24, 1), opacity 450ms ease;
+  /* An entering slide must be opaque from the first frame. Fading it in
+     while the previous slide moves away exposed the dark canvas as a blink,
+     most noticeably when scrolling back upward. */
+  transition: transform 750ms cubic-bezier(.72, 0, .24, 1);
 }
 
 .story-shell.presentation-ready .story-scene[data-slide-state="exit-before"],
@@ -369,26 +372,17 @@ body:has(.story-shell.presentation-ready) {
   animation: none;
 }
 
-.story-shell.presentation-ready .story-scene[data-slide-state="active"] [data-reveal] {
+.story-shell.presentation-ready[data-transitioning="forward"] .story-scene[data-slide-state="active"] [data-reveal] {
   animation: story-content-enter 540ms cubic-bezier(.17, .82, .23, 1) 100ms both;
 }
 
-.story-shell.presentation-ready .story-scene[data-slide-state="active"] .scene-heading + [data-reveal],
-.story-shell.presentation-ready .story-scene[data-slide-state="active"] .hero-art[data-reveal] {
+.story-shell.presentation-ready[data-transitioning="forward"] .story-scene[data-slide-state="active"] .scene-heading + [data-reveal],
+.story-shell.presentation-ready[data-transitioning="forward"] .story-scene[data-slide-state="active"] .hero-art[data-reveal] {
   animation-delay: 190ms;
-}
-
-.story-shell.presentation-ready[data-transitioning="backward"] .story-scene[data-slide-state="active"] [data-reveal] {
-  animation-name: story-content-enter-back;
 }
 
 @keyframes story-content-enter {
   from { opacity: 0; transform: translate3d(0, 25px, 0) scale(.987); }
-  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
-}
-
-@keyframes story-content-enter-back {
-  from { opacity: 0; transform: translate3d(0, -25px, 0) scale(.987); }
   to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
 
