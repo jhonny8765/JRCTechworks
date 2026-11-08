@@ -13,7 +13,7 @@ import { contactEmail, gmailComposeHref, socialLinks } from "@/lib/contact";
 
 export default function Home() {
   return (
-    <div className="site-shell story-shell">
+    <div className="site-shell story-shell editorial-preview">
       <ScrollExperience />
       <CursorCompanion />
       <div className="ambient ambient-purple" aria-hidden="true" />
