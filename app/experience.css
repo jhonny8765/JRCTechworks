@@ -362,10 +362,10 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .arcade-slide-feature { min-height: 285px; }
   .arcade-slide-cards { grid-template-columns: 1fr; grid-template-rows: none; min-height: 0; gap: 9px; padding: 10px; }
   .arcade-slide-card { min-height: 115px; padding: 15px 17px; border-radius: 12px; }
-  .arcade-slide-card-number { font-size: 9px; }
+  .arcade-slide-card-number { font-size: 10px; }
   .arcade-slide-card-copy { max-width: calc(100% - 115px); gap: 5px; }
   .arcade-slide-card-copy strong { font-size: clamp(17px, 4.6vw, 21px); }
-  .arcade-slide-card-copy small { font-size: 10px; line-height: 1.4; }
+  .arcade-slide-card-copy small { font-size: 12px; line-height: 1.45; }
   .arcade-slide-card-art { top: 18px; right: 23px; transform: scale(.68); transform-origin: top right; }
   .arcade-slide-card-arrow { right: 12px; bottom: 12px; }
   .rescue-slide-screen { min-height: 285px; }
@@ -777,7 +777,7 @@ body:has(.story-shell.presentation-ready) {
 @keyframes buddy-invite { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 @media (hover: none), (pointer: coarse), (max-width: 900px) {
   .cursor-companion, .cursor-companion[data-scene] {
-    transform: translate3d(calc(100vw - 78px), calc(100dvh - 91px), 0) scale(.5);
+    transform: translate3d(calc(100vw - 78px - env(safe-area-inset-right)), calc(100dvh - 91px - env(safe-area-inset-bottom)), 0) scale(.5);
     transform-origin: top left;
     z-index: 101;
   }
@@ -787,6 +787,17 @@ body:has(.story-shell.presentation-ready) {
   .cursor-companion.is-walking .cursor-companion__foot-left,
   .cursor-companion.is-walking .cursor-companion__foot-right,
   .cursor-companion.is-walking .cursor-companion__arm-left { animation: none; }
+}
+/* The guide stays out of the way of open mobile navigation and the conversation. */
+@media (max-width: 900px) {
+  body:has(.mobile-nav.is-open) .cursor-companion,
+  body:has(.jrc-chat) .cursor-companion { visibility: hidden; pointer-events: none; }
+}
+@media (max-width: 380px) {
+  .cursor-companion, .cursor-companion[data-scene] {
+    transform: translate3d(calc(100vw - 71px - env(safe-area-inset-right)), calc(100dvh - 84px - env(safe-area-inset-bottom)), 0) scale(.44);
+  }
+  .cursor-companion__hello { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cursor-companion,
@@ -849,10 +860,16 @@ body:has(.story-shell.presentation-ready) {
 .jrc-chat__copy-status { color: #b7eed3 !important; }
 .jrc-chat__manual-brief { width: 100%; resize: vertical; border: 1px solid #5e889c; border-radius: 7px; padding: 9px; color: #f2ffff; background: #15263c; font: 11px/1.5 ui-monospace, monospace; }
 @media (max-width: 600px) {
-  .jrc-chat { right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); width: calc(100vw - 20px); height: min(570px, calc(100dvh - 100px)); }
+  .jrc-chat { left: max(10px, env(safe-area-inset-left)); right: max(10px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom)); width: auto; height: min(570px, calc(100dvh - 100px)); border-radius: 15px; }
   .jrc-chat__header { padding: 12px 13px; }
+  .jrc-chat__close { width: 44px; height: 44px; flex: 0 0 44px; }
   .jrc-chat__messages { padding: 12px; }
+  .jrc-chat__message { font-size: 13px; }
+  .jrc-chat__suggestions button { min-height: 40px; font-size: 12px; }
   .jrc-chat__form textarea { font-size: 16px; }
+  .jrc-chat__form button { min-height: 44px; }
+  .jrc-chat__footer { flex-wrap: wrap; gap: 3px 12px; font-size: 11px; }
+  .jrc-chat__footer button { min-height: 40px; padding: 8px 0; }
 }
 @media (prefers-reduced-motion: reduce) { .jrc-chat { animation: none; } }
 
