@@ -251,6 +251,12 @@
   box-shadow: none; width: auto;
 }
 .editorial-preview .inquiry-submit:hover, .editorial-preview .inquiry-copy:hover { color: #fff; background: transparent; }
+.editorial-preview .contact-form-anchor .inquiry-submit,
+.editorial-preview .contact-form-anchor .inquiry-copy {
+  background: transparent; color: #fff; box-shadow: none;
+  border: 0; border-bottom: 1px solid #fff; border-radius: 0;
+  padding: 4px 0 8px; font-size: 13px; font-weight: 400;
+}
 .editorial-preview .inquiry-send-options { background: #090909; border: 1px solid #555; border-radius: 0; }
 .editorial-preview .inquiry-send-title, .editorial-preview .inquiry-send-help,
 .editorial-preview .inquiry-privacy { color: #aaa; }
@@ -323,6 +329,14 @@
   .editorial-preview.presentation-ready .scene-contact .inquiry-form { padding: 17px 20px; }
   .editorial-preview.presentation-ready .scene-contact .inquiry-intro { margin-bottom: 12px; }
   .editorial-preview.presentation-ready .scene-contact .contact-channels { margin-top: 8px; }
+  .editorial-preview.story-shell.presentation-ready .scene-contact .contact-panel { padding: 14px 20px; }
+  .editorial-preview.story-shell.presentation-ready .scene-contact .contact-copy h3 {
+    font-size: clamp(39px, 3.7vw, 56px); margin-bottom: 10px;
+  }
+  .editorial-preview.story-shell.presentation-ready .scene-contact .inquiry-form { padding: 13px 18px 12px; }
+  .editorial-preview.story-shell.presentation-ready .scene-contact .inquiry-field textarea { min-height: 74px; padding: 8px 12px; }
+  .editorial-preview.story-shell.presentation-ready .scene-contact .inquiry-field input,
+  .editorial-preview.story-shell.presentation-ready .scene-contact .inquiry-field select { padding: 8px 12px; }
 }
 @media (max-width: 1100px) {
   .editorial-preview .site-header { background: rgba(0,0,0,.96); }
