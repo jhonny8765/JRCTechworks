@@ -505,6 +505,30 @@ body:has(.story-shell.presentation-ready) {
 }
 
 /* Keep the full contact journey visible on common desktop laptop displays. */
+/* A tiny original JRC robot follows fine pointers but cannot obstruct site controls. */
+.cursor-companion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 112px;
+  height: 138px;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(-150px, -150px, 0);
+  transition: opacity 240ms ease, visibility 240ms ease;
+  will-change: transform;
+}
+.cursor-companion.is-visible { opacity: 1; visibility: visible; }
+.cursor-companion__float { position: relative; width: 112px; height: 138px; animation: buddy-hover 2.8s ease-in-out infinite; filter: drop-shadow(0 12px 18px rgba(4, 10, 30, .32)); }
+.cursor-companion__pupil { transform: translate(var(--buddy-look-x, 0px), var(--buddy-look-y, 0px)); transition: transform 100ms ease-out; }
+.cursor-companion__hello { position: absolute; top: 12px; right: -18px; border-radius: 10px 10px 10px 2px; padding: 4px 7px; background: #0c1c36; color: #acf8ff; border: 1px solid rgba(136, 245, 254, .65); font: 800 9px/1.2 ui-sans-serif, system-ui, sans-serif; letter-spacing: .09em; box-shadow: 0 5px 15px rgba(0, 0, 0, .25); }
+@keyframes buddy-hover { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) { .cursor-companion { display: none !important; } }
+
+/* Keep the full contact journey visible on common desktop laptop displays. */
 @media (min-width: 1101px) and (min-height: 760px) {
   .story-shell.presentation-ready .scene-contact .scene-frame { padding-top: 12px; padding-bottom: 12px; }
   .story-shell.presentation-ready .scene-contact .contact-panel { padding: 18px 25px; }

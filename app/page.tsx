@@ -3,6 +3,7 @@ import BrowserFrame from "@/components/browser-frame";
 import ArrowIcon from "@/components/arrow-icon";
 import SiteFooter from "@/components/site-footer";
 import ScrollExperience from "@/components/scroll-experience";
+import CursorCompanion from "@/components/cursor-companion";
 import WorkShowcase from "@/components/work-showcase";
 import ServicesExplorer from "@/components/services-explorer";
 import StudioScene from "@/components/studio-scene";
@@ -14,6 +15,7 @@ export default function Home() {
   return (
     <div className="site-shell story-shell">
       <ScrollExperience />
+      <CursorCompanion />
       <div className="ambient ambient-purple" aria-hidden="true" />
       <div className="ambient ambient-blue" aria-hidden="true" />
       <SiteHeader />
