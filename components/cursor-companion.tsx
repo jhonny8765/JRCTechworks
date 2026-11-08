@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import AssistantChat from "./assistant-chat";
 
 type Scene = "top" | "work" | "services" | "about" | "contact";
 
@@ -9,11 +10,12 @@ const isScene = (value: string | undefined): value is Scene =>
 
 /** A stage companion: anchored per scene, animated between scenes, and attentive to the pointer. */
 export default function CursorCompanion() {
-  const buddyRef = useRef<HTMLAnchorElement>(null);
+  const buddyRef = useRef<HTMLButtonElement>(null);
   const [scene, setScene] = useState<Scene>("top");
   const [walking, setWalking] = useState(false);
   const [excited, setExcited] = useState(false);
   const [ready, setReady] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     const buddy = buddyRef.current;
@@ -82,12 +84,16 @@ export default function CursorCompanion() {
   }, []);
 
   return (
-    <a
+    <>
+    <button
+      type="button"
       className={`cursor-companion${ready ? " is-ready" : ""}${walking ? " is-walking" : ""}${excited ? " is-excited" : ""}`}
       data-scene={scene}
       ref={buddyRef}
-      href={scene === "contact" ? "#project-brief" : "#contact"}
-      aria-label={scene === "contact" ? "Let's talk about your project" : "Meet JRC Techworks — get in touch"}
+      aria-label={chatOpen ? "Close JRC assistant chat" : "Ask JRC assistant a question"}
+      aria-expanded={chatOpen}
+      aria-controls="jrc-assistant-chat"
+      onClick={() => setChatOpen((open) => !open)}
       onMouseEnter={() => setExcited(true)}
       onMouseLeave={() => setExcited(false)}
       onFocus={() => setExcited(true)}
@@ -142,9 +148,11 @@ export default function CursorCompanion() {
           <g className="cursor-companion__foot-right"><path d="M73 123V129" stroke="#67C4F7" strokeWidth="8" strokeLinecap="round" /></g>
         </svg>
         <span className="cursor-companion__hello" aria-hidden="true">
-          {scene === "contact" ? "LET'S TALK!" : excited ? "HEY, YOU!" : "HELLO!"}
+          {chatOpen ? "CHATTING!" : excited ? "ASK ME!" : "ASK ME!"}
         </span>
       </div>
-    </a>
+    </button>
+    <AssistantChat open={chatOpen} onClose={() => setChatOpen(false)} />
+    </>
   );
 }
