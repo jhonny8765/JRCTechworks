@@ -274,6 +274,15 @@
   .arcade-game-overlay p { font-size: 11px; }
   .arcade-outro h2 { font-size: 42px; }
 }
+@media (max-width: 430px) {
+  /* Full-width game choices are more legible and easier to tap on phones. */
+  .arcade-game-list { grid-template-columns: 1fr; }
+  .arcade-select-card { min-height: 174px; padding: 15px 17px; }
+  .arcade-select-bottom strong { font-size: 18px; }
+  .arcade-select-bottom small { font-size: 10px; }
+  .arcade-directions button { min-width: 44px; min-height: 44px; }
+  .arcade-game-overlay { padding: 16px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .arcade-shell *, .arcade-shell *::before, .arcade-shell *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }

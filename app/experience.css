@@ -2,10 +2,9 @@
 html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px; }
 .story-shell .site-header { position: sticky; top: 0; z-index: 40; background: rgba(8, 14, 26, .77); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom-color: rgba(117, 175, 210, .13); }
 .story-shell .header-inner { min-height: 79px; }
-/* During hydration, show one composed home scene instead of briefly exposing
-   all seven stacked sections. With scripting disabled, the full readable page
-   remains available as a progressive-enhancement fallback. */
-@media (scripting: enabled) {
+/* Only desktop needs the single-slide hydration guard. On mobile every
+   section must stay in the normal document flow for native touch scrolling. */
+@media (scripting: enabled) and (min-width: 901px) {
   .story-shell:not(.presentation-ready) .story-scene:not(.scene-home),
   .story-shell:not(.presentation-ready) > .footer { display: none; }
   .story-shell:not(.presentation-ready) .scene-home { min-height: 100dvh; }
@@ -248,8 +247,11 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .arcade-slide-card-art { right: 8px; transform: scale(.84); transform-origin: top right; }
 }
 @media (max-width: 900px) {
-  html:has(.story-shell) { scroll-snap-type: none; scroll-padding-top: 76px; }
-  .story-shell .story-scene { min-height: auto; scroll-snap-align: none; }
+  html:has(.story-shell) { scroll-snap-type: none; scroll-behavior: auto; scroll-padding-top: 76px; }
+  .story-shell .site-header { z-index: 110; background: #091322; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .story-shell .story-scene { min-height: auto; scroll-snap-align: none; scroll-margin-top: 76px; }
+  .story-shell .anchor-marker { scroll-margin-top: 76px; }
+  .story-shell .contact-form-anchor { scroll-margin-top: 90px; }
   .story-shell .scene-frame { padding: 81px 0 64px; }
   .story-shell .scene-home { min-height: 0; }
   .story-shell .scene-home .hero-layout { min-height: auto; }
@@ -341,6 +343,40 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .rescue-slide-bot { transform: scale(.8) rotate(-7deg); transform-origin: bottom left; }
   .rescue-slide-terminal { transform: scale(.85) rotate(4deg); transform-origin: center bottom; }
   .rescue-slide-screen-top,.rescue-slide-screen-bottom { font-size: 7px; padding: 12px 9px; }
+}
+/* A narrow arcade card must have room for both its game art and a readable
+   title. Use easy-to-tap rows rather than four cramped miniature panels. */
+@media (max-width: 600px) {
+  .story-shell .scene-frame { padding-top: 55px; padding-bottom: 52px; }
+  .story-shell .scene-heading { margin-bottom: 23px; }
+  .story-shell .scene-heading h2 { font-size: clamp(34px, 8.4vw, 47px); }
+  .story-shell .scene-heading > p { font-size: 13px; line-height: 1.65; margin-top: 13px; }
+  .story-shell .scene-home .hero-art { height: min(340px, 88vw); }
+  .story-shell .scene-home .hero-copy { padding-top: 27px; }
+  .story-shell .mobile-swipe-hint { letter-spacing: .08em; }
+  .work-feature-copy h3 { font-size: clamp(35px, 9vw, 45px); }
+  .work-feature-description { font-size: 13px; }
+  .work-feature-actions { margin-top: 23px; }
+  .service-stage-content h3 { font-size: clamp(33px, 8vw, 42px); }
+  .service-stage-content > p:not(.section-label) { font-size: 13px; }
+  .arcade-slide-feature { min-height: 285px; }
+  .arcade-slide-cards { grid-template-columns: 1fr; grid-template-rows: none; min-height: 0; gap: 9px; padding: 10px; }
+  .arcade-slide-card { min-height: 115px; padding: 15px 17px; border-radius: 12px; }
+  .arcade-slide-card-number { font-size: 9px; }
+  .arcade-slide-card-copy { max-width: calc(100% - 115px); gap: 5px; }
+  .arcade-slide-card-copy strong { font-size: clamp(17px, 4.6vw, 21px); }
+  .arcade-slide-card-copy small { font-size: 10px; line-height: 1.4; }
+  .arcade-slide-card-art { top: 18px; right: 23px; transform: scale(.68); transform-origin: top right; }
+  .arcade-slide-card-arrow { right: 12px; bottom: 12px; }
+  .rescue-slide-screen { min-height: 285px; }
+  .story-shell .scene-contact .contact-panel { padding: 20px; }
+  .story-shell .scene-contact .contact-copy h3 { font-size: clamp(37px, 9vw, 46px); }
+}
+@media (max-width: 380px) {
+  .story-shell .scene-home .hero-title { font-size: clamp(35px, 10vw, 40px); }
+  .story-shell .scene-home .hero-art { height: min(300px, 83vw); }
+  .arcade-slide-card-copy { max-width: calc(100% - 97px); }
+  .arcade-slide-card-art { right: 11px; transform: scale(.57); }
 }
 @media (prefers-reduced-motion: reduce) {
   html:has(.story-shell) { scroll-snap-type: none; scroll-behavior: auto; }
@@ -741,10 +777,16 @@ body:has(.story-shell.presentation-ready) {
 @keyframes buddy-invite { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 @media (hover: none), (pointer: coarse), (max-width: 900px) {
   .cursor-companion, .cursor-companion[data-scene] {
-    transform: translate3d(calc(100vw - 98px), calc(100dvh - 138px), 0) scale(.72);
+    transform: translate3d(calc(100vw - 78px), calc(100dvh - 91px), 0) scale(.5);
     transform-origin: top left;
     z-index: 101;
   }
+  .cursor-companion__float,
+  .cursor-companion.is-excited:not(.is-walking) .cursor-companion__float,
+  .cursor-companion.is-walking .cursor-companion__float { animation: none; }
+  .cursor-companion.is-walking .cursor-companion__foot-left,
+  .cursor-companion.is-walking .cursor-companion__foot-right,
+  .cursor-companion.is-walking .cursor-companion__arm-left { animation: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cursor-companion,
@@ -806,7 +848,12 @@ body:has(.story-shell.presentation-ready) {
 .jrc-chat__other-actions a, .jrc-chat__other-actions button { padding: 0; border: 0; background: transparent; color: #86e2f6; font: 750 11px/1.6 ui-sans-serif, system-ui, sans-serif; text-decoration: underline; cursor: pointer; }
 .jrc-chat__copy-status { color: #b7eed3 !important; }
 .jrc-chat__manual-brief { width: 100%; resize: vertical; border: 1px solid #5e889c; border-radius: 7px; padding: 9px; color: #f2ffff; background: #15263c; font: 11px/1.5 ui-monospace, monospace; }
-@media (max-width: 600px) { .jrc-chat { right: 10px; bottom: 10px; width: calc(100vw - 20px); height: min(580px, calc(100dvh - 22px)); } }
+@media (max-width: 600px) {
+  .jrc-chat { right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); width: calc(100vw - 20px); height: min(570px, calc(100dvh - 100px)); }
+  .jrc-chat__header { padding: 12px 13px; }
+  .jrc-chat__messages { padding: 12px; }
+  .jrc-chat__form textarea { font-size: 16px; }
+}
 @media (prefers-reduced-motion: reduce) { .jrc-chat { animation: none; } }
 
 /* Keep the full contact journey visible on common desktop laptop displays. */

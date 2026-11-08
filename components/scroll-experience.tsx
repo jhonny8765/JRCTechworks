@@ -60,6 +60,48 @@ export default function ScrollExperience() {
     if (!shellElement || sections.length !== scenes.length) return;
     const shell: HTMLElement = shellElement;
 
+    // Phones use the browser's native page scroll. The desktop presentation
+    // intentionally locks the document and moves slides, but that makes a
+    // tall phone scene difficult to read, reach, or navigate with touch.
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      let scrollFrame: number | null = null;
+
+      const updateVisibleScene = () => {
+        scrollFrame = null;
+        const readingLine = Math.min(220, Math.max(105, window.innerHeight * 0.32));
+        let visibleIndex = 0;
+        sections.forEach((section, index) => {
+          if (section.getBoundingClientRect().top <= readingLine) visibleIndex = index;
+        });
+
+        if (visibleIndex !== activeRef.current || !shell.dataset.currentScene) {
+          activeRef.current = visibleIndex;
+          setActiveIndex(visibleIndex);
+          shell.dataset.currentScene = scenes[visibleIndex].id;
+          window.dispatchEvent(new CustomEvent("jrc:scenechange", { detail: scenes[visibleIndex].id }));
+        }
+      };
+
+      const scheduleUpdate = () => {
+        if (scrollFrame === null) scrollFrame = window.requestAnimationFrame(updateVisibleScene);
+      };
+
+      // Native links, scrolling, history, and form focus remain untouched.
+      // No inert slides and no wheel/touch/key interception on narrow screens.
+      window.addEventListener("scroll", scheduleUpdate, { passive: true });
+      window.addEventListener("resize", scheduleUpdate);
+      window.addEventListener("hashchange", scheduleUpdate);
+      scheduleUpdate();
+
+      return () => {
+        if (scrollFrame !== null) window.cancelAnimationFrame(scrollFrame);
+        window.removeEventListener("scroll", scheduleUpdate);
+        window.removeEventListener("resize", scheduleUpdate);
+        window.removeEventListener("hashchange", scheduleUpdate);
+        delete shell.dataset.currentScene;
+      };
+    }
+
     const previousRestoration = window.history.scrollRestoration;
     window.history.scrollRestoration = "manual";
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

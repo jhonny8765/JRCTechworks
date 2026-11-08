@@ -352,7 +352,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   .menu-toggle.is-open span:first-child { transform: translateY(7px) rotate(45deg); }
   .menu-toggle.is-open span:nth-child(2) { opacity: 0; }
   .menu-toggle.is-open span:last-child { transform: translateY(-7px) rotate(-45deg); }
-  .mobile-nav { display: flex; position: absolute; z-index: 20; top: 100%; left: 0; right: 0; padding: 13px 19px 21px; background: #0b1321; border-bottom: 1px solid var(--line); flex-direction: column; gap: 0; box-shadow: 0 20px 40px rgba(0,0,0,.3); opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-10px); transition: opacity 230ms ease, transform 230ms ease, visibility 230ms; }
+  .mobile-nav { display: flex; position: absolute; z-index: 20; top: 100%; left: 0; right: 0; max-height: calc(100dvh - 78px); overflow-y: auto; overscroll-behavior: contain; padding: 13px 19px 21px; background: #0b1321; border-bottom: 1px solid var(--line); flex-direction: column; gap: 0; box-shadow: 0 20px 40px rgba(0,0,0,.3); opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-10px); transition: opacity 230ms ease, transform 230ms ease, visibility 230ms; }
   .mobile-nav.is-open { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
   .mobile-nav a { padding: 14px 8px; font-size: 15px; color: #d9e9f9; border-bottom: 1px solid rgba(150,176,206,.1); }
   .mobile-nav a:last-child { color: var(--cyan); border-bottom: 0; }
@@ -613,6 +613,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 @media (max-width: 760px) {
   .case-inquiry-layout { flex-direction: column; align-items: flex-start; gap: 28px; }
   .case-inquiry-layout > a { width: 100%; }
+}
+@media (max-width: 600px) {
+  .inquiry-field-row { grid-template-columns: 1fr; gap: 0; }
+  .contact-channel-grid { grid-template-columns: 1fr; }
+  .inquiry-field input, .inquiry-field select, .inquiry-field textarea { font-size: 16px; }
 }
 @media (max-width: 430px) {
   .inquiry-form { padding: 19px 17px; }
