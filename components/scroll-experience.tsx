@@ -86,6 +86,24 @@ export default function ScrollExperience() {
         if (scrollFrame === null) scrollFrame = window.requestAnimationFrame(updateVisibleScene);
       };
 
+      // Reveal each mobile section as it enters the viewport. Keep natural
+      // scrolling and all interactive controls untouched; if the API or motion
+      // preference disallows it, content remains visible without animation.
+      const revealTargets = Array.from(shell.querySelectorAll<HTMLElement>("[data-reveal]"));
+      let revealObserver: IntersectionObserver | null = null;
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+        shell.classList.add("motion-enabled");
+        revealObserver = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const element = entry.target as HTMLElement;
+            element.dataset.motionVisible = "true";
+            revealObserver?.unobserve(element);
+          }
+        }, { rootMargin: "0px 0px 14% 0px", threshold: 0.01 });
+        revealTargets.forEach((element) => revealObserver?.observe(element));
+      }
+
       // Native links, scrolling, history, and form focus remain untouched.
       // No inert slides and no wheel/touch/key interception on narrow screens.
       window.addEventListener("scroll", scheduleUpdate, { passive: true });
@@ -98,6 +116,9 @@ export default function ScrollExperience() {
         window.removeEventListener("scroll", scheduleUpdate);
         window.removeEventListener("resize", scheduleUpdate);
         window.removeEventListener("hashchange", scheduleUpdate);
+        revealObserver?.disconnect();
+        shell.classList.remove("motion-enabled");
+        revealTargets.forEach((element) => delete element.dataset.motionVisible);
         delete shell.dataset.currentScene;
       };
     }

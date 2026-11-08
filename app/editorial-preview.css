@@ -757,3 +757,100 @@
     white-space: nowrap;
   }
 }
+
+
+/* Editorial motion: animate the seven story chapters, never the game canvas.
+   Animations use compositor-friendly opacity/translation, and finish without
+   holding transforms so links, tabs, and hover states remain interactive. */
+@keyframes jrc-editorial-rise {
+  from { opacity: 0; transform: translate3d(0, 34px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes jrc-editorial-soft {
+  from { opacity: 0; transform: translate3d(0, 17px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  /* This state changes on every active chapter, including back navigation. */
+  .editorial-preview.story-shell.presentation-ready:not(.motion-disabled)
+  .story-scene[data-slide-state="active"] [data-reveal] {
+    animation: jrc-editorial-rise 720ms cubic-bezier(.16, .79, .22, 1) backwards;
+  }
+  .editorial-preview.story-shell.presentation-ready:not(.motion-disabled)
+  .story-scene[data-slide-state="active"] .scene-heading[data-reveal],
+  .editorial-preview.story-shell.presentation-ready:not(.motion-disabled)
+  .scene-home[data-slide-state="active"] .hero-copy[data-reveal] {
+    animation-delay: 115ms;
+  }
+  .editorial-preview.story-shell.presentation-ready:not(.motion-disabled)
+  .story-scene[data-slide-state="active"] .scene-heading + [data-reveal],
+  .editorial-preview.story-shell.presentation-ready:not(.motion-disabled)
+  .scene-home[data-slide-state="active"] .hero-art[data-reveal] {
+    animation-delay: 290ms;
+  }
+  .editorial-preview.story-shell.presentation-ready:not(.motion-disabled)
+  .scene-contact[data-slide-state="active"] .contact-channels[data-reveal] {
+    animation-delay: 425ms;
+  }
+  /* The supporting UI arrives in a soft stagger inside each chapter. */
+  .editorial-preview.presentation-ready .story-scene[data-slide-state="active"]
+  :is(.work-switcher, .work-feature-copy, .work-feature-visual,
+      .studio-story-copy, .studio-team-card, .rescue-slide-info,
+      .rescue-slide-screen, .contact-copy, .inquiry-form) {
+    animation: jrc-editorial-soft 600ms cubic-bezier(.18, .82, .25, 1) backwards;
+    animation-delay: 350ms;
+  }
+  .editorial-preview.presentation-ready .story-scene[data-slide-state="active"]
+  .service-option {
+    animation: jrc-editorial-soft 550ms cubic-bezier(.2, .8, .2, 1) backwards;
+    animation-delay: calc(310ms + var(--jrc-step, 0ms));
+  }
+  .editorial-preview.presentation-ready .story-scene[data-slide-state="active"]
+  .arcade-slide-card {
+    animation: jrc-editorial-soft 600ms cubic-bezier(.2, .8, .2, 1) backwards;
+    animation-delay: calc(345ms + var(--jrc-step, 0ms));
+  }
+  .editorial-preview .service-option:nth-child(2),
+  .editorial-preview .arcade-slide-card:nth-child(2) { --jrc-step: 75ms; }
+  .editorial-preview .service-option:nth-child(3),
+  .editorial-preview .arcade-slide-card:nth-child(3) { --jrc-step: 150ms; }
+  .editorial-preview .service-option:nth-child(4),
+  .editorial-preview .arcade-slide-card:nth-child(4) { --jrc-step: 225ms; }
+  .editorial-preview .service-option:nth-child(5) { --jrc-step: 300ms; }
+  .editorial-preview .service-option:nth-child(6) { --jrc-step: 375ms; }
+}
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .editorial-preview.presentation-ready .story-scene[data-slide-state="active"] .scene-heading > p {
+    animation: jrc-editorial-soft 620ms cubic-bezier(.18, .82, .25, 1) 265ms backwards;
+  }
+}
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+  /* A native IntersectionObserver reveals content at its actual scroll position.
+     Without JS, or with reduced motion, these elements stay visible normally. */
+  .editorial-preview.motion-enabled [data-reveal] {
+    transition: opacity 620ms cubic-bezier(.17, .78, .22, 1),
+                transform 620ms cubic-bezier(.17, .78, .22, 1);
+  }
+  .editorial-preview.motion-enabled [data-reveal]:not([data-motion-visible="true"]) {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  .editorial-preview.motion-enabled [data-reveal][data-motion-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-preview .story-scene [data-reveal],
+  .editorial-preview .story-scene[data-slide-state="active"] [data-reveal],
+  .editorial-preview .story-scene[data-slide-state="active"]
+  :is(.work-switcher, .work-feature-copy, .work-feature-visual,
+      .studio-story-copy, .studio-team-card, .rescue-slide-info,
+      .rescue-slide-screen, .contact-copy, .inquiry-form,
+      .service-option, .arcade-slide-card) {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
