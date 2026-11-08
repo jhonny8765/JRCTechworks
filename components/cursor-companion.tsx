@@ -1,95 +1,77 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-/** A lightweight, decorative companion that trails desktop pointers without blocking UI. */
+type Scene = "top" | "work" | "services" | "about" | "contact";
+
+const isScene = (value: string | undefined): value is Scene =>
+  value === "top" || value === "work" || value === "services" || value === "about" || value === "contact";
+
+/** A stage companion: anchored per scene, animated between scenes, and attentive to the pointer. */
 export default function CursorCompanion() {
-  const buddyRef = useRef<HTMLDivElement>(null);
+  const buddyRef = useRef<HTMLAnchorElement>(null);
+  const [scene, setScene] = useState<Scene>("top");
+  const [walking, setWalking] = useState(false);
+  const [excited, setExcited] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const buddy = buddyRef.current;
     if (!buddy) return;
 
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!finePointer.matches || reducedMotion.matches) return;
-
-    const size = { width: 112, height: 138 };
-    let frame = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let previousX = 0;
-    let hasPointer = false;
+    let walkTimer = 0;
+    let readyFrame = 0;
+    const startingScene = document.querySelector<HTMLElement>(".story-shell")?.dataset.currentScene;
+    if (isScene(startingScene)) setScene(startingScene);
+    readyFrame = window.requestAnimationFrame(() => setReady(true));
 
     const clamp = (value: number, min: number, max: number) =>
       Math.max(min, Math.min(max, value));
 
-    const follow = () => {
-      frame = 0;
-      currentX += (targetX - currentX) * 0.13;
-      currentY += (targetY - currentY) * 0.13;
-      const tilt = clamp((currentX - previousX) * 0.65, -12, 12);
-      previousX = currentX;
-      buddy.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) rotate(${tilt}deg)`;
-
-      if (Math.abs(targetX - currentX) > 0.3 || Math.abs(targetY - currentY) > 0.3 || Math.abs(tilt) > 0.3) {
-        frame = window.requestAnimationFrame(follow);
-      }
-    };
-
     const onPointerMove = (event: PointerEvent) => {
-      if (event.pointerType === "touch" || !finePointer.matches || reducedMotion.matches) return;
-      // Swap sides near the right/bottom edge to keep the companion in view.
-      const offsetX = event.clientX > window.innerWidth - 165 ? -size.width - 20 : 32;
-      const offsetY = event.clientY > window.innerHeight - 175 ? -size.height - 16 : 20;
-      targetX = clamp(event.clientX + offsetX, 8, window.innerWidth - size.width - 8);
-      targetY = clamp(event.clientY + offsetY, 8, window.innerHeight - size.height - 8);
-
-      const lookX = clamp((event.clientX - (currentX + size.width / 2)) / 24, -4, 4);
-      const lookY = clamp((event.clientY - (currentY + 54)) / 30, -3, 3);
+      if (event.pointerType === "touch" || !finePointer.matches) return;
+      // The robot stays put; only its eyes follow the visitor.
+      const bounds = buddy.getBoundingClientRect();
+      const lookX = clamp((event.clientX - (bounds.left + 56)) / 34, -4, 4);
+      const lookY = clamp((event.clientY - (bounds.top + 61)) / 42, -3, 3);
       buddy.style.setProperty("--buddy-look-x", `${lookX}px`);
       buddy.style.setProperty("--buddy-look-y", `${lookY}px`);
-
-      if (!hasPointer) {
-        hasPointer = true;
-        currentX = targetX;
-        currentY = targetY;
-        previousX = targetX;
-        buddy.classList.add("is-visible");
-      }
-      if (!frame) frame = window.requestAnimationFrame(follow);
     };
 
-    const hide = () => buddy.classList.remove("is-visible");
-    const onMotionChange = () => {
-      if (!finePointer.matches || reducedMotion.matches) {
-        hide();
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-        hasPointer = false;
-      }
+    const onSceneChange = (event: Event) => {
+      const next = (event as CustomEvent<string>).detail;
+      if (!isScene(next) || next === buddy.dataset.scene) return;
+      window.clearTimeout(walkTimer);
+      setScene(next);
+      setWalking(true);
+      setExcited(false);
+      walkTimer = window.setTimeout(() => setWalking(false), 1080);
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("blur", hide);
-    document.addEventListener("pointerleave", hide);
-    finePointer.addEventListener("change", onMotionChange);
-    reducedMotion.addEventListener("change", onMotionChange);
+    window.addEventListener("jrc:scenechange", onSceneChange);
 
     return () => {
-      window.cancelAnimationFrame(frame);
+      window.clearTimeout(walkTimer);
+      window.cancelAnimationFrame(readyFrame);
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("blur", hide);
-      document.removeEventListener("pointerleave", hide);
-      finePointer.removeEventListener("change", onMotionChange);
-      reducedMotion.removeEventListener("change", onMotionChange);
+      window.removeEventListener("jrc:scenechange", onSceneChange);
     };
   }, []);
 
   return (
-    <div className="cursor-companion" ref={buddyRef} aria-hidden="true">
+    <a
+      className={`cursor-companion${ready ? " is-ready" : ""}${walking ? " is-walking" : ""}${excited ? " is-excited" : ""}`}
+      data-scene={scene}
+      ref={buddyRef}
+      href={scene === "contact" ? "#project-brief" : "#contact"}
+      aria-label={scene === "contact" ? "Let's talk about your project" : "Meet JRC Techworks — get in touch"}
+      onMouseEnter={() => setExcited(true)}
+      onMouseLeave={() => setExcited(false)}
+      onFocus={() => setExcited(true)}
+      onBlur={() => setExcited(false)}
+    >
       <div className="cursor-companion__float">
         <svg viewBox="0 0 112 138" width="112" height="138" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -108,10 +90,14 @@ export default function CursorCompanion() {
           </defs>
           <ellipse cx="56" cy="131" rx="34" ry="5" fill="#36D9F1" opacity=".25" filter="url(#buddy-glow)" />
           <path d="M56 22V13" stroke="#99F2FF" strokeWidth="5" strokeLinecap="round" />
-          <circle cx="56" cy="10" r="6" fill="#57E9F7" stroke="#B7FFFF" strokeWidth="2" />
-          <path d="M23 95C12 96 10 88 11 82" stroke="url(#buddy-shell)" strokeWidth="12" strokeLinecap="round" />
-          <path d="M89 94C104 91 102 78 99 73" stroke="url(#buddy-shell)" strokeWidth="12" strokeLinecap="round" />
-          <circle cx="100" cy="69" r="8" fill="#79DBFA" stroke="#C9FCFF" strokeWidth="2" />
+          <circle className="cursor-companion__antenna" cx="56" cy="10" r="6" fill="#57E9F7" stroke="#B7FFFF" strokeWidth="2" />
+          <g className="cursor-companion__arm-left">
+            <path d="M23 95C12 96 10 88 11 82" stroke="url(#buddy-shell)" strokeWidth="12" strokeLinecap="round" />
+          </g>
+          <g className="cursor-companion__arm-right">
+            <path d="M89 94C104 91 102 78 99 73" stroke="url(#buddy-shell)" strokeWidth="12" strokeLinecap="round" />
+            <circle cx="100" cy="69" r="8" fill="#79DBFA" stroke="#C9FCFF" strokeWidth="2" />
+          </g>
           <rect x="26" y="80" width="60" height="46" rx="22" fill="url(#buddy-shell)" stroke="#B3FCFF" strokeWidth="2" />
           <rect x="40" y="98" width="32" height="17" rx="8.5" fill="#071629" opacity=".84" />
           <text x="56" y="109.5" textAnchor="middle" fontFamily="system-ui,sans-serif" fontWeight="850" fontSize="10" fill="#A6FFFF">JRC</text>
@@ -131,10 +117,13 @@ export default function CursorCompanion() {
           <path d="M50 74Q56 79 62 74" stroke="#6EF3F4" strokeWidth="2.5" strokeLinecap="round" />
           <circle cx="29" cy="76" r="3" fill="#FFA2BE" opacity=".82" />
           <circle cx="83" cy="76" r="3" fill="#FFA2BE" opacity=".82" />
-          <path d="M39 123V129M73 123V129" stroke="#67C4F7" strokeWidth="8" strokeLinecap="round" />
+          <g className="cursor-companion__foot-left"><path d="M39 123V129" stroke="#67C4F7" strokeWidth="8" strokeLinecap="round" /></g>
+          <g className="cursor-companion__foot-right"><path d="M73 123V129" stroke="#67C4F7" strokeWidth="8" strokeLinecap="round" /></g>
         </svg>
-        <span className="cursor-companion__hello">HELLO!</span>
+        <span className="cursor-companion__hello" aria-hidden="true">
+          {scene === "contact" ? "LET'S TALK!" : excited ? "HEY, YOU!" : "HELLO!"}
+        </span>
       </div>
-    </div>
+    </a>
   );
 }
