@@ -238,7 +238,18 @@
 
 @media (min-width: 901px) {
   .editorial-preview.presentation-ready .story-viewport { inset: 0; }
-  .editorial-preview.presentation-ready .story-scene .scene-frame { padding-top: max(95px, 9vh); padding-bottom: 90px; }
+  /* A tall editorial scene must begin below the masthead rather than being
+     vertically centered into a negative Y position by the slide flexbox. */
+  .editorial-preview.presentation-ready .story-scene { justify-content: flex-start; }
+  .editorial-preview.presentation-ready .story-scene .scene-frame { flex: 0 0 auto; margin-block: 0; padding-top: max(112px, 12vh); padding-bottom: 90px; }
+  .editorial-preview.presentation-ready .scene-heading h2 { font-size: clamp(55px, 5vw, 78px); }
+  .editorial-preview .cursor-companion,
+  .editorial-preview .cursor-companion[data-scene] {
+    --buddy-x: calc(100vw - 170px);
+    --buddy-y: 37vh;
+    transform: translate3d(var(--buddy-x), var(--buddy-y), 0) scale(.76);
+    transform-origin: top left;
+  }
   .editorial-preview.presentation-ready .scene-home .hero-copy { padding-top: clamp(145px, 19vh, 260px); }
   .editorial-preview.presentation-ready .scene-home .hero-layout { min-height: 100%; }
   .editorial-preview.presentation-ready .scene-home .hero-title { font-size: clamp(65px, 8vw, 130px); }
