@@ -606,9 +606,7 @@ body:has(.story-shell.presentation-ready) {
 @keyframes buddy-invite { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 @media (hover: none), (pointer: coarse), (max-width: 900px) {
   .cursor-companion, .cursor-companion[data-scene] {
-    --buddy-x: calc(100vw - 100px);
-    --buddy-y: calc(100dvh - 145px);
-    scale: .72;
+    transform: translate3d(calc(100vw - 98px), calc(100dvh - 138px), 0) scale(.72);
     transform-origin: top left;
     z-index: 101;
   }
@@ -690,3 +688,4 @@ body:has(.story-shell.presentation-ready) {
   .story-shell.presentation-ready .scene-contact .contact-channel-grid { padding: 9px; }
   .story-shell.presentation-ready .scene-contact .contact-channel-grid .contact-channel { padding: 8px 11px; }
 }
+
