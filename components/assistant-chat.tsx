@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { contactEmail } from "@/lib/contact";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -9,7 +10,7 @@ const greeting: ChatMessage = {
   content: "Hi! 👋 I'm the JRC Techworks assistant. May business problem ka bang gustong gawing mas simple? Ask me about websites, POS, inventory, apps, or automation. No pressure!",
 };
 const MAX_QUESTIONS = 7;
-const leadEmail = "jhonreyc2002@gmail.com";
+const leadEmail = contactEmail;
 
 export default function AssistantChat({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [messages, setMessages] = useState<ChatMessage[]>([greeting]);

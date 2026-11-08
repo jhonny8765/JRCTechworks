@@ -1,7 +1,7 @@
-export const contactEmail = "jhonreyc2001@gmail.com";
+export const contactEmail = "jhonreyc2002@gmail.com";
 
 export const projectInquiryHref =
-  "mailto:jhonreyc2001@gmail.com?subject=Project%20inquiry%20for%20JRC%20Techworks";
+  "mailto:jhonreyc2002@gmail.com?subject=Project%20inquiry%20for%20JRC%20Techworks";
 
 // Webmail drafts work even on devices without a configured mailto handler.
 // Visitors still review and send the message themselves.

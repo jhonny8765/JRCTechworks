@@ -9,7 +9,7 @@ Help potential clients understand what JRC Techworks builds and make it easy to 
 - The primary homepage action takes visitors to the project inquiry area; the portfolio remains a secondary action.
 - Each of the six service cards links to `/?service=<service name>#contact` to preselect that category in the project brief.
 - The contact section asks for a name, reply email, service, approximate timeline, and project overview.
-- Visitors can open a prefilled email draft addressed to `jhonreyc2001@gmail.com`, or copy the complete brief into a different messaging app.
+- Visitors can open a prefilled email draft addressed to `jhonreyc2002@gmail.com`, or copy the complete brief into a different messaging app.
 - Direct email, Facebook, GitHub, and LinkedIn remain visible below the brief.
 - Project case-study pages close with a relevant inquiry link.
 
