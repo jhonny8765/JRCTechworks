@@ -3,6 +3,7 @@ node_modules
 out
 .vercel
 .env*
+.dev.vars*
 *.tsbuildinfo
 .DS_Store
 npm-debug.log*
