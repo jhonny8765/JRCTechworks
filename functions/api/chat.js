@@ -1,5 +1,7 @@
 // Runs ONLY in Cloudflare Pages Functions. The browser never receives a model key.
-const MODEL = "@cf/zai-org/glm-4.7-flash";
+// This instruct model answers directly. Reasoning models can exhaust a short
+// completion budget without producing visible text for the visitor.
+const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const MAX_BYTES = 12000;
 const MAX_TURNS = 7;
 const MAX_REPLY = 1100;
@@ -62,7 +64,7 @@ export async function onRequest({ request, env }) {
   try {
     const result = await env.AI.run(MODEL, {
       messages: [{ role: "system", content: SYSTEM }, ...history.map(({ role, content }) => ({ role, content: content.trim() }))],
-      max_completion_tokens: 280,
+      max_tokens: 240,
       temperature: 0.5,
     });
     const raw = result?.response ?? result?.choices?.[0]?.message?.content;
