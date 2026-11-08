@@ -127,7 +127,7 @@ export default function Home() {
                 <p className="section-label"><span>05 /</span> JRC ARCADE</p>
                 <h2 id="arcade-slide-title">A little break.<br /><em>A lot of play.</em></h2>
               </div>
-              <p>Four free browser games, including our original Filipino cashier challenge. No installs, no accounts, just play.</p>
+              <p>Five free browser games—including our new JRC Bot adventure and Filipino cashier challenge. No installs, no accounts, just play.</p>
             </div>
             <div className="arcade-slide-layout" data-reveal>
               <div className="arcade-slide-feature">
@@ -139,8 +139,8 @@ export default function Home() {
                   <small>INSERT FUN · PRESS PLAY</small>
                 </div>
                 <div className="arcade-slide-feature-bottom">
-                  <p>Think fast. Match tiles. Chase your high score. Or test your <em>sukli</em> skills behind a mini POS counter.</p>
-                  <a className="button primary-button arcade-slide-cta" href="/arcade">Enter the arcade <ArrowIcon diagonal /></a>
+                  <p>Save three businesses as JRC Bot, chase your high score, or test your <em>sukli</em> skills behind a mini POS counter.</p>
+                  <a className="button primary-button arcade-slide-cta" href="/arcade/system-rescue">Play our featured game <ArrowIcon diagonal /></a>
                 </div>
               </div>
               <div className="arcade-slide-cards" aria-label="Games you can play in JRC Arcade">

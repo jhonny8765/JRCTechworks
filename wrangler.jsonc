@@ -2,5 +2,8 @@
   "name": "jrc-techworks",
   "pages_build_output_dir": "./out",
   "compatibility_date": "2026-11-08",
-  "ai": { "binding": "AI" }
+  "ai": { "binding": "AI" },
+  "d1_databases": [
+    { "binding": "RESCUE_DB", "database_name": "jrc-system-rescue", "database_id": "94f7eebd-3e76-4406-a334-b7c666085702" }
+  ]
 }

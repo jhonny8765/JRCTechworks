@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: siteUrl, priority: 1 },
     { url: `${siteUrl}/arcade`, priority: 0.65 },
+    { url: `${siteUrl}/arcade/system-rescue`, priority: 0.7 },
     {
       url: `${siteUrl}/work/sukisuite`,
       priority: 0.8,
