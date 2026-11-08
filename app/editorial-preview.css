@@ -819,6 +819,11 @@
   .editorial-preview .service-option:nth-child(5) { --jrc-step: 300ms; }
   .editorial-preview .service-option:nth-child(6) { --jrc-step: 375ms; }
 }
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .editorial-preview.presentation-ready .story-scene[data-slide-state="active"] .scene-heading > p {
+    animation: jrc-editorial-soft 620ms cubic-bezier(.18, .82, .25, 1) 265ms backwards;
+  }
+}
 @media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
   /* A native IntersectionObserver reveals content at its actual scroll position.
      Without JS, or with reduced motion, these elements stay visible normally. */
