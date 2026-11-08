@@ -691,3 +691,69 @@
   .editorial-inner .rescue-details h2 { font-size: 49px; }
   .editorial-inner .rescue-ending { padding: 30px 22px; }
 }
+
+/* Final mobile pass: make every service discoverable without sideways swiping. */
+@media (max-width: 600px) {
+  .editorial-preview .services-select {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    overflow: visible;
+    padding: 0;
+    border-top: 1px solid #444;
+    border-bottom: 0;
+    scroll-snap-type: none;
+  }
+  .editorial-preview .service-option {
+    width: 100%;
+    min-width: 0;
+    min-height: 60px;
+    padding: 13px 8px 13px 0;
+    border: 0;
+    border-bottom: 1px solid #383838;
+    border-radius: 0;
+    font-size: 14px;
+    line-height: 1.22;
+    white-space: normal;
+    text-align: left;
+    gap: 5px;
+  }
+  .editorial-preview .service-option.is-active { border-bottom-color: #fff; }
+  .editorial-preview .service-option-number { display: none; }
+  .editorial-preview .service-option-arrow { flex: none; }
+  .editorial-preview .cursor-companion,
+  .editorial-preview .cursor-companion[data-scene] {
+    transform: translate3d(calc(100vw - 74px - env(safe-area-inset-right)), calc(100dvh - 88px - env(safe-area-inset-bottom)), 0) scale(.46);
+  }
+}
+@media (max-width: 380px) {
+  .editorial-preview .work-switcher button {
+    font-size: 12px;
+    padding-inline: 4px;
+    gap: 5px;
+    white-space: nowrap;
+  }
+  .editorial-preview .service-option { font-size: 12.5px; }
+  .editorial-preview .cursor-companion,
+  .editorial-preview .cursor-companion[data-scene] {
+    transform: translate3d(calc(100vw - 62px - env(safe-area-inset-right)), calc(100dvh - 79px - env(safe-area-inset-bottom)), 0) scale(.40);
+  }
+}
+/* Keep all four game stats and a full-width Pause target on small touchscreens. */
+@media (max-width: 480px) {
+  .editorial-inner.rescue-shell .rescue-hud {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px 6px;
+    padding: 11px 8px;
+    align-items: center;
+  }
+  .editorial-inner.rescue-shell .rescue-hud-item { min-width: 0; }
+  .editorial-inner.rescue-shell .rescue-pause-button {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 39px;
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+}
