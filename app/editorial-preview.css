@@ -273,7 +273,7 @@
   .editorial-preview .site-header { position: sticky; top: 0; }
   .editorial-preview .scene-home .hero-layout { min-height: 0; }
   .editorial-preview .scene-home .hero-copy { width: 100%; padding: 80px 0 40px; text-align: left; }
-  .editorial-preview .scene-home .hero-actions { justify-content: flex-start; }
+  .editorial-preview .scene-home .hero-actions { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: flex-start; }
   .editorial-preview .scene-home .hero-actions .button { width: auto; flex: 0 0 auto; min-width: 0; }
   .editorial-preview .scene-home .hero-title { font-size: clamp(58px, 10vw, 90px); }
   .editorial-preview .scene-home .hero-art { position: relative; inset: auto; width: 100%; height: min(65vw, 510px); margin-bottom: 35px; }
