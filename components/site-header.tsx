@@ -11,11 +11,12 @@ const navLinks = [
   { label: "Contact", href: "/#contact" },
 ];
 
-export default function SiteHeader() {
+export default function SiteHeader({ arcadeNavTarget = "/arcade" }: { arcadeNavTarget?: "/arcade" | "/#arcade" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeScene, setActiveScene] = useState("top");
   const headerRef = useRef<HTMLElement>(null);
   const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const currentNavLinks = navLinks.map((link) => link.label === "Arcade" ? { ...link, href: arcadeNavTarget } : link);
 
   useEffect(() => {
     const current = document.querySelector<HTMLElement>(".story-shell")?.dataset.currentScene;
@@ -72,7 +73,7 @@ export default function SiteHeader() {
         </a>
 
         <nav className="desktop-nav" aria-label="Main navigation">
-          {navLinks.map((link) => (
+          {currentNavLinks.map((link) => (
             <a key={link.href} href={link.href} aria-current={link.href.includes("#") && activeScene === link.href.split("#")[1] ? "location" : undefined}>{link.label}</a>
           ))}
         </nav>
@@ -107,7 +108,7 @@ export default function SiteHeader() {
         aria-hidden={!menuOpen}
         inert={!menuOpen}
       >
-        {navLinks.map((link) => (
+        {currentNavLinks.map((link) => (
           <a key={link.href} href={link.href} aria-current={activeScene === link.href.split("#")[1] ? "location" : undefined} onClick={() => setMenuOpen(false)}>{link.label}</a>
         ))}
         <a

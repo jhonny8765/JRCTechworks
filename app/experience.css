@@ -3,7 +3,7 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .story-shell .site-header { position: sticky; top: 0; z-index: 40; background: rgba(8, 14, 26, .77); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom-color: rgba(117, 175, 210, .13); }
 .story-shell .header-inner { min-height: 79px; }
 /* During hydration, show one composed home scene instead of briefly exposing
-   all five stacked sections. With scripting disabled, the full readable page
+   all six stacked sections. With scripting disabled, the full readable page
    remains available as a progressive-enhancement fallback. */
 @media (scripting: enabled) {
   .story-shell:not(.presentation-ready) .story-scene:not(.scene-home),
@@ -37,6 +37,7 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .story-shell .scene-work { background: radial-gradient(ellipse at 85% 48%, rgba(77, 70, 161, .16), transparent 48%), #080f1c; }
 .story-shell .scene-services { background: radial-gradient(ellipse at 5% 62%, rgba(24, 113, 151, .16), transparent 47%), #0a101e; }
 .story-shell .scene-studio { background: radial-gradient(ellipse at 85% 32%, rgba(74, 65, 151, .16), transparent 45%), #090e1b; }
+.story-shell .scene-arcade { background: radial-gradient(ellipse at 66% 45%, rgba(50, 116, 167, .18), transparent 48%), #080f1d; }
 .story-shell .scene-contact { background: radial-gradient(ellipse at 35% 70%, rgba(18, 121, 139, .09), transparent 45%), #080d18; }
 .story-shell .scene-contact.contact-section { padding: 0; }
 
@@ -134,6 +135,52 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
 .studio-process-list h4 { font-size: 20px; line-height: 1.2; margin: 0 0 7px; }
 .studio-process-list p { color: #9fb2ca; font-size: 13px; line-height: 1.7; margin: 0; }
 
+/* The Arcade has its own presentation slide; the actual games stay isolated
+   on /arcade so they don't run timers or load bundles while scrolling. */
+.arcade-slide-layout { display: grid; grid-template-columns: minmax(320px, .91fr) minmax(0, 1.09fr); min-height: 458px; overflow: hidden; border: 1px solid rgba(118, 190, 223, .3); border-radius: 22px; background: #0e192b; box-shadow: 0 30px 80px rgba(0, 0, 0, .22); }
+.arcade-slide-feature { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 31px clamp(30px, 3vw, 49px); border-right: 1px solid rgba(143, 186, 223, .16); background: radial-gradient(circle at 50% 44%, rgba(58, 156, 190, .2), transparent 51%), linear-gradient(140deg, #152b45, #0c1b2e 78%); }
+.arcade-slide-feature::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background-image: linear-gradient(rgba(126, 187, 216, .047) 1px, transparent 1px), linear-gradient(90deg, rgba(126, 187, 216, .047) 1px, transparent 1px); background-size: 33px 33px; mask-image: linear-gradient(110deg, transparent, black 70%); }
+.arcade-slide-kicker { display: inline-flex; align-items: center; gap: 9px; margin: 0; color: #9fc9dd; font-size: 9px; font-weight: 850; letter-spacing: .16em; }
+.arcade-slide-kicker span { width: 7px; height: 7px; border-radius: 50%; background: #65e5c9; box-shadow: 0 0 12px rgba(101, 229, 201, .5); }
+.arcade-slide-emblem { position: relative; isolation: isolate; align-self: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 191px; width: 100%; color: #effbff; text-align: center; transform: rotate(-3deg); }
+.arcade-slide-emblem-glow { position: absolute; width: 220px; height: 175px; z-index: -1; border: 1px solid rgba(110, 225, 244, .23); border-radius: 50%; box-shadow: 0 0 0 24px rgba(79, 158, 210, .035), 0 0 0 49px rgba(79, 158, 210, .028), inset 0 0 30px rgba(59, 178, 210, .1); }
+.arcade-slide-emblem-mark { color: #8debf8; font-size: 16px; font-weight: 900; letter-spacing: .07em; }
+.arcade-slide-emblem strong { font-size: clamp(45px, 4.6vw, 73px); line-height: 1.05; letter-spacing: -.08em; font-weight: 900; text-shadow: 0 12px 60px rgba(62, 192, 230, .27); }
+.arcade-slide-emblem strong span { color: #80e8fa; }
+.arcade-slide-emblem small { color: #7cbbd1; font-size: 9px; font-weight: 790; letter-spacing: .22em; margin-top: 13px; }
+.arcade-slide-feature-bottom { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+.arcade-slide-feature-bottom p { margin: 0; color: #a9c1d8; max-width: 430px; font-size: 13px; line-height: 1.7; }
+.arcade-slide-feature-bottom em { color: #a6eeed; font-style: normal; }
+.arcade-slide-cta { min-height: 47px; font-size: 12px; }
+.arcade-slide-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 16px; }
+.arcade-slide-card { display: flex; position: relative; flex-direction: column; align-items: flex-start; justify-content: space-between; min-width: 0; min-height: 195px; padding: 20px 21px; overflow: hidden; border: 1px solid rgba(145, 185, 220, .15); border-radius: 15px; background: radial-gradient(circle at 88% 28%, rgba(91, 134, 199, .12), transparent 58%), #111e32; color: #edf7ff; transition: border-color 200ms, background-color 200ms, transform 200ms; }
+.arcade-slide-card::after { content: ""; pointer-events: none; position: absolute; inset: 0; background: linear-gradient(130deg, transparent 60%, rgba(110, 203, 223, .035)); }
+.arcade-slide-card:hover, .arcade-slide-card:focus-visible { transform: translateY(-3px); border-color: rgba(105, 230, 241, .6); background-color: #192d43; }
+.arcade-slide-card:focus-visible { outline: 2px solid #89ebf6; outline-offset: 2px; }
+.arcade-slide-card-number { color: #86a8c5; font-size: 9px; font-weight: 850; letter-spacing: .16em; z-index: 2; }
+.arcade-slide-card-copy { position: relative; display: flex; flex-direction: column; gap: 5px; z-index: 2; max-width: calc(100% - 20px); }
+.arcade-slide-card-copy strong { color: #f4faff; font-size: clamp(17px, 1.55vw, 23px); letter-spacing: -.04em; line-height: 1.15; }
+.arcade-slide-card-copy small { color: #9aafc8; font-size: 11px; line-height: 1.45; }
+.arcade-slide-card-arrow { position: absolute; right: 19px; bottom: 17px; color: #8edbed; font-size: 18px; font-weight: 500; z-index: 2; }
+.arcade-slide-card-art { display: flex; position: absolute; align-items: center; justify-content: center; top: 49px; right: 21px; height: 83px; min-width: 122px; opacity: .98; pointer-events: none; }
+.arcade-slide-snake-art i { position: absolute; display: block; background: #61e9d2; width: 25px; height: 25px; border-radius: 6px; box-shadow: 0 0 17px rgba(85, 234, 213, .2); }
+.arcade-slide-snake-art i:nth-child(1) { left: 13px; top: 45px; }
+.arcade-slide-snake-art i:nth-child(2) { left: 39px; top: 45px; }
+.arcade-slide-snake-art i:nth-child(3) { left: 65px; top: 45px; }
+.arcade-slide-snake-art i:nth-child(4) { left: 65px; top: 19px; border-radius: 9px; background: #a0fff0; }
+.arcade-slide-snake-art b { position: absolute; right: 10px; top: 11px; height: 14px; width: 14px; border-radius: 50%; background: #fbbf76; box-shadow: 0 0 14px rgba(255, 181, 89, .56); }
+.arcade-slide-number-art { gap: 5px; transform: rotate(-8deg); }
+.arcade-slide-number-art i { display: grid; place-items: center; width: 39px; height: 43px; border-radius: 7px; background: #dcc7b6; color: #314259; font: normal 850 20px/1 ui-sans-serif, system-ui; box-shadow: 0 8px 18px rgba(0, 0, 0, .15); }
+.arcade-slide-number-art i:nth-child(2) { background: #f4ce95; transform: translateY(-11px); }
+.arcade-slide-number-art i:nth-child(3) { background: #efad80; }
+.arcade-slide-memory-art { gap: 7px; }
+.arcade-slide-memory-art i { display: grid; place-items: center; width: 38px; height: 52px; border: 1px solid #6674b8; border-radius: 7px; background: #5365a2; color: #bceaf9; font: normal 800 25px/1 ui-sans-serif, system-ui; box-shadow: 0 7px 16px rgba(0, 0, 0, .18); }
+.arcade-slide-memory-art i:nth-child(2) { background: #24334e; color: #a8b7df; transform: translateY(-11px); }
+.arcade-slide-cashier-art { gap: 10px; }
+.arcade-slide-cashier-art > i { display: grid; place-items: center; height: 48px; width: 48px; border-radius: 50%; border: 3px solid #9df8d8; background: #1d7d7b; color: #e3fff0; font: normal 900 28px/1 ui-sans-serif, system-ui; }
+.arcade-slide-cashier-art > span { padding: 9px 10px; background: #d6f2ea; color: #3f7177; border-radius: 5px; box-shadow: 0 6px 14px rgba(0,0,0,.18); font-size: 8px; font-weight: 800; letter-spacing: .14em; line-height: 1.8; transform: rotate(7deg); }
+.arcade-slide-cashier-art b { color: #18535a; font-size: 12px; letter-spacing: -.02em; }
+
 /* Contact stays fully usable while visually fitting into the closing scene. */
 .story-shell .scene-contact .scene-heading { margin-bottom: 24px; }
 .story-shell .scene-contact .contact-panel { padding: clamp(27px, 3vw, 45px); gap: clamp(24px, 3vw, 45px); background: radial-gradient(circle at 5% 8%, rgba(38, 126, 169, .18), transparent 36%), #0d1627; }
@@ -151,6 +198,9 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .story-shell .scene-heading { gap: 25px; }
   .work-feature-copy { padding: 30px; }
   .services-explorer { grid-template-columns: minmax(240px, .9fr) 1.1fr; }
+  .arcade-slide-layout { grid-template-columns: minmax(300px, .88fr) minmax(0, 1.12fr); }
+  .arcade-slide-card { padding: 16px; }
+  .arcade-slide-card-art { right: 8px; transform: scale(.84); transform-origin: top right; }
 }
 @media (max-width: 900px) {
   html:has(.story-shell) { scroll-snap-type: none; scroll-padding-top: 76px; }
@@ -177,6 +227,12 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .studio-team-card { border-left: 0; border-top: 1px solid rgba(145, 187, 225, .18); padding-top: 18px; }
   .studio-team-monogram { font-size: 65px; line-height: 1.25; }
   .studio-process { gap: 35px; }
+  .arcade-slide-layout { grid-template-columns: 1fr; }
+  .arcade-slide-feature { min-height: 330px; border-right: 0; border-bottom: 1px solid rgba(143, 186, 223, .16); }
+  .arcade-slide-emblem { min-height: 130px; }
+  .arcade-slide-emblem-glow { height: 130px; }
+  .arcade-slide-emblem strong { font-size: 58px; }
+  .arcade-slide-cards { min-height: 390px; }
 }
 @media (max-width: 760px) {
   .story-shell .header-inner { min-height: 76px; }
@@ -191,6 +247,9 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .service-option { gap: 11px; font-size: 12px; padding: 10px 15px; }
   .service-stage { padding: 28px; min-height: 310px; }
   .studio-story-copy h3, .studio-process h3 { font-size: 44px; }
+  .arcade-slide-feature { min-height: 315px; padding: 24px 27px; }
+  .arcade-slide-feature-bottom { gap: 14px; }
+  .arcade-slide-cards { min-height: 365px; }
 }
 @media (max-width: 430px) {
   .story-shell .scene-frame { padding: 68px 0 55px; }
@@ -213,11 +272,26 @@ html:has(.story-shell) { scroll-snap-type: y proximity; scroll-padding-top: 82px
   .studio-team-card { padding: 21px 25px; }
   .studio-process { padding: 29px 25px; }
   .story-shell .scene-contact .contact-copy h3 { font-size: 44px; }
+  .arcade-slide-feature { min-height: 305px; }
+  .arcade-slide-emblem { min-height: 105px; }
+  .arcade-slide-emblem strong { font-size: 48px; }
+  .arcade-slide-emblem-glow { width: 180px; height: 115px; }
+  .arcade-slide-feature-bottom p { font-size: 12px; }
+  .arcade-slide-cards { padding: 9px; gap: 9px; min-height: 330px; }
+  .arcade-slide-card { min-height: 161px; padding: 12px; border-radius: 11px; }
+  .arcade-slide-card-number { font-size: 8px; }
+  .arcade-slide-card-copy { gap: 4px; }
+  .arcade-slide-card-copy strong { font-size: 16px; }
+  .arcade-slide-card-copy small { font-size: 9px; }
+  .arcade-slide-card-art { right: 1px; top: 29px; transform: scale(.64); }
+  .arcade-slide-card-arrow { right: 10px; bottom: 10px; font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html:has(.story-shell) { scroll-snap-type: none; scroll-behavior: auto; }
   .story-shell .scene-scroll-cue span:last-child, .story-shell .mobile-swipe-hint span, .work-feature, .service-stage, .studio-panel { animation: none; }
   .work-feature-frame { transform: none; }
+  .arcade-slide-card { transition: none; }
+  .arcade-slide-card:hover { transform: none; }
 }
 
 /* Phase 11 refinement — a real full-screen presentation, not a scrollable page.
@@ -309,7 +383,7 @@ body:has(.story-shell.presentation-ready) {
   transition: none;
 }
 
-/* Reserve compositor layers for the moving slides, not all five full-screen
+/* Reserve compositor layers for the moving slides, not all six full-screen
    scenes at once (which can consume significant GPU memory on laptops). */
 .story-shell.presentation-ready .story-scene[data-slide-state="active"],
 .story-shell.presentation-ready .story-scene[data-slide-state^="exit-"] {
@@ -415,6 +489,9 @@ body:has(.story-shell.presentation-ready) {
 .story-shell.presentation-ready .studio-process {
   min-height: min(410px, 48dvh);
 }
+
+.story-shell.presentation-ready .arcade-slide-layout { min-height: min(430px, 51dvh); }
+.story-shell.presentation-ready .arcade-slide-card { min-height: 0; }
 
 .story-shell.presentation-ready .studio-team-monogram {
   display: flex;
@@ -545,6 +622,7 @@ body:has(.story-shell.presentation-ready) {
 .cursor-companion[data-scene="work"] { --buddy-x: calc(50vw - 56px); --buddy-y: clamp(175px, 21vh, 220px); }
 .cursor-companion[data-scene="services"] { --buddy-x: calc(100vw - 166px); --buddy-y: clamp(400px, 68vh, 710px); }
 .cursor-companion[data-scene="about"] { --buddy-x: 30vw; --buddy-y: clamp(175px, 21vh, 220px); }
+.cursor-companion[data-scene="arcade"] { --buddy-x: 55vw; --buddy-y: clamp(155px, 19vh, 205px); }
 .cursor-companion[data-scene="contact"] { --buddy-x: 29.5vw; --buddy-y: clamp(375px, 61.5vh, 670px); }
 .cursor-companion:focus-visible { outline: 2px solid #92f5fb; outline-offset: 5px; border-radius: 22px; }
 .cursor-companion__float {

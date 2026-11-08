@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import AssistantChat from "./assistant-chat";
 
-type Scene = "top" | "work" | "services" | "about" | "contact";
+type Scene = "top" | "work" | "services" | "about" | "arcade" | "contact";
 
 const isScene = (value: string | undefined): value is Scene =>
-  value === "top" || value === "work" || value === "services" || value === "about" || value === "contact";
+  value === "top" || value === "work" || value === "services" || value === "about" || value === "arcade" || value === "contact";
 
 /** A stage companion: anchored per scene, animated between scenes, and attentive to the pointer. */
 export default function CursorCompanion() {

@@ -18,7 +18,7 @@ export default function Home() {
       <CursorCompanion />
       <div className="ambient ambient-purple" aria-hidden="true" />
       <div className="ambient ambient-blue" aria-hidden="true" />
-      <SiteHeader />
+      <SiteHeader arcadeNavTarget="/#arcade" />
 
       <div className="story-viewport">
       <main id="main-content" className="story-main" tabIndex={-1}>
@@ -116,7 +116,61 @@ export default function Home() {
               <p>Get to know the small team behind JRC Techworks and how we turn ideas into useful technology.</p>
             </div>
             <div data-reveal><StudioScene /></div>
-            <a className="scene-next-link" href="#contact">Have something in mind? <ArrowIcon /></a>
+            <a className="scene-next-link" href="#arcade">Take a quick game break <ArrowIcon /></a>
+          </div>
+        </section>
+
+        <section id="arcade" className="story-scene scene-arcade" aria-labelledby="arcade-slide-title">
+          <div className="container scene-frame">
+            <div className="scene-heading" data-reveal>
+              <div>
+                <p className="section-label"><span>05 /</span> JRC ARCADE</p>
+                <h2 id="arcade-slide-title">A little break.<br /><em>A lot of play.</em></h2>
+              </div>
+              <p>Four free browser games, including our original Filipino cashier challenge. No installs, no accounts, just play.</p>
+            </div>
+            <div className="arcade-slide-layout" data-reveal>
+              <div className="arcade-slide-feature">
+                <p className="arcade-slide-kicker"><span /> MADE BY JRC TECHWORKS</p>
+                <div className="arcade-slide-emblem" aria-hidden="true">
+                  <div className="arcade-slide-emblem-glow" />
+                  <span className="arcade-slide-emblem-mark">[J]</span>
+                  <strong>ARCADE<span>.</span></strong>
+                  <small>INSERT FUN · PRESS PLAY</small>
+                </div>
+                <div className="arcade-slide-feature-bottom">
+                  <p>Think fast. Match tiles. Chase your high score. Or test your <em>sukli</em> skills behind a mini POS counter.</p>
+                  <a className="button primary-button arcade-slide-cta" href="/arcade">Enter the arcade <ArrowIcon diagonal /></a>
+                </div>
+              </div>
+              <div className="arcade-slide-cards" aria-label="Games you can play in JRC Arcade">
+                <a className="arcade-slide-card arcade-slide-snake" href="/arcade">
+                  <span className="arcade-slide-card-number">01 / CLASSIC</span>
+                  <span className="arcade-slide-card-art arcade-slide-snake-art" aria-hidden="true"><i /><i /><i /><i /><b /></span>
+                  <span className="arcade-slide-card-copy"><strong>Neon Snake</strong><small>Chase the glow. Dodge your tail.</small></span>
+                  <span className="arcade-slide-card-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a className="arcade-slide-card arcade-slide-2048" href="/arcade">
+                  <span className="arcade-slide-card-number">02 / PUZZLE</span>
+                  <span className="arcade-slide-card-art arcade-slide-number-art" aria-hidden="true"><i>2</i><i>4</i><i>8</i></span>
+                  <span className="arcade-slide-card-copy"><strong>2048 Challenge</strong><small>Merge tiles. Reach the goal.</small></span>
+                  <span className="arcade-slide-card-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a className="arcade-slide-card arcade-slide-memory" href="/arcade">
+                  <span className="arcade-slide-card-number">03 / FOCUS</span>
+                  <span className="arcade-slide-card-art arcade-slide-memory-art" aria-hidden="true"><i>✦</i><i>?</i><i>✦</i></span>
+                  <span className="arcade-slide-card-copy"><strong>Memory Match</strong><small>Find the matching pairs.</small></span>
+                  <span className="arcade-slide-card-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a className="arcade-slide-card arcade-slide-cashier" href="/arcade">
+                  <span className="arcade-slide-card-number">04 / JRC ORIGINAL</span>
+                  <span className="arcade-slide-card-art arcade-slide-cashier-art" aria-hidden="true"><i>₱</i><span>SALE<br /><b>₱ 120</b></span></span>
+                  <span className="arcade-slide-card-copy"><strong>Cashier Rush</strong><small>Compute the right sukli.</small></span>
+                  <span className="arcade-slide-card-arrow" aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+            <a className="scene-next-link" href="#contact">Ready to build something? <ArrowIcon /></a>
           </div>
         </section>
 
@@ -124,7 +178,7 @@ export default function Home() {
           <div className="container scene-frame">
             <div className="scene-heading" data-reveal>
               <div>
-                <p className="section-label"><span>05 /</span> YOUR TURN</p>
+                <p className="section-label"><span>06 /</span> YOUR TURN</p>
                 <h2 id="contact-title">Let's build <em>something useful.</em></h2>
               </div>
               <p>Got a website, POS, inventory tool, app, or automation in mind? Start with a short brief.</p>
