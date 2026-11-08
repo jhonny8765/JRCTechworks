@@ -389,6 +389,14 @@
 .editorial-inner .footer { background: #000; border-top: 1px solid #333; }
 .editorial-inner .footer a, .editorial-inner .footer strong { color: #fff; }
 .editorial-inner .footer p, .editorial-inner .footer span { color: #aaa; }
+.editorial-inner.arcade-shell, .editorial-inner.rescue-shell { background: #000; }
+.editorial-inner.arcade-shell .site-header,
+.editorial-inner.rescue-shell .site-header { background: rgba(0,0,0,.97); border-bottom-color: #333; }
+.editorial-inner.arcade-shell .desktop-nav a[href="/arcade"] { color: #fff; }
+.editorial-inner a:focus-visible, .editorial-inner button:focus-visible,
+.editorial-preview a:focus-visible, .editorial-preview button:focus-visible {
+  outline: 2px solid #fff; outline-offset: 4px;
+}
 
 /* Case studies: project screen is the artwork, every section is a chapter. */
 .editorial-inner.case-study-shell .case-hero { padding: 46px 0 98px; }
